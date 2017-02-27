@@ -21,7 +21,7 @@ public final class FxOneShootActionService extends Service<Void> {
     private final Duration timeout;
     private final Runnable action;
 
-    /**
+    /** 
      * Create a {@link FxOneShootActionService} that executes the specified {@link Runnable} on the JavaFx thread after
      * the timeout.
      */
