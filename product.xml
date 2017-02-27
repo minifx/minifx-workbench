@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <products>
-	<product name="minifx-workbench" version="0.0.2" directory="org/minifx/minifx-workbench">
+	<product name="minifx-workbench" version="0.0.3" directory="org/minifx/minifx-workbench">
 		<jar>minifx-workbench.jar</jar>
 		<desc />
 		<dependencies>
