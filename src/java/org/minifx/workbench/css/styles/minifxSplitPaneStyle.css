@@ -1,0 +1,27 @@
+.split-pane:horizontal>.split-pane-divider {
+	-fx-background-color: #cdcdcd;
+	-fx-border-style: solid;
+	-fx-border-color: #adadad;
+	-fx-border-width: 1px;
+	-fx-border-insets: 0px 10px 0px 10px;
+	-fx-background-insets: 0px 10px 0px 10px;
+	-fx-padding: 0 2px 0 2px;
+}
+
+.split-pane:horizontal {
+	-fx-background-color: transparent;
+}
+
+.split-pane:vertical>.split-pane-divider {
+	-fx-background-color: #cdcdcd;
+	-fx-border-style: solid;
+	-fx-border-color: #adadad;
+	-fx-border-width: 1px;
+	-fx-border-insets: 0px 10px 0px 10px;
+	-fx-background-insets: 0px 10px 0px 10px;
+	-fx-padding: 0 2px 0 2px;
+}
+
+.split-pane:vertical {
+	-fx-background-color: transparent;
+}

@@ -1,0 +1,8 @@
+.perspective-button {
+	
+}
+
+.toolbar-button {
+	-fx-alignment: top-center;
+	-fx-padding: 1px; /* Reset padding, workaround */
+}

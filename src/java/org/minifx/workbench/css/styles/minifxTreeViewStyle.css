@@ -1,0 +1,4 @@
+.tree-cell:selected {
+    -fx-font-weight: bold ;
+    -fx-text-fill: #FFF;
+}

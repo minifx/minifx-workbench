@@ -1,0 +1,21 @@
+.main-panel {
+	-fx-background-color: #eeeeee;
+}
+
+.main-panel-view {
+	-fx-background-color: #fdfdfd;
+	-fx-border-radius: 2px; -fx-border-color : #BBB;
+	-fx-border-width: 1px;
+	-fx-border-color: #AAA;
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 4, 0, 1, 1);
+	
+	-fx-padding: 8;
+	-fx-background-insets: 8;
+	-fx-border-insets: 8;
+}
+
+.single-main-panel-view {
+	-fx-background-color: #fdfdfd;
+	-fx-padding: 8;
+}
+

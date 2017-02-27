@@ -1,0 +1,42 @@
+* {
+	-minifx-button-background: #fdfdfd;
+	-minifx-button-background-selected: #e6e6e6;
+	-minifx-button-background-hover: -minifx-button-background-selected;
+	-minifx-button-text-color-selected: derive(#4682b4, -20.0%);
+	-minifx-button-text-color-hover: -minifx-button-text-color-selected;
+}
+
+.button, .toggle-button {
+	-fx-border-style: solid;
+	-fx-border-width: 1.0;
+	-fx-border-color: #b3b3b3;
+	-fx-border-insets: 0.0;
+	-fx-background-color: -minifx-button-background;
+	-fx-background-insets: 0.0;
+	-fx-padding: 5.0px 10.0px 5.0px 10.0px;
+	-fx-effect: dropshadow(three-pass-box, rgba(0.0, 0.0, 0.0, 0.2), 2.0, 0.0, 1.0, 1.0);
+}
+
+.button:hover, .toggle-button:hover {
+	-fx-background-color: -minifx-button-background-hover;
+}
+
+.button:armed, .toggle-button:armed, .toggle-button:selected {
+	-fx-text-fill: -minifx-button-text-color-selected;
+	-fx-border-color: -minifx-button-text-color-selected;
+	-fx-background-color: -minifx-button-background-selected;
+}
+
+.segmented-button .toggle-button.left-pill {
+	-fx-border-insets: 0.0px 5.0px 0.0px 0.0px;
+	-fx-background-insets: 0.0px 5.0px 0.0px 0.0px;
+}
+
+.segmented-button .toggle-button.center-pill {
+	-fx-border-insets: 0.0px 5.0px 0.0px 0.0px;
+	-fx-background-insets: 0.0px 5.0px 0.0px 0.0px;
+}
+
+.segmented-button .toggle-button.right-pill {
+	
+}

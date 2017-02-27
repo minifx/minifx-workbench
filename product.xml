@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+	<product name="minifx-workbench" version="0.0.1" directory="org/streaming-pool/minifx-workbench">
+		<jar>minifx-workbench.jar</jar>
+		<desc />
+		<dependencies>
+			<dep product="guava" />
+
+			<dep product="spring-core" />
+			<dep product="spring-context" />
+			<dep product="spring-test" local="true" excluded="true" />
+
+			<dep product="fontawesomefx-commons" version="8.11" />
+			<dep product="fontawesomefx-fontawesome" version="4.6.1-2" />
+
+			<dep product="slf4j-log4j12" />
+
+			<dep product="junit" local="true" excluded="true" />
+			<dep product="mockito-core" local="true" excluded="true" />
+			<dep product="assertj-core" local="true" excluded="true" />
+			<dep product="testfx-core" version="4.0.1-alpha" local="true" excluded="true" />
+			<dep product="testfx-junit" version="4.0.1-alpha" local="true" excluded="true" />
+		</dependencies>
+	</product>
+</products>
