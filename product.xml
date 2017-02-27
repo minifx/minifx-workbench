@@ -17,7 +17,7 @@
 
 			<dep product="junit" local="true" excluded="true" />
 			<dep product="mockito-core" local="true" excluded="true" />
-			<dep product="assertj-core" local="true" excluded="true" />
+			<dep product="assertj-core" version="3.6.2" local="true" excluded="true" />
 			<dep product="testfx-core" version="4.0.1-alpha" local="true" excluded="true" />
 			<dep product="testfx-junit" version="4.0.1-alpha" local="true" excluded="true" />
 		</dependencies>
