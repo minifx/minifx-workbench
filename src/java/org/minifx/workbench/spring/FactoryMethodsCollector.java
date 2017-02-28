@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -25,15 +24,15 @@ import com.google.common.collect.Iterables;
 public class FactoryMethodsCollector implements BeanFactoryAware, BeanPostProcessor, FactoryMethodsRepository {
 
     private DefaultListableBeanFactory beanFactory;
-    private Map<String, Method> beanNamesToFactoryMethod = new ConcurrentHashMap<>();
+    private Map<Object, Method> beansToFactoryMethod = new ConcurrentHashMap<>();
 
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessBeforeInitialization(Object bean, String beanName) {
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
 
         Method factoryMethod = factoryMethodFor(beanDefinition);
         if (factoryMethod != null) {
-            beanNamesToFactoryMethod.put(beanName, factoryMethod);
+            beansToFactoryMethod.put(bean, factoryMethod);
         }
         return bean;
     }
@@ -56,18 +55,18 @@ public class FactoryMethodsCollector implements BeanFactoryAware, BeanPostProces
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(Object bean, String beanName) {
         return bean;
     }
 
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = (DefaultListableBeanFactory) beanFactory;
     }
 
     @Override
-    public Optional<Method> factoryMethodForBean(String beanName) {
-        return Optional.ofNullable(beanNamesToFactoryMethod.get(beanName));
+    public Optional<Method> factoryMethodForBean(Object bean) {
+        return Optional.ofNullable(beansToFactoryMethod.get(bean));
     }
 
 }

@@ -55,7 +55,7 @@ public class Views {
         return shownAt.at();
     }
 
-    public static final Class<? extends Perspective> perspectiveOf(WorkbenchView view) {
+    public static final Class<? extends Perspective> perspectiveFromObject(WorkbenchView view) {
         requireNonNull(view, "view must not be null");
         return perspectiveOf(view.getClass());
     }
@@ -73,7 +73,7 @@ public class Views {
             Collection<WorkbenchView> views2) {
         Builder<Class<? extends Perspective>, WorkbenchView> perspectiveToViewBuilder = ImmutableListMultimap.builder();
         for (WorkbenchView view : views2) {
-            perspectiveToViewBuilder.put(perspectiveOf(view), view);
+            perspectiveToViewBuilder.put(perspectiveFromObject(view), view);
         }
         return perspectiveToViewBuilder.build();
     }

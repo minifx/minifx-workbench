@@ -7,7 +7,7 @@ package org.minifx.workbench.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.minifx.workbench.domain.PerspectivePos.LEFT;
 import static org.minifx.workbench.util.Views.DEFAULT_PERSPECTIVE;
-import static org.minifx.workbench.util.Views.perspectiveOf;
+import static org.minifx.workbench.util.Views.perspectiveFromObject;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,27 +33,27 @@ public class ViewsTest {
     public void perspectiveOfNullInstanceThrows() {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("view ");
-        Views.perspectiveOf((WorkbenchView) null);
+        Views.perspectiveFromObject((WorkbenchView) null);
     }
 
     @Test
     public void unannotatedClassRetrievesDefaultPerspective() {
-        assertThat(perspectiveOf(UnannotatedTestView.class)).isEqualTo(DEFAULT_PERSPECTIVE);
+        assertThat(Views.perspectiveOf(UnannotatedTestView.class)).isEqualTo(DEFAULT_PERSPECTIVE);
     }
 
     @Test
     public void unannotatedInstanceRetrievesDefaultPerspective() {
-        assertThat(perspectiveOf(new UnannotatedTestView())).isEqualTo(DEFAULT_PERSPECTIVE);
+        assertThat(perspectiveFromObject(new UnannotatedTestView())).isEqualTo(DEFAULT_PERSPECTIVE);
     }
 
     @Test
     public void annotatedClassRetrievesCorrectPerspective() {
-        assertThat(perspectiveOf(AnnotatedTestView.class)).isEqualTo(AnyPerspective.class);
+        assertThat(Views.perspectiveOf(AnnotatedTestView.class)).isEqualTo(AnyPerspective.class);
     }
 
     @Test
     public void annotatedInstanceRetrievesCorrectPerspective() {
-        assertThat(perspectiveOf(new AnnotatedTestView())).isEqualTo(AnyPerspective.class);
+        assertThat(perspectiveFromObject(new AnnotatedTestView())).isEqualTo(AnyPerspective.class);
     }
 
     private static class UnannotatedTestView extends AbstractFxBorderPaneView {

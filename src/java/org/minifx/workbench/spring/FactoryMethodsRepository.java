@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface FactoryMethodsRepository {
 
-    Optional<Method> factoryMethodForBean(String beanName);
+    Optional<Method> factoryMethodForBean(Object bean);
 
 }
