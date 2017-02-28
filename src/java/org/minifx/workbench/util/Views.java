@@ -122,9 +122,6 @@ public class Views {
     }
 
     public static final Node viewPaneFrom(List<WorkbenchView> posViews) {
-        // if (posViews.size() == 1) {
-        // return createBorderedPaneFrom(posViews.get(0));
-        // }
         return createTabPaneFrom(posViews);
     }
 
