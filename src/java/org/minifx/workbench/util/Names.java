@@ -14,7 +14,7 @@ public class Names {
         Optional<Method> nameMethod = nameMethod(object);
         if (nameMethod.isPresent()) {
             try {
-                return Optional.of((String) nameMethod.get().invoke(object));
+                return Optional.ofNullable((String) nameMethod.get().invoke(object));
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 /* do nothing on purpose */
             }
