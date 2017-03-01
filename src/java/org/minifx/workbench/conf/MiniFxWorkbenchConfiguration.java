@@ -25,6 +25,9 @@ import javafx.scene.Scene;
 @Configuration
 public class MiniFxWorkbenchConfiguration {
 
+    private static final int DEFAULT_HEIGHT = 760;
+    private static final int DEFAULT_WIDTH = 1280;
+    
     public static final String ID_MAIN_PANEL = "minifx-workbench-main-panel";
 
     @Autowired(required = false)
@@ -36,13 +39,21 @@ public class MiniFxWorkbenchConfiguration {
 
     @Autowired(required = false)
     private List<ToolbarItem> toolbarItems;
+    
+
+    @Autowired(required = false)
+    private MiniFxSceneBuilder sceneBuilder;
 
     @Bean
     public Scene mainScene() {
         MainPane mainPanel = new MainPane(perspectiveInstancesFrom(emptyIfNull(views)), emptyIfNull(toolbarItems));
         mainPanel.setId(ID_MAIN_PANEL);
 
-        MiniFxSceneBuilder sceneBuilder = miniFxSceneBuilder().withRoot(mainPanel).withSize(1280, 760);
+        if (sceneBuilder == null) {
+            sceneBuilder = miniFxSceneBuilder().withSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        }
+        
+        sceneBuilder.withRoot(mainPanel);
 
         if (cssStyleSheets != null) {
             sceneBuilder.withAdditionalCss(cssStyleSheets.stream().flatMap(List::stream).collect(toList()));
