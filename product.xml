@@ -15,6 +15,7 @@
 
 			<dep product="slf4j-api" version="PRO" />
 
+			<dep product="slf4j-log4j12" version="PRO" local="true" excluded="true" />
 			<dep product="junit" version="PRO" local="true" excluded="true" />
 			<dep product="mockito-core" version="PRO" local="true" excluded="true" />
 			<dep product="assertj-core" version="3.6.2" local="true" excluded="true" />
