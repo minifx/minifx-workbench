@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <products>
-	<product name="minifx-workbench" version="0.0.2" directory="org/minifx/minifx-workbench">
+	<product name="minifx-workbench" version="0.0.3" directory="org/minifx/minifx-workbench">
 		<jar>minifx-workbench.jar</jar>
 		<desc />
 		<dependencies>
-			<dep product="guava" />
+			<dep product="guava" version="PRO" />
 
-			<dep product="spring-core" />
-			<dep product="spring-context" />
-			<dep product="spring-test" local="true" excluded="true" />
+			<dep product="spring-core" version="PRO" />
+			<dep product="spring-context" version="PRO" />
+			<dep product="spring-test" version="PRO" local="true" excluded="true" />
 
-			<dep product="fontawesomefx-commons" version="8.11" />
+			<dep product="fontawesomefx-commons" version="8.15" />
 			<dep product="fontawesomefx-fontawesome" version="4.6.1-2" />
 
-			<dep product="slf4j-log4j12" />
+			<dep product="slf4j-api" version="PRO" />
 
-			<dep product="junit" local="true" excluded="true" />
-			<dep product="mockito-core" local="true" excluded="true" />
+			<dep product="junit" version="PRO" local="true" excluded="true" />
+			<dep product="mockito-core" version="PRO" local="true" excluded="true" />
 			<dep product="assertj-core" version="3.6.2" local="true" excluded="true" />
 			<dep product="testfx-core" version="4.0.1-alpha" local="true" excluded="true" />
 			<dep product="testfx-junit" version="4.0.1-alpha" local="true" excluded="true" />
