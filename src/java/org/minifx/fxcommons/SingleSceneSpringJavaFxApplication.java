@@ -3,6 +3,7 @@ package org.minifx.fxcommons;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import org.minifx.workbench.domain.Perspective;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -26,8 +27,14 @@ import javafx.stage.WindowEvent;
 @Component
 public class SingleSceneSpringJavaFxApplication extends Application {
 
-    public static final EventHandler<WindowEvent> EXIT_ON_CLOSE = ev -> System.exit(0);
+    public static final Consumer<WindowEvent> EXIT_ON_CLOSE = ev -> System.exit(0);
     private static final FxLauncher LAUNCHER = new FxLauncher();
+
+    /*
+     * This reference has to be kept. Otherwise we would risk that some beans (which are not referenced by any panel)
+     * would be garbage collected.
+     */
+    private AnnotationConfigApplicationContext ctx;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -36,14 +43,16 @@ public class SingleSceneSpringJavaFxApplication extends Application {
                     "Use the builder to configure the JavaFx application. Do not call directly Application.launch(...)");
         }
 
-        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(LAUNCHER.configurationClasses);
+        ctx = new AnnotationConfigApplicationContext(LAUNCHER.configurationClasses);
         Scene mainScene = ctx.getBean(Scene.class);
         primaryStage.setScene(mainScene);
         primaryStage.sizeToScene();
         primaryStage.show();
-        primaryStage.setOnCloseRequest(LAUNCHER.windowCloseHandler);
+        primaryStage.setOnCloseRequest(evt -> {
+            ctx.close();
+            LAUNCHER.windowCloseHandler.accept(evt);
+        });
         primaryStage.setTitle(LAUNCHER.windowTitle);
-        ctx.close();
     }
 
     /**
@@ -57,7 +66,7 @@ public class SingleSceneSpringJavaFxApplication extends Application {
     public static class FxLauncher {
         private Class<?>[] configurationClasses = new Class<?>[0];
         private String windowTitle = "";
-        private EventHandler<WindowEvent> windowCloseHandler = EXIT_ON_CLOSE;
+        private Consumer<WindowEvent> windowCloseHandler = EXIT_ON_CLOSE;
         private boolean readyToLaunch = false;
 
         public FxLauncher configurationClasses(Class<?>... _configurationClasses) {
@@ -74,7 +83,7 @@ public class SingleSceneSpringJavaFxApplication extends Application {
             return this;
         }
 
-        public FxLauncher windowCloseHandler(EventHandler<WindowEvent> _windowCloseHandler) {
+        public FxLauncher windowCloseHandler(Consumer<WindowEvent> _windowCloseHandler) {
             this.windowCloseHandler = _windowCloseHandler;
             return this;
         }
