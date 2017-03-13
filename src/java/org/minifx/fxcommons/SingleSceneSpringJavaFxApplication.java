@@ -29,12 +29,6 @@ public class SingleSceneSpringJavaFxApplication extends Application {
     public static final Consumer<WindowEvent> EXIT_ON_CLOSE = ev -> System.exit(0);
     private static final FxLauncher LAUNCHER = new FxLauncher();
 
-    /*
-     * This reference has to be kept. Otherwise we would risk that some beans (which are not referenced by any panel)
-     * would be garbage collected.
-     */
-    private AnnotationConfigApplicationContext ctx;
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         if (!LAUNCHER.readyToLaunch) {
@@ -42,15 +36,15 @@ public class SingleSceneSpringJavaFxApplication extends Application {
                     "Use the builder to configure the JavaFx application. Do not call directly Application.launch(...)");
         }
 
-        ctx = new AnnotationConfigApplicationContext(LAUNCHER.configurationClasses);
+        @SuppressWarnings("resource") /* Closed automatically by the hook */
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(LAUNCHER.configurationClasses);
+        /* Spring context register itself in the shutdown hook. It automatically keeps a reference to it this way */
+        ctx.registerShutdownHook();
         Scene mainScene = ctx.getBean(Scene.class);
         primaryStage.setScene(mainScene);
         primaryStage.sizeToScene();
         primaryStage.show();
-        primaryStage.setOnCloseRequest(evt -> {
-            ctx.close();
-            LAUNCHER.windowCloseHandler.accept(evt);
-        });
+        primaryStage.setOnCloseRequest(LAUNCHER.windowCloseHandler::accept);
         primaryStage.setTitle(LAUNCHER.windowTitle);
     }
 
