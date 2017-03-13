@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <products>
-	<product name="minifx-workbench" version="0.0.4" directory="org/minifx/minifx-workbench">
+	<product name="minifx-workbench" version="0.0.5" directory="org/minifx/minifx-workbench">
 		<jar>minifx-workbench.jar</jar>
 		<desc />
 		<dependencies>
@@ -10,7 +10,6 @@
 			<dep product="spring-context" version="PRO" />
 			<dep product="spring-test" version="PRO" local="true" excluded="true" />
 
-			<dep product="fontawesomefx-commons" version="8.15" />
 			<dep product="fontawesomefx-fontawesome" version="4.7.0-5" />
 
 			<dep product="slf4j-api" version="PRO" />
