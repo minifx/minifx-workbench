@@ -31,9 +31,12 @@ import com.google.common.collect.ListMultimap;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -82,7 +85,7 @@ public class Views {
             ListMultimap<Class<? extends Perspective>, WorkbenchView> perspectiveToViews) {
         List<AbstractPerspectiveInstance> perspectiveToNode = new ArrayList<>();
         for (Class<? extends Perspective> perspective : perspectiveToViews.keySet()) {
-            final String name = nameFrom(perspective);
+            final String name = nameFromClass(perspective);
             final Node icon = ofNullable(graphicFrom(perspective, PERSPECTIVE_BUTTON_ICON_SIZE))
                     .orElseGet(Views::perspectiveDefaultIcon);
 
@@ -122,18 +125,21 @@ public class Views {
                 .collect(Collectors.toList());
     }
 
-    private static String nameFrom(Object view) {
-        Class<?> viewClass = view.getClass();
+    private static String nameFromClass(Class<?> viewClass) {
         Name name = viewClass.getAnnotation(Name.class);
         if (name != null) {
             return name.value();
         }
 
-        return Names.nameFromNameMethod(view).orElse(viewClass.getSimpleName());
+        return viewClass.getSimpleName();
     }
-    
+
+    private static String nameFrom(Object view) {
+        return Names.nameFromNameMethod(view).orElse(nameFromClass(view.getClass()));
+    }
+
     public static Node createContainerPaneFrom(List<?> views) {
-        if(views.size() == 1) {
+        if (views.size() == 1) {
             return MiniFxComponents.fxNodeFrom(views.get(0));
         }
         return createTabPaneFrom(views);

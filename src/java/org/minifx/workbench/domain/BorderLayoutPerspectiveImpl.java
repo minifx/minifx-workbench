@@ -57,9 +57,6 @@ public class BorderLayoutPerspectiveImpl extends AbstractPerspectiveInstance {
 
     private Node setupNodeFor(PerspectivePos position, List<WorkbenchView> posViews) {
         Node viewPane = viewPaneFrom(posViews);
-        viewPane.minWidth(400);
-        viewPane.maxWidth(400);
-        viewPane.prefWidth(400);
         position.set(viewPane).into(this);
         return viewPane;
     }
