@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 
-import org.minifx.workbench.domain.WorkbenchView;
+import org.minifx.workbench.annotations.FxmlControllerQualifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
