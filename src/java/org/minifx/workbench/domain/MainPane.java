@@ -35,17 +35,22 @@ public class MainPane extends BorderPane {
     }
 
     public MainPane(List<AbstractPerspectiveInstance> perspectives, List<ToolbarItem> toolbarItems, Node filler) {
-        List<Node> perspectiveNodes = perspectiveButtons(copyOf(perspectives));
+        List<ToggleButton> perspectiveNodes = perspectiveButtons(copyOf(perspectives));
         List<Node> toolbarNodes = nodesFrom(copyOf(toolbarItems));
 
-        this.setTop(createToolbar(perspectiveNodes, toolbarNodes, filler));
+        setTop(createToolbar(perspectiveNodes, toolbarNodes, filler));
 
+        triggerAnyPerspectiveSelection(perspectiveNodes);
+    }
+
+    private void triggerAnyPerspectiveSelection(List<ToggleButton> perspectiveNodes) {
         if (!perspectiveNodes.isEmpty()) {
-            ((ToggleButton) perspectiveNodes.get(0)).fire();
+            perspectiveNodes.get(0).fire();
         }
     }
 
-    private ToolBar createToolbar(List<Node> perspectiveNodes, List<Node> toolbarNodes, Node filler) {
+    private ToolBar createToolbar(List<? extends Node> perspectiveNodes, List<? extends Node> toolbarNodes,
+            Node filler) {
         HBox toolbarBox = horizontalBoxOf(toolbarNodes, Pos.TOP_LEFT);
         HBox centralBox = horizontalBoxOf(singletonList(filler), Pos.TOP_CENTER);
         HBox perspectivesBox = horizontalBoxOf(perspectiveNodes, Pos.TOP_RIGHT);
@@ -55,9 +60,9 @@ public class MainPane extends BorderPane {
         return new ToolBar(toolbarBox, centralBox, perspectivesBox);
     }
 
-    private HBox horizontalBoxOf(List<Node> nodes, Pos alignment) {
+    private HBox horizontalBoxOf(List<? extends Node> nodes, Pos alignment) {
         nodes.forEach(node -> node.getStyleClass().add(MiniFxCssConstants.TOOLBAR_BUTTON_CLASS));
-        
+
         HBox box = new HBox();
         box.setSpacing(3);
         box.setAlignment(alignment);
@@ -66,8 +71,8 @@ public class MainPane extends BorderPane {
         return box;
     }
 
-    private List<Node> perspectiveButtons(List<AbstractPerspectiveInstance> perspectives) {
-        List<Node> perspectiveButtons = new ArrayList<>();
+    private List<ToggleButton> perspectiveButtons(List<AbstractPerspectiveInstance> perspectives) {
+        List<ToggleButton> perspectiveButtons = new ArrayList<>();
         ToggleGroup toggleGroup = new ToggleGroup();
         for (AbstractPerspectiveInstance perspective : perspectives) {
             ToggleButton button = new ToggleButton(perspective.name(), perspective.graphic());
@@ -82,7 +87,7 @@ public class MainPane extends BorderPane {
 
     private void setActive(AbstractPerspectiveInstance perspective) {
         perspective.getStyleClass().add(MiniFxCssConstants.MAIN_PANE_CLASS);
-        this.setCenter(perspective);
+        setCenter(perspective);
     }
 
 }
