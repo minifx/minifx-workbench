@@ -14,6 +14,7 @@ import java.util.List;
 import org.minifx.fxcommons.MiniFxSceneBuilder;
 import org.minifx.workbench.domain.MainPane;
 import org.minifx.workbench.domain.ToolbarItem;
+import org.minifx.workbench.domain.WorkbenchFooter;
 import org.minifx.workbench.domain.WorkbenchView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,13 +41,15 @@ public class MiniFxWorkbenchConfiguration {
     @Autowired(required = false)
     private List<ToolbarItem> toolbarItems;
     
+    @Autowired(required = false)
+    private List<WorkbenchFooter> footerItems;
 
     @Autowired(required = false)
     private MiniFxSceneBuilder sceneBuilder;
 
     @Bean
     public Scene mainScene() {
-        MainPane mainPanel = new MainPane(perspectiveInstancesFrom(emptyIfNull(views)), emptyIfNull(toolbarItems));
+        MainPane mainPanel = new MainPane(perspectiveInstancesFrom(emptyIfNull(views)), emptyIfNull(toolbarItems), emptyIfNull(footerItems));
         mainPanel.setId(ID_MAIN_PANEL);
 
         if (sceneBuilder == null) {

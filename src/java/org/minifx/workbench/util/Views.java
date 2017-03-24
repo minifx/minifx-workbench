@@ -94,14 +94,6 @@ public class Views {
         return perspectiveToNode;
     }
 
-    public static final String nameFrom(Class<?> currentPerspective) {
-        Name name = currentPerspective.getAnnotation(Name.class);
-        if (name == null) {
-            return currentPerspective.getSimpleName();
-        }
-        return name.value();
-    }
-
     public static final Node graphicFrom(Class<?> currentPerspective) {
         return graphicFrom(currentPerspective, DEFAULT_ICON_SIZE);
     }
@@ -122,7 +114,7 @@ public class Views {
     }
 
     public static final Node viewPaneFrom(List<WorkbenchView> posViews) {
-        return createTabPaneFrom(posViews);
+        return createContainerPaneFrom(posViews);
     }
 
     public static final List<WorkbenchView> viewsForPosition(List<WorkbenchView> views, PerspectivePos position) {
@@ -130,7 +122,7 @@ public class Views {
                 .collect(Collectors.toList());
     }
 
-    private static String nameFrom(WorkbenchView view) {
+    private static String nameFrom(Object view) {
         Class<?> viewClass = view.getClass();
         Name name = viewClass.getAnnotation(Name.class);
         if (name != null) {
@@ -139,10 +131,17 @@ public class Views {
 
         return Names.nameFromNameMethod(view).orElse(viewClass.getSimpleName());
     }
+    
+    public static Node createContainerPaneFrom(List<?> views) {
+        if(views.size() == 1) {
+            return MiniFxComponents.fxNodeFrom(views.get(0));
+        }
+        return createTabPaneFrom(views);
+    }
 
-    private static TabPane createTabPaneFrom(List<WorkbenchView> posViews) {
+    private static TabPane createTabPaneFrom(List<?> posViews) {
         TabPane tabRoot = new TabPane();
-        for (WorkbenchView view : posViews) {
+        for (Object view : posViews) {
             Tab tab = new Tab();
             tab.setText(nameFrom(view));
             tab.setGraphic(graphicFrom(view.getClass()));
