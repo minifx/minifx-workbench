@@ -21,4 +21,6 @@ public @interface Shown {
     Class<? extends Perspective> in();
 
     PerspectivePos at() default CENTER;
+    
+    boolean alwaysAsTab() default false;
 }

@@ -112,6 +112,14 @@ public class Views {
         return nodeIcon;
     }
 
+    private static final boolean alwaysShowTabs(Object view) {
+        Shown shownAnnotation = view.getClass().getAnnotation(Shown.class);
+        if (shownAnnotation == null) {
+            return false;
+        }
+        return shownAnnotation.alwaysAsTab();
+    }
+
     public static final List<AbstractPerspectiveInstance> perspectiveInstancesFrom(Collection<WorkbenchView> views) {
         return instantiatePerspectives(mapToPerspective(views));
     }
@@ -121,7 +129,7 @@ public class Views {
     }
 
     public static final List<WorkbenchView> viewsForPosition(List<WorkbenchView> views, PerspectivePos position) {
-        return views.stream().filter((view) -> position.equals(extractPerspectivePosition(view)))
+        return views.stream().filter(view -> position.equals(extractPerspectivePosition(view)))
                 .collect(Collectors.toList());
     }
 
@@ -139,7 +147,7 @@ public class Views {
     }
 
     public static Node createContainerPaneFrom(List<?> views) {
-        if (views.size() == 1) {
+        if ((views.size() == 1) && (!alwaysShowTabs(views.get(0)))) {
             return MiniFxComponents.fxNodeFrom(views.get(0));
         }
         return createTabPaneFrom(views);
@@ -160,9 +168,6 @@ public class Views {
     }
 
     private static final Node perspectiveDefaultIcon() {
-        // final Node perspectiveDefaultIcon = new Text("");
-        // perspectiveDefaultIcon.setStyle("-fx-font-size:" + PERSPECTIVE_BUTTON_ICON_SIZE);
-        // return perspectiveDefaultIcon;
         Text defaultIcon = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.ANGLE_DOWN,
                 PERSPECTIVE_BUTTON_ICON_SIZE);
         defaultIcon.setFill(Color.rgb(2, 2, 2));
