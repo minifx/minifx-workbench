@@ -26,7 +26,7 @@ import javafx.scene.Scene;
 @Configuration
 public class MiniFxWorkbenchConfiguration {
 
-    private static final int DEFAULT_HEIGHT = 760;
+    private static final intl DEFAULT_HEIGHT = 760;
     private static final int DEFAULT_WIDTH = 1280;
     
     public static final String ID_MAIN_PANEL = "minifx-workbench-main-panel";
