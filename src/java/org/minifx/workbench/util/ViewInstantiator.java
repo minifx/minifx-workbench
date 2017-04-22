@@ -4,10 +4,15 @@
 
 package org.minifx.workbench.util;
 
+import static java.util.Collections.singletonList;
 import static java.util.Collections.sort;
 import static java.util.Comparator.comparingInt;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.groupingBy;
+import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS;
+import static org.minifx.workbench.css.MiniFxCssConstants.SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS;
+import static org.minifx.workbench.domain.PerspectivePos.CENTER;
 import static org.minifx.workbench.util.Perspectives.orderFrom;
 
 import java.util.ArrayList;
@@ -23,6 +28,7 @@ import org.minifx.workbench.domain.BorderLayoutPerspectiveImpl;
 import org.minifx.workbench.domain.DefaultPerspective;
 import org.minifx.workbench.domain.Perspective;
 import org.minifx.workbench.domain.PerspectivePos;
+import org.minifx.workbench.domain.TextWorkbenchView;
 import org.minifx.workbench.domain.WorkbenchView;
 
 import com.google.common.collect.ImmutableListMultimap;
@@ -31,26 +37,19 @@ import com.google.common.collect.ListMultimap;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-public class Views {
+public class ViewInstantiator {
 
     public static final Class<? extends Perspective> DEFAULT_PERSPECTIVE = DefaultPerspective.class;
     private static final String DEFAULT_ICON_SIZE = "1em";
     private static final String PERSPECTIVE_BUTTON_ICON_SIZE = "1.5em";
 
-    private Views() {
-        /* Only static methods */
-    }
-
-    public static final PerspectivePos extractPerspectivePosition(WorkbenchView view) {
+    public PerspectivePos extractPerspectivePosition(WorkbenchView view) {
         Shown shownAt = view.getClass().getAnnotation(Shown.class);
         if (shownAt == null) {
             return PerspectivePos.CENTER;
@@ -58,21 +57,21 @@ public class Views {
         return shownAt.at();
     }
 
-    public static final Class<? extends Perspective> perspectiveFromObject(WorkbenchView view) {
+    public Class<? extends Perspective> perspectiveFromObject(WorkbenchView view) {
         requireNonNull(view, "view must not be null");
         return perspectiveOf(view.getClass());
     }
 
-    public static Class<? extends Perspective> perspectiveOf(Class<? extends WorkbenchView> viewClass) {
+    public Class<? extends Perspective> perspectiveOf(Class<? extends WorkbenchView> viewClass) {
         requireNonNull(viewClass, "viewClass must not be null");
         Shown shownAtAnnotation = viewClass.getAnnotation(Shown.class);
         if (shownAtAnnotation == null) {
-            return Views.DEFAULT_PERSPECTIVE;
+            return ViewInstantiator.DEFAULT_PERSPECTIVE;
         }
         return shownAtAnnotation.in();
     }
 
-    public static final ListMultimap<Class<? extends Perspective>, WorkbenchView> mapToPerspective(
+    public ListMultimap<Class<? extends Perspective>, WorkbenchView> mapToPerspective(
             Collection<WorkbenchView> views2) {
         Builder<Class<? extends Perspective>, WorkbenchView> perspectiveToViewBuilder = ImmutableListMultimap.builder();
         for (WorkbenchView view : views2) {
@@ -81,27 +80,28 @@ public class Views {
         return perspectiveToViewBuilder.build();
     }
 
-    public static final List<AbstractPerspectiveInstance> instantiatePerspectives(
+    public List<AbstractPerspectiveInstance> instantiatePerspectives(
             ListMultimap<Class<? extends Perspective>, WorkbenchView> perspectiveToViews) {
         List<AbstractPerspectiveInstance> perspectiveToNode = new ArrayList<>();
         for (Class<? extends Perspective> perspective : perspectiveToViews.keySet()) {
             final String name = nameFromClass(perspective);
             final Node icon = ofNullable(graphicFrom(perspective, PERSPECTIVE_BUTTON_ICON_SIZE))
-                    .orElseGet(Views::perspectiveDefaultIcon);
+                    .orElseGet(this::perspectiveDefaultIcon);
 
             BorderLayoutPerspectiveImpl instance = new BorderLayoutPerspectiveImpl(name, icon,
                     perspectiveToViews.get(perspective), orderFrom(perspective));
+            initComponents(instance);
             perspectiveToNode.add(instance);
         }
         sort(perspectiveToNode, comparingInt(AbstractPerspectiveInstance::order));
         return perspectiveToNode;
     }
 
-    public static final Node graphicFrom(Class<?> currentPerspective) {
+    public Node graphicFrom(Class<?> currentPerspective) {
         return graphicFrom(currentPerspective, DEFAULT_ICON_SIZE);
     }
 
-    public static final Node graphicFrom(Class<?> currentPerspective, String size) {
+    public Node graphicFrom(Class<?> currentPerspective, String size) {
         final Icon iconAnnotation = currentPerspective.getAnnotation(Icon.class);
         if (iconAnnotation == null) {
             return null;
@@ -112,7 +112,7 @@ public class Views {
         return nodeIcon;
     }
 
-    private static final boolean alwaysShowTabs(Object view) {
+    private boolean alwaysShowTabs(Object view) {
         Shown shownAnnotation = view.getClass().getAnnotation(Shown.class);
         if (shownAnnotation == null) {
             return false;
@@ -120,20 +120,20 @@ public class Views {
         return shownAnnotation.alwaysAsTab();
     }
 
-    public static final List<AbstractPerspectiveInstance> perspectiveInstancesFrom(Collection<WorkbenchView> views) {
+    public List<AbstractPerspectiveInstance> perspectiveInstancesFrom(Collection<WorkbenchView> views) {
         return instantiatePerspectives(mapToPerspective(views));
     }
 
-    public static final Node viewPaneFrom(List<WorkbenchView> posViews) {
+    public Node viewPaneFrom(List<WorkbenchView> posViews) {
         return createContainerPaneFrom(posViews);
     }
 
-    public static final List<WorkbenchView> viewsForPosition(List<WorkbenchView> views, PerspectivePos position) {
+    public List<WorkbenchView> viewsForPosition(List<WorkbenchView> views, PerspectivePos position) {
         return views.stream().filter(view -> position.equals(extractPerspectivePosition(view)))
                 .collect(Collectors.toList());
     }
 
-    private static String nameFromClass(Class<?> viewClass) {
+    private String nameFromClass(Class<?> viewClass) {
         Name name = viewClass.getAnnotation(Name.class);
         if (name != null) {
             return name.value();
@@ -142,18 +142,18 @@ public class Views {
         return viewClass.getSimpleName();
     }
 
-    private static String nameFrom(Object view) {
+    private String nameFrom(Object view) {
         return Names.nameFromNameMethod(view).orElse(nameFromClass(view.getClass()));
     }
 
-    public static Node createContainerPaneFrom(List<?> views) {
+    public Node createContainerPaneFrom(List<?> views) {
         if ((views.size() == 1) && (!alwaysShowTabs(views.get(0)))) {
             return MiniFxComponents.fxNodeFrom(views.get(0));
         }
         return createTabPaneFrom(views);
     }
 
-    private static TabPane createTabPaneFrom(List<?> posViews) {
+    private TabPane createTabPaneFrom(List<?> posViews) {
         TabPane tabRoot = new TabPane();
         for (Object view : posViews) {
             Tab tab = new Tab();
@@ -167,11 +167,52 @@ public class Views {
         return tabRoot;
     }
 
-    private static final Node perspectiveDefaultIcon() {
+    private Node perspectiveDefaultIcon() {
         Text defaultIcon = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.ANGLE_DOWN,
                 PERSPECTIVE_BUTTON_ICON_SIZE);
         defaultIcon.setFill(Color.rgb(2, 2, 2));
         return defaultIcon;
+    }
+
+    //
+    // perspective instantiation
+    //
+
+    private void initComponents(BorderLayoutPerspectiveImpl perspective) {
+        List<WorkbenchView> views = perspective.views();
+
+        if (views.isEmpty()) {
+            singleViewInit(perspective, singletonList(new TextWorkbenchView("No views to display")));
+        } else if (allViewsBelongToOnePosition(views)) {
+            singleViewInit(perspective, views);
+        } else {
+            multipleViewInit(perspective, views);
+        }
+    }
+
+    private void singleViewInit(BorderLayoutPerspectiveImpl perspective, List<WorkbenchView> views) {
+        setupNodeFor(perspective, CENTER, views).getStyleClass().add(SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS);
+    }
+
+    private void multipleViewInit(BorderLayoutPerspectiveImpl perspective, List<WorkbenchView> views) {
+        for (PerspectivePos position : PerspectivePos.values()) {
+            List<WorkbenchView> posViews = viewsForPosition(views, position);
+            if (!posViews.isEmpty()) {
+                setupNodeFor(perspective, position, posViews).getStyleClass().add(COMPONENTS_OF_MAIN_PANEL_CLASS);
+            }
+        }
+    }
+
+    private Node setupNodeFor(BorderLayoutPerspectiveImpl perspective, PerspectivePos position,
+            List<WorkbenchView> posViews) {
+        Node viewPane = viewPaneFrom(posViews);
+        position.set(viewPane).into(perspective);
+        return viewPane;
+    }
+
+    private boolean allViewsBelongToOnePosition(List<WorkbenchView> views) {
+        return views.stream().collect(groupingBy(this::extractPerspectivePosition)).values().stream()
+                .anyMatch(viewsOfAPosition -> viewsOfAPosition.size() == views.size());
     }
 
 }
