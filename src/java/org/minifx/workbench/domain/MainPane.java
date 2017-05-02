@@ -31,12 +31,12 @@ public class MainPane extends BorderPane {
 
     private static final HBox DEFAULT_FILLER = new HBox();
 
-    public MainPane(List<AbstractPerspectiveInstance> perspectives, List<ToolbarItem> toolbarItems,
+    public MainPane(List<AbstractPerspectiveInstance> perspectives, Iterable<Object> toolbarItems,
             Optional<Node> footer) {
         this(perspectives, toolbarItems, footer, DEFAULT_FILLER);
     }
 
-    public MainPane(List<AbstractPerspectiveInstance> perspectives, List<ToolbarItem> toolbarItems,
+    public MainPane(List<AbstractPerspectiveInstance> perspectives, Iterable<Object> toolbarItems,
             Optional<Node> footer, Node filler) {
         List<ToggleButton> perspectiveNodes = perspectiveButtons(copyOf(perspectives));
         List<Node> toolbarNodes = nodesFrom(copyOf(toolbarItems));

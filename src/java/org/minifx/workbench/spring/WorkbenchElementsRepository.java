@@ -15,5 +15,9 @@ public interface WorkbenchElementsRepository {
     OngoingAnnotationExtraction from(Object object);
     
     Set<Object> views();
+    
+    Set<Object> toolbarItems();
+    
+    Set<Object> footers();
 
 }

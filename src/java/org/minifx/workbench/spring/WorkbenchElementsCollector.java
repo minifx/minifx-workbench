@@ -4,13 +4,11 @@
 
 package org.minifx.workbench.spring;
 
-import static java.util.Arrays.stream;
 import static java.util.Collections.newSetFromMap;
 import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +17,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.minifx.workbench.annotations.Footer;
 import org.minifx.workbench.annotations.View;
+import org.minifx.workbench.domain.ToolbarItem;
+import org.minifx.workbench.domain.WorkbenchFooter;
 import org.minifx.workbench.domain.WorkbenchView;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -83,8 +84,26 @@ public class WorkbenchElementsCollector implements BeanFactoryAware, BeanPostPro
     public Object postProcessAfterInitialization(Object bean, String beanName) {
         if (isView(bean)) {
             views.add(bean);
+        } else if (isToolbarItem(bean)) {
+            toolbarItems.add(bean);
+        } else if (isFooter(bean)) {
+            footers.add(bean);
         }
         return bean;
+    }
+
+    private boolean isFooter(Object bean) {
+        if (bean instanceof WorkbenchFooter) {
+            return true;
+        }
+        return from(bean).getAnnotation(Footer.class).isPresent();
+    }
+
+    private boolean isToolbarItem(Object bean) {
+        if (bean instanceof ToolbarItem) {
+            return true;
+        }
+        return from(bean).getAnnotation(org.minifx.workbench.annotations.ToolbarItem.class).isPresent();
     }
 
     private boolean isView(Object bean) {
@@ -112,6 +131,16 @@ public class WorkbenchElementsCollector implements BeanFactoryAware, BeanPostPro
     @Override
     public Set<Object> views() {
         return ImmutableSet.copyOf(this.views);
+    }
+
+    @Override
+    public Set<Object> toolbarItems() {
+        return ImmutableSet.copyOf(this.toolbarItems);
+    }
+
+    @Override
+    public Set<Object> footers() {
+        return ImmutableSet.copyOf(this.footers);
     }
 
 }

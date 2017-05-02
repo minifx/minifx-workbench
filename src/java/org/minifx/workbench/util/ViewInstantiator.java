@@ -36,6 +36,7 @@ import org.minifx.workbench.spring.WorkbenchElementsRepository;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableListMultimap.Builder;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -204,14 +205,17 @@ public class ViewInstantiator {
         return views.stream().filter(view -> position.equals(perspectivePosForView(view))).collect(Collectors.toList());
     }
 
-    public Node createContainerPaneFrom(List<?> views) {
-        if ((views.size() == 1) && (!alwaysShowTabsFromView(views.get(0)))) {
-            return MiniFxComponents.fxNodeFrom(views.get(0));
+    public Node createContainerPaneFrom(Collection<?> views) {
+        if ((views.size() == 1)) {
+            Object singleView = Iterables.getOnlyElement(views);
+            if (!alwaysShowTabsFromView(singleView)) {
+                return MiniFxComponents.fxNodeFrom(singleView);
+            }
         }
         return createTabPaneFrom(views);
     }
 
-    private TabPane createTabPaneFrom(List<?> posViews) {
+    private TabPane createTabPaneFrom(Collection<?> posViews) {
         TabPane tabRoot = new TabPane();
         for (Object view : posViews) {
             Tab tab = new Tab();

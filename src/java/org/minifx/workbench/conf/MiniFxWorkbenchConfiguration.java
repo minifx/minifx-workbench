@@ -7,16 +7,13 @@ package org.minifx.workbench.conf;
 import static java.util.stream.Collectors.toList;
 import static org.minifx.fxcommons.MiniFxSceneBuilder.miniFxSceneBuilder;
 import static org.minifx.workbench.css.MiniFxCssConstants.SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS;
-import static org.minifx.workbench.util.MoreCollections.emptyIfNull;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.minifx.fxcommons.MiniFxSceneBuilder;
 import org.minifx.workbench.domain.MainPane;
-import org.minifx.workbench.domain.ToolbarItem;
-import org.minifx.workbench.domain.WorkbenchFooter;
-import org.minifx.workbench.domain.WorkbenchView;
 import org.minifx.workbench.spring.WorkbenchElementsRepository;
 import org.minifx.workbench.util.ViewInstantiator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +21,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.annotation.Order;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -38,18 +34,9 @@ public class MiniFxWorkbenchConfiguration {
 
     public static final String ID_MAIN_PANEL = "minifx-workbench-main-panel";
 
-    // @Autowired(required = false)
-    // private List<WorkbenchView> views;
-
     @Autowired(required = false)
     @Qualifier("cssStyleSheets")
     private List<List<String>> cssStyleSheets;
-
-    @Autowired(required = false)
-    private List<ToolbarItem> toolbarItems;
-
-    @Autowired(required = false)
-    private List<WorkbenchFooter> footerItems;
 
     @Autowired(required = false)
     private MiniFxSceneBuilder sceneBuilder;
@@ -57,8 +44,9 @@ public class MiniFxWorkbenchConfiguration {
     @Bean
     public Scene mainScene(WorkbenchElementsRepository factoryMethodsRepository) {
         ViewInstantiator viewInstantiator = new ViewInstantiator(factoryMethodsRepository);
-        MainPane mainPanel = new MainPane(viewInstantiator.perspectiveInstances(), emptyIfNull(toolbarItems),
-                createFooter(viewInstantiator, emptyIfNull(footerItems)));
+        MainPane mainPanel = new MainPane(viewInstantiator.perspectiveInstances(),
+                factoryMethodsRepository.toolbarItems(),
+                createFooter(viewInstantiator, factoryMethodsRepository.footers()));
         mainPanel.setId(ID_MAIN_PANEL);
 
         if (sceneBuilder == null) {
@@ -74,7 +62,7 @@ public class MiniFxWorkbenchConfiguration {
         return sceneBuilder.build();
     }
 
-    private Optional<Node> createFooter(ViewInstantiator viewInstantiator, List<WorkbenchFooter> items) {
+    private Optional<Node> createFooter(ViewInstantiator viewInstantiator, Collection<Object> items) {
         if (items.isEmpty()) {
             return Optional.empty();
         }
