@@ -10,6 +10,9 @@ import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,11 +65,14 @@ public class WorkbenchElementsCollector implements BeanFactoryAware, BeanPostPro
                 factoryClass = factoryClass.getSuperclass();
             }
 
-            List<Method> filteredMethods = stream(factoryClass.getMethods())
-                    .filter(m -> factoryMethodName.equals(m.getName())).collect(toList());
+            Set<Method> methods = new HashSet<>(Arrays.asList(factoryClass.getMethods()));
+            methods.addAll(Arrays.asList(factoryClass.getDeclaredMethods()));
+
+            List<Method> filteredMethods = methods.stream().filter(m -> factoryMethodName.equals(m.getName()))
+                    .collect(toList());
             if (filteredMethods.isEmpty()) {
                 throw new IllegalStateException(
-                        "No method of name " + factoryMethodName + " found in class " + factoryBean.getClass() + ".");
+                        "No method of name " + factoryMethodName + " found in class " + factoryClass + ".");
             }
             return Iterables.getOnlyElement(filteredMethods);
         }

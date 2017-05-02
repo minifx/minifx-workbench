@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -37,8 +38,8 @@ public class MiniFxWorkbenchConfiguration {
 
     public static final String ID_MAIN_PANEL = "minifx-workbench-main-panel";
 
-    @Autowired(required = false)
-    private List<WorkbenchView> views;
+    // @Autowired(required = false)
+    // private List<WorkbenchView> views;
 
     @Autowired(required = false)
     @Qualifier("cssStyleSheets")
@@ -54,12 +55,8 @@ public class MiniFxWorkbenchConfiguration {
     private MiniFxSceneBuilder sceneBuilder;
 
     @Bean
-    public ViewInstantiator viewInstantiator(WorkbenchElementsRepository factoryMethodsRepository) {
-        return new ViewInstantiator(factoryMethodsRepository);
-    }
-
-    @Bean
-    public Scene mainScene(ViewInstantiator viewInstantiator, WorkbenchElementsRepository factoryMethodsRepository) {
+    public Scene mainScene(WorkbenchElementsRepository factoryMethodsRepository) {
+        ViewInstantiator viewInstantiator = new ViewInstantiator(factoryMethodsRepository);
         MainPane mainPanel = new MainPane(viewInstantiator.perspectiveInstances(), emptyIfNull(toolbarItems),
                 createFooter(viewInstantiator, emptyIfNull(footerItems)));
         mainPanel.setId(ID_MAIN_PANEL);

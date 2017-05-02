@@ -22,7 +22,7 @@ import javafx.scene.paint.Color;
  * @author acalia
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface Icon {
 
     FontAwesomeIcon icon();
