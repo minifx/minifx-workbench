@@ -181,8 +181,10 @@ public class ViewInstantiator {
             final Node icon = ofNullable(graphicFrom(perspective, PERSPECTIVE_BUTTON_ICON_SIZE))
                     .orElseGet(this::perspectiveDefaultIcon);
 
-            BorderLayoutPerspectiveImpl instance = new BorderLayoutPerspectiveImpl(name, icon,
-                    perspectiveToViews.get(perspective), orderFrom(perspective));
+            List<Object> perspectiveViews = new ArrayList<>(perspectiveToViews.get(perspective));
+            sort(perspectiveViews, comparingInt(v -> orderFrom(v.getClass())));
+            BorderLayoutPerspectiveImpl instance = new BorderLayoutPerspectiveImpl(name, icon, perspectiveViews,
+                    orderFrom(perspective));
             initComponents(instance);
             perspectiveToNode.add(instance);
         }

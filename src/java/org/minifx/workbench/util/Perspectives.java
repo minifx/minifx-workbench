@@ -17,7 +17,7 @@ public final class Perspectives {
         /* Only static methods */
     }
 
-    public static final int orderFrom(Class<? extends Perspective> perspectiveClass) {
+    public static final int orderFrom(Class<?> perspectiveClass) {
         requireNonNull(perspectiveClass, "perspectiveClass must not be null.");
         Order order = perspectiveClass.getAnnotation(Order.class);
         return ofNullable(order).map(Order::value).orElse(LOWEST_PRECEDENCE);
