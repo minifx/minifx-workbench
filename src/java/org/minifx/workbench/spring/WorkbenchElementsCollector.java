@@ -5,45 +5,64 @@
 package org.minifx.workbench.spring;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.newSetFromMap;
 import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.minifx.workbench.annotations.View;
+import org.minifx.workbench.domain.WorkbenchView;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.stereotype.Component;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-public class FactoryMethodsCollector implements BeanFactoryAware, BeanPostProcessor, FactoryMethodsRepository {
+@Component
+public class WorkbenchElementsCollector implements BeanFactoryAware, BeanPostProcessor, WorkbenchElementsRepository {
 
     private DefaultListableBeanFactory beanFactory;
     private Map<Object, Method> beansToFactoryMethod = new ConcurrentHashMap<>();
 
+    private Set<Object> views = newSetFromMap(new ConcurrentHashMap<>());
+    private Set<Object> footers = newSetFromMap(new ConcurrentHashMap<>());
+    private Set<Object> toolbarItems = newSetFromMap(new ConcurrentHashMap<>());
+
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
-        BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
-
-        Method factoryMethod = factoryMethodFor(beanDefinition);
+        Method factoryMethod = factoryMethodForBeanName(beanName);
         if (factoryMethod != null) {
             beansToFactoryMethod.put(bean, factoryMethod);
         }
         return bean;
     }
 
-    private Method factoryMethodFor(BeanDefinition beanDefinition) {
+    private Method factoryMethodForBeanName(String beanName) {
+        BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
         String factoryBeanName = beanDefinition.getFactoryBeanName();
         String factoryMethodName = beanDefinition.getFactoryMethodName();
 
         if (factoryBeanName != null && factoryMethodName != null) {
             Object factoryBean = beanFactory.getBean(factoryBeanName);
-            List<Method> filteredMethods = stream(factoryBean.getClass().getMethods())
+
+            Class<? extends Object> factoryClass = factoryBean.getClass();
+
+            if (Proxy.isProxyClass(factoryClass) || Enhancer.isEnhanced(factoryClass)) {
+                factoryClass = factoryClass.getSuperclass();
+            }
+
+            List<Method> filteredMethods = stream(factoryClass.getMethods())
                     .filter(m -> factoryMethodName.equals(m.getName())).collect(toList());
             if (filteredMethods.isEmpty()) {
                 throw new IllegalStateException(
@@ -56,7 +75,17 @@ public class FactoryMethodsCollector implements BeanFactoryAware, BeanPostProces
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
+        if (isView(bean)) {
+            views.add(bean);
+        }
         return bean;
+    }
+
+    private boolean isView(Object bean) {
+        if (bean instanceof WorkbenchView) {
+            return true;
+        }
+        return from(bean).getAnnotation(View.class).isPresent();
     }
 
     @Override
@@ -67,6 +96,16 @@ public class FactoryMethodsCollector implements BeanFactoryAware, BeanPostProces
     @Override
     public Optional<Method> factoryMethodForBean(Object bean) {
         return Optional.ofNullable(beansToFactoryMethod.get(bean));
+    }
+
+    @Override
+    public OngoingAnnotationExtraction from(Object object) {
+        return OngoingAnnotationExtraction.from(beansToFactoryMethod.get(object), object);
+    }
+
+    @Override
+    public Set<Object> views() {
+        return ImmutableSet.copyOf(this.views);
     }
 
 }

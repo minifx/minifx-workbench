@@ -5,7 +5,7 @@
 package org.minifx.workbench.examples.simpledemo;
 
 import org.minifx.workbench.annotations.Name;
-import org.minifx.workbench.annotations.Shown;
+import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.domain.PerspectivePos;
 import org.minifx.workbench.domain.WorkbenchView;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.StackPane;
 
 @Name("List of categories")
-@Shown(at=PerspectivePos.LEFT, in=DashboardPerspective.class)
+@View(at=PerspectivePos.LEFT, in=DashboardPerspective.class)
 @Component
 public class SimpleMenuView extends StackPane implements WorkbenchView{
     

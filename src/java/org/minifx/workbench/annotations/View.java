@@ -11,16 +11,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.minifx.workbench.domain.DefaultPerspective;
 import org.minifx.workbench.domain.Perspective;
 import org.minifx.workbench.domain.PerspectivePos;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Shown {
+@Target({ ElementType.TYPE, ElementType.METHOD })
+public @interface View {
 
-    Class<? extends Perspective> in();
+    Class<? extends Perspective>in() default DefaultPerspective.class;
 
     PerspectivePos at() default CENTER;
-    
+
     boolean alwaysAsTab() default false;
 }

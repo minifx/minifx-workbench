@@ -15,7 +15,7 @@ import javafx.scene.Node;
  */
 public class BorderLayoutPerspectiveImpl extends AbstractPerspectiveInstance {
 
-    public BorderLayoutPerspectiveImpl(String name, Node graphic, List<WorkbenchView> views, int order) {
+    public BorderLayoutPerspectiveImpl(String name, Node graphic, List<Object> views, int order) {
         super(name, graphic, views, order);
     }
 

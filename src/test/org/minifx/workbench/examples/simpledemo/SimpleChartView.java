@@ -6,7 +6,7 @@ package org.minifx.workbench.examples.simpledemo;
 
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
-import org.minifx.workbench.annotations.Shown;
+import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.domain.PerspectivePos;
 import org.minifx.workbench.domain.WorkbenchView;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import javafx.scene.layout.StackPane;
 
 @Name("A chart")
 @Icon(color="orange", icon=FontAwesomeIcon.PIE_CHART)
-@Shown(at=PerspectivePos.CENTER, in=DashboardPerspective.class)
+@View(at=PerspectivePos.CENTER, in=DashboardPerspective.class)
 @Component
 public class SimpleChartView extends StackPane implements WorkbenchView {
 

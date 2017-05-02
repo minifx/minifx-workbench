@@ -6,12 +6,12 @@ package org.minifx.workbench.conf.fullyconfigured;
 
 import static org.minifx.workbench.domain.PerspectivePos.CENTER;
 
-import org.minifx.workbench.annotations.Shown;
+import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.domain.AbstractFxBorderPaneView;
 
 import javafx.scene.control.Label;
 
-@Shown(in = Perspective1.class, at = CENTER)
+@View(in = Perspective1.class, at = CENTER)
 public class P1CenterA extends AbstractFxBorderPaneView {
 
     public static final String ID = "id-p1-center-a";

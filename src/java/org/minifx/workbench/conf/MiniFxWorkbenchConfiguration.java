@@ -17,16 +17,19 @@ import org.minifx.workbench.domain.MainPane;
 import org.minifx.workbench.domain.ToolbarItem;
 import org.minifx.workbench.domain.WorkbenchFooter;
 import org.minifx.workbench.domain.WorkbenchView;
+import org.minifx.workbench.spring.WorkbenchElementsRepository;
 import org.minifx.workbench.util.ViewInstantiator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;
 
 @Configuration
+@Import(FactoryMethodsCollectorConfiguration.class)
 public class MiniFxWorkbenchConfiguration {
 
     private static final int DEFAULT_HEIGHT = 760;
@@ -51,14 +54,14 @@ public class MiniFxWorkbenchConfiguration {
     private MiniFxSceneBuilder sceneBuilder;
 
     @Bean
-    public ViewInstantiator viewInstantiator() {
-        return new ViewInstantiator();
+    public ViewInstantiator viewInstantiator(WorkbenchElementsRepository factoryMethodsRepository) {
+        return new ViewInstantiator(factoryMethodsRepository);
     }
 
     @Bean
-    public Scene mainScene(ViewInstantiator viewInstantiator) {
-        MainPane mainPanel = new MainPane(viewInstantiator.perspectiveInstancesFrom(emptyIfNull(views)),
-                emptyIfNull(toolbarItems), createFooter(viewInstantiator, emptyIfNull(footerItems)));
+    public Scene mainScene(ViewInstantiator viewInstantiator, WorkbenchElementsRepository factoryMethodsRepository) {
+        MainPane mainPanel = new MainPane(viewInstantiator.perspectiveInstances(), emptyIfNull(toolbarItems),
+                createFooter(viewInstantiator, emptyIfNull(footerItems)));
         mainPanel.setId(ID_MAIN_PANEL);
 
         if (sceneBuilder == null) {

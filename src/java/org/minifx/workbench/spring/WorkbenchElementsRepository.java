@@ -6,9 +6,14 @@ package org.minifx.workbench.spring;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
+import java.util.Set;
 
-public interface FactoryMethodsRepository {
+public interface WorkbenchElementsRepository {
 
     Optional<Method> factoryMethodForBean(Object bean);
+
+    OngoingAnnotationExtraction from(Object object);
+    
+    Set<Object> views();
 
 }

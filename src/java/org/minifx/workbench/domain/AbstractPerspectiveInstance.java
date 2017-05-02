@@ -16,12 +16,12 @@ import javafx.scene.layout.BorderPane;
  */
 public class AbstractPerspectiveInstance extends BorderPane implements PerspectiveInstance {
 
-    private final List<WorkbenchView> views;
+    private final List<Object> views;
     private final String name;
     private final Node graphic;
     private final int order;
 
-    public AbstractPerspectiveInstance(String name, Node graphic, List<WorkbenchView> views, int order) {
+    public AbstractPerspectiveInstance(String name, Node graphic, List<Object> views, int order) {
         super();
         this.name = requireNonNull(name, "name must not be null");
         this.views = requireNonNull(views, "views must not be null");
@@ -34,7 +34,7 @@ public class AbstractPerspectiveInstance extends BorderPane implements Perspecti
         return this.name;
     }
 
-    public List<WorkbenchView> views() {
+    public List<Object> views() {
         return views;
     }
 
