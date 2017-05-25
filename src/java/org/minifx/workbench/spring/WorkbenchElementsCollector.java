@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.minifx.workbench.annotations.Footer;
 import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.domain.ToolbarItem;
-import org.minifx.workbench.domain.WorkbenchFooter;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -92,9 +91,6 @@ public class WorkbenchElementsCollector implements BeanFactoryAware, BeanPostPro
     }
 
     private boolean isFooter(Object bean) {
-        if (bean instanceof WorkbenchFooter) {
-            return true;
-        }
         return from(bean).getAnnotation(Footer.class).isPresent();
     }
 

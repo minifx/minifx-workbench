@@ -11,5 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan(basePackageClasses = WorkbenchElementsCollector.class)
 public class FactoryMethodsCollectorConfiguration {
-    
+    /* only annotations relevant */
 }
