@@ -23,15 +23,7 @@ public class Names {
     }
 
     private static Optional<Method> nameMethod(Object object) {
-        return chain(stringMethodOfName(object, "name"), stringMethodOfName(object, "getName"));
-    }
-
-    private static final <T> Optional<T> chain(Optional<T> o1, Optional<T> o2) {
-        if (o1.isPresent()) {
-            return o1;
-        } else {
-            return o2;
-        }
+        return Optionals.first(stringMethodOfName(object, "name"), stringMethodOfName(object, "getName"));
     }
 
     private static Optional<Method> stringMethodOfName(Object object, String methodName) {

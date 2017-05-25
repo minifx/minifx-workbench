@@ -23,7 +23,7 @@ import org.springframework.context.ApplicationContext;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
-public class FxmlWorkbenchView extends Parent implements WorkbenchView {
+public class FxmlWorkbenchView extends Parent {
     private static final Logger LOGGER = LoggerFactory.getLogger(FxmlWorkbenchView.class);
     private final String fxmlFileName;
 

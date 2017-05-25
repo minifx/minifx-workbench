@@ -6,6 +6,10 @@ package org.minifx.workbench.conf.fullyconfigured;
 
 import org.minifx.workbench.domain.AbstractFxBorderPaneView;
 
+import javafx.scene.control.Label;
+
 public class UnannotatedView extends AbstractFxBorderPaneView {
-    /* marker */
+    {
+        setCenter(new Label("Un-annotated view."));
+    }
 }

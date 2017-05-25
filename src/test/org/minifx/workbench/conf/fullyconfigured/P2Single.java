@@ -10,8 +10,14 @@ import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.domain.AbstractFxBorderPaneView;
 import org.springframework.stereotype.Component;
 
+import javafx.scene.control.Label;
+
 @Component
 @View(in = Perspective2.class, at = CENTER)
 public class P2Single extends AbstractFxBorderPaneView {
+    
+    {
+        setCenter(new Label("Empty View"));
+    }
     /* marker */
 }

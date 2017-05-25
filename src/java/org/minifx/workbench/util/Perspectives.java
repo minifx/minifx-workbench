@@ -8,7 +8,6 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 
-import org.minifx.workbench.domain.Perspective;
 import org.springframework.core.annotation.Order;
 
 public final class Perspectives {

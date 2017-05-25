@@ -14,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 /**
  * @author kfuchsbe
  */
+@Deprecated
 public class AbstractPerspectiveInstance extends BorderPane implements PerspectiveInstance {
 
     private final List<Object> views;

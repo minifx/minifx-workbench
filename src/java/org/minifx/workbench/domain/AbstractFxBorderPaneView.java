@@ -4,8 +4,11 @@
 
 package org.minifx.workbench.domain;
 
+import org.minifx.workbench.annotations.View;
+
 import javafx.scene.layout.BorderPane;
 
-public class AbstractFxBorderPaneView extends BorderPane implements WorkbenchView {
+@View
+public class AbstractFxBorderPaneView extends BorderPane {
     /* Inherit from here to get it autodetected */
 }

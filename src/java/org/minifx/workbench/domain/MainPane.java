@@ -6,13 +6,18 @@ package org.minifx.workbench.domain;
 
 import static com.google.common.collect.ImmutableList.copyOf;
 import static java.util.Collections.singletonList;
+import static org.minifx.workbench.util.MiniFxComponents.containerPaneFrom;
 import static org.minifx.workbench.util.MiniFxComponents.nodesFrom;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.minifx.workbench.css.MiniFxCssConstants;
+import org.minifx.workbench.util.MiniFxComponents;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -31,20 +36,28 @@ public class MainPane extends BorderPane {
 
     private static final HBox DEFAULT_FILLER = new HBox();
 
-    public MainPane(List<AbstractPerspectiveInstance> perspectives, Iterable<Object> toolbarItems,
-            Optional<Node> footer) {
-        this(perspectives, toolbarItems, footer, DEFAULT_FILLER);
+    private final Map<Class<? extends Perspective>, Node> perspectives;
+
+    public MainPane(Collection<PerspectiveDefinition> perspectives, Iterable<Object> toolbarItems,
+            Collection<FooterDefinition> footers) {
+        this(perspectives, toolbarItems, footers, DEFAULT_FILLER);
     }
 
-    public MainPane(List<AbstractPerspectiveInstance> perspectives, Iterable<Object> toolbarItems,
-            Optional<Node> footer, Node filler) {
-        List<ToggleButton> perspectiveNodes = perspectiveButtons(copyOf(perspectives));
+    public MainPane(Collection<PerspectiveDefinition> perspectives, Iterable<Object> toolbarItems,
+            Collection<FooterDefinition> footers, Node filler) {
+
+        this.perspectives = perspectives.stream()
+                .collect(Collectors.toMap(PerspectiveDefinition::perspective, MiniFxComponents::createPerspective));
+
+        List<PerspectiveDefinition> orderedPerspectives = perspectives.stream()
+                .sorted(Comparator.comparingInt(p -> p.displayProperties().order())).collect(Collectors.toList());
+
+        List<ToggleButton> perspectiveNodes = perspectiveButtons(orderedPerspectives);
         List<Node> toolbarNodes = nodesFrom(copyOf(toolbarItems));
 
         createToolbar(perspectiveNodes, toolbarNodes, filler);
-        if (footer.isPresent()) {
-            setBottom(footer.get());
-        }
+
+        setBottom(containerPaneFrom(footers).map(MiniFxComponents::configureSingleNodeStyle).orElse(null));
 
         triggerAnyPerspectiveSelection(perspectiveNodes);
     }
@@ -76,12 +89,13 @@ public class MainPane extends BorderPane {
         return box;
     }
 
-    private List<ToggleButton> perspectiveButtons(List<AbstractPerspectiveInstance> perspectives) {
+    private List<ToggleButton> perspectiveButtons(List<PerspectiveDefinition> perspectiveDefinitions) {
         List<ToggleButton> perspectiveButtons = new ArrayList<>();
         ToggleGroup toggleGroup = new ToggleGroup();
-        for (AbstractPerspectiveInstance perspective : perspectives) {
-            ToggleButton button = new ToggleButton(perspective.name(), perspective.graphic());
-            button.setOnAction(evt -> setActive(perspective));
+        for (PerspectiveDefinition perspective : perspectiveDefinitions) {
+            DisplayProperties displayProperties = perspective.displayProperties();
+            ToggleButton button = new ToggleButton(displayProperties.name(), displayProperties.graphic().orElse(null));
+            button.setOnAction(evt -> setActive(perspective.perspective()));
             button.getStyleClass().add(MiniFxCssConstants.PERSPECTIVE_BUTTON_CLASS);
 
             perspectiveButtons.add(button);
@@ -90,7 +104,8 @@ public class MainPane extends BorderPane {
         return perspectiveButtons;
     }
 
-    private void setActive(AbstractPerspectiveInstance perspective) {
+    private void setActive(Class<? extends Perspective> perspectiveDefinition) {
+        Node perspective = this.perspectives.get(perspectiveDefinition);
         perspective.getStyleClass().add(MiniFxCssConstants.MAIN_PANE_CLASS);
         setCenter(perspective);
     }

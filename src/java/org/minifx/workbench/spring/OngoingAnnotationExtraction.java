@@ -9,9 +9,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.minifx.workbench.annotations.Icon;
-import org.minifx.workbench.annotations.View;
-import org.minifx.workbench.domain.DefaultPerspective;
+import org.springframework.core.annotation.AnnotationUtils;
 
 public class OngoingAnnotationExtraction {
 
@@ -32,12 +30,12 @@ public class OngoingAnnotationExtraction {
         if (annotation.isPresent()) {
             return annotation;
         }
-        return Optional.ofNullable(bean.getClass().getAnnotation(annotationClass));
+        return Optional.ofNullable(AnnotationUtils.findAnnotation(bean.getClass(), annotationClass));
     }
 
     private <T extends Annotation> Optional<T> getFromFactoryMethod(Class<T> annotationClass) {
         if (factoryMethod != null) {
-            return Optional.ofNullable(factoryMethod.getAnnotation(annotationClass));
+            return Optional.ofNullable(AnnotationUtils.findAnnotation(factoryMethod, annotationClass));
         }
         return Optional.empty();
     }

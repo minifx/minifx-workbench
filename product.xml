@@ -4,7 +4,7 @@
 		<jar>minifx-workbench.jar</jar>
 		<desc />
 		<dependencies>
-			<dep product="guava" version="PRO" />
+			<dep product="guava" version="21.0" />
 
 			<dep product="spring-core" version="PRO" />
 			<dep product="spring-context" version="PRO" />

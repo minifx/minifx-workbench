@@ -9,14 +9,15 @@ import static org.minifx.workbench.domain.PerspectivePos.LEFT;
 import static org.minifx.workbench.util.ViewInstantiator.DEFAULT_PERSPECTIVE;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.domain.AbstractFxBorderPaneView;
 import org.minifx.workbench.domain.Perspective;
-import org.minifx.workbench.domain.WorkbenchView;
 
+@Ignore
 public class ViewInstantiatorTest {
 
     private ViewInstantiator viewInstantiator;
@@ -30,37 +31,20 @@ public class ViewInstantiatorTest {
     }
 
     @Test
-    public void perspectiveOfNullClassThrows() {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("viewClass ");
-        viewInstantiator.perspectiveFromClass((Class<? extends WorkbenchView>) null);
-    }
-
-    @Test
     public void perspectiveOfNullInstanceThrows() {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("view ");
-        viewInstantiator.perspectiveForView((WorkbenchView) null);
-    }
-
-    @Test
-    public void unannotatedClassRetrievesDefaultPerspective() {
-        assertThat(viewInstantiator.perspectiveFromClass(UnannotatedTestView.class)).isEqualTo(DEFAULT_PERSPECTIVE);
+        viewInstantiator.perspectiveFor(null);
     }
 
     @Test
     public void unannotatedInstanceRetrievesDefaultPerspective() {
-        assertThat(viewInstantiator.perspectiveForView(new UnannotatedTestView())).isEqualTo(DEFAULT_PERSPECTIVE);
-    }
-
-    @Test
-    public void annotatedClassRetrievesCorrectPerspective() {
-        assertThat(viewInstantiator.perspectiveFromClass(AnnotatedTestView.class)).isEqualTo(AnyPerspective.class);
+        assertThat(viewInstantiator.perspectiveFor(new UnannotatedTestView())).isEqualTo(DEFAULT_PERSPECTIVE);
     }
 
     @Test
     public void annotatedInstanceRetrievesCorrectPerspective() {
-        assertThat(viewInstantiator.perspectiveForView(new AnnotatedTestView())).isEqualTo(AnyPerspective.class);
+        assertThat(viewInstantiator.perspectiveFor(new AnnotatedTestView())).isEqualTo(AnyPerspective.class);
     }
 
     private static class UnannotatedTestView extends AbstractFxBorderPaneView {

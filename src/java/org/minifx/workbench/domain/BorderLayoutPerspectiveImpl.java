@@ -13,6 +13,7 @@ import javafx.scene.Node;
  * 
  * @author kfuchsbe
  */
+@Deprecated
 public class BorderLayoutPerspectiveImpl extends AbstractPerspectiveInstance {
 
     public BorderLayoutPerspectiveImpl(String name, Node graphic, List<Object> views, int order) {

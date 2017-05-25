@@ -6,11 +6,8 @@ package org.minifx.workbench.conf;
 
 import static java.util.stream.Collectors.toList;
 import static org.minifx.fxcommons.MiniFxSceneBuilder.miniFxSceneBuilder;
-import static org.minifx.workbench.css.MiniFxCssConstants.SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import org.minifx.fxcommons.MiniFxSceneBuilder;
 import org.minifx.workbench.domain.MainPane;
@@ -22,7 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import javafx.scene.Node;
 import javafx.scene.Scene;
 
 @Configuration
@@ -44,9 +40,10 @@ public class MiniFxWorkbenchConfiguration {
     @Bean
     public Scene mainScene(WorkbenchElementsRepository factoryMethodsRepository) {
         ViewInstantiator viewInstantiator = new ViewInstantiator(factoryMethodsRepository);
-        MainPane mainPanel = new MainPane(viewInstantiator.perspectiveInstances(),
-                factoryMethodsRepository.toolbarItems(),
-                createFooter(viewInstantiator, factoryMethodsRepository.footers()));
+
+        MainPane mainPanel = new MainPane(viewInstantiator.perspectives(), factoryMethodsRepository.toolbarItems(),
+                viewInstantiator.footers());
+
         mainPanel.setId(ID_MAIN_PANEL);
 
         if (sceneBuilder == null) {
@@ -60,15 +57,6 @@ public class MiniFxWorkbenchConfiguration {
         }
 
         return sceneBuilder.build();
-    }
-
-    private Optional<Node> createFooter(ViewInstantiator viewInstantiator, Collection<Object> items) {
-        if (items.isEmpty()) {
-            return Optional.empty();
-        }
-        Node footerTabs = viewInstantiator.createContainerPaneFrom(items);
-        footerTabs.getStyleClass().add(SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS);
-        return Optional.of(footerTabs);
     }
 
 }

@@ -4,12 +4,11 @@
 
 package org.minifx.workbench.examples.simpledemo;
 
-import org.minifx.workbench.domain.WorkbenchView;
 import org.springframework.stereotype.Component;
 
 import javafx.scene.layout.StackPane;
 
 @Component
-public class SimpleEmptyView extends StackPane implements WorkbenchView {
+public class SimpleEmptyView extends StackPane  {
     /* marker */
 }

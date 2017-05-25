@@ -14,7 +14,7 @@ import org.springframework.core.annotation.Order;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 
-@Order(1)
+@Order(2)
 @Name("named B")
 @View(in = Perspective1.class, at = LEFT)
 @Icon(icon=FontAwesomeIcon.BATTERY_QUARTER, color="green")

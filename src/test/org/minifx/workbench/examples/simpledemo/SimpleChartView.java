@@ -8,7 +8,6 @@ import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.domain.PerspectivePos;
-import org.minifx.workbench.domain.WorkbenchView;
 import org.springframework.stereotype.Component;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -20,7 +19,7 @@ import javafx.scene.layout.StackPane;
 @Icon(color="orange", icon=FontAwesomeIcon.PIE_CHART)
 @View(at=PerspectivePos.CENTER, in=DashboardPerspective.class)
 @Component
-public class SimpleChartView extends StackPane implements WorkbenchView {
+public class SimpleChartView extends StackPane {
 
     public SimpleChartView() {
         PieChart pieChart = new PieChart();

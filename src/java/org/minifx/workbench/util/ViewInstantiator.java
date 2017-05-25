@@ -4,36 +4,44 @@
 
 package org.minifx.workbench.util;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.sort;
 import static java.util.Comparator.comparingInt;
 import static java.util.Objects.requireNonNull;
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
-import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS;
-import static org.minifx.workbench.css.MiniFxCssConstants.SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS;
+import static java.util.stream.Collectors.toList;
 import static org.minifx.workbench.domain.PerspectivePos.CENTER;
+import static org.minifx.workbench.util.Names.nameFromNameMethod;
 import static org.minifx.workbench.util.Perspectives.orderFrom;
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.minifx.workbench.annotations.Footer;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.domain.AbstractPerspectiveInstance;
 import org.minifx.workbench.domain.BorderLayoutPerspectiveImpl;
 import org.minifx.workbench.domain.DefaultPerspective;
+import org.minifx.workbench.domain.DisplayProperties;
+import org.minifx.workbench.domain.FooterDefinition;
 import org.minifx.workbench.domain.Perspective;
+import org.minifx.workbench.domain.PerspectiveDefinition;
 import org.minifx.workbench.domain.PerspectivePos;
 import org.minifx.workbench.domain.TextWorkbenchView;
+import org.minifx.workbench.domain.ViewDefinition;
 import org.minifx.workbench.spring.WorkbenchElementsRepository;
+import org.springframework.core.annotation.Order;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableListMultimap.Builder;
 import com.google.common.collect.Iterables;
@@ -49,143 +57,130 @@ import javafx.scene.text.Text;
 
 public class ViewInstantiator {
 
+    private static final Color DEFAULT_COLOR = Color.rgb(2, 2, 2);
+    private static final FontAwesomeIcon DEFAULT_PERSPECTIVE_ICON = FontAwesomeIcon.ANGLE_DOWN;
+    public static final PerspectivePos DEFAULT_POSITION = CENTER;
     public static final Class<? extends Perspective> DEFAULT_PERSPECTIVE = DefaultPerspective.class;
-    private static final String DEFAULT_ICON_SIZE = "1em";
-    private static final String PERSPECTIVE_BUTTON_ICON_SIZE = "1.5em";
 
-    private WorkbenchElementsRepository factoryMethodsRepository;
+    private static final String DEFAULT_ICON_SIZE = "1em";
+    private static final String PERSPECTIVE_ICON_SIZE = "1.5em";
+
+    private WorkbenchElementsRepository repository;
 
     public ViewInstantiator(WorkbenchElementsRepository factoryMethodsRepository) {
-        this.factoryMethodsRepository = factoryMethodsRepository;
+        this.repository = factoryMethodsRepository;
     }
 
-    // perspectivePos
-
-    public PerspectivePos perspectivePosForView(Object view) {
+    public PerspectivePos viewPosFor(Object view) {
         requireNonNull(view, "view must not be null");
-        Optional<PerspectivePos> pos = perspectivePosFromFactoryMethod(view);
-        if (pos.isPresent()) {
-            return pos.get();
-        }
-        Class<?> viewClass = view.getClass();
-        return perspectivePositionFromClass(viewClass);
+        Optional<PerspectivePos> p = repository.from(view).getAnnotation(View.class).map(View::at);
+        return p.orElse(DEFAULT_POSITION);
     }
 
-    private Optional<PerspectivePos> perspectivePosFromFactoryMethod(Object view) {
-        Optional<View> viewAnnotation = viewAnnotationFrom(view);
-
-        Optional<Method> method = factoryMethodsRepository.factoryMethodForBean(view);
-
-        if (method.isPresent()) {
-            System.out.println(view + "; " + method.get() + "; " + Arrays.toString(method.get().getAnnotations()));
-            View shownAt = method.get().getAnnotation(View.class);
-            if (shownAt != null) {
-                return Optional.ofNullable(shownAt.at());
-            }
-        }
-        return Optional.empty();
-    }
-
-    private Optional<View> viewAnnotationFrom(Object view) {
-        return factoryMethodsRepository.from(view).getAnnotation(View.class);
-    }
-
-    private PerspectivePos perspectivePositionFromClass(Class<?> viewClass) {
-        View shownAt = viewClass.getAnnotation(View.class);
-        if (shownAt == null) {
-            return PerspectivePos.CENTER;
-        }
-        return shownAt.at();
-    }
-
-    // perspective
-
-    public Class<? extends Perspective> perspectiveForView(Object view) {
+    @VisibleForTesting
+    Class<? extends Perspective> perspectiveFor(Object view) {
         requireNonNull(view, "view must not be null");
-        return perspectiveFromClass(view.getClass());
+        Optional<Class<? extends Perspective>> p = repository.from(view).getAnnotation(View.class).map(View::in);
+        return p.orElse(DEFAULT_PERSPECTIVE);
     }
 
-    public Class<? extends Perspective> perspectiveFromClass(Class<?> viewClass) {
-        requireNonNull(viewClass, "viewClass must not be null");
-        View shownAtAnnotation = viewClass.getAnnotation(View.class);
-        if (shownAtAnnotation == null) {
-            return ViewInstantiator.DEFAULT_PERSPECTIVE;
-        }
-        return shownAtAnnotation.in();
+    public Optional<FontAwesomeIcon> iconFor(Object view) {
+        requireNonNull(view, "view must not be null");
+        return iconFrom(viewIconAnnotation(view));
+    }
+
+    private static final Optional<FontAwesomeIcon> iconFrom(Optional<Icon> annotation) {
+        return annotation.map(Icon::icon);
+    }
+
+    private Optional<Icon> viewIconAnnotation(Object view) {
+        return repository.from(view).getAnnotation(Icon.class);
+    }
+
+    private int perspectiveOrderFrom(Class<? extends Perspective> perspective) {
+        return orderFrom(perspective);
+    }
+
+    public Optional<FontAwesomeIcon> perspectiveIcon(Class<?> currentPerspective) {
+        requireNonNull(currentPerspective, "perspective must not be null");
+        return iconFrom(perspectiveIconAnnotation(currentPerspective));
+    }
+
+    private Optional<Icon> perspectiveIconAnnotation(Class<?> currentPerspective) {
+        return Optional.ofNullable(currentPerspective.getAnnotation(Icon.class));
     }
 
     // graphics
 
-    private Node graphicsForView(Object view) {
-        return graphicFromClass(view.getClass());
+    private Optional<Node> graphicsForView(Object view) {
+        Optional<Icon> annotation = viewIconAnnotation(view);
+        return annotation.map(ic -> graphicFrom(ic, DEFAULT_ICON_SIZE));
     }
 
-    public Node graphicFromClass(Class<?> currentPerspective) {
-        return graphicFrom(currentPerspective, DEFAULT_ICON_SIZE);
+    private Node perspectiveGraphicsFrom(Class<? extends Perspective> perspective) {
+        Optional<Icon> annotation = Optional.ofNullable(perspective.getAnnotation(Icon.class));
+        return annotation.map(ic -> graphicFrom(ic, PERSPECTIVE_ICON_SIZE)).orElseGet(this::perspectiveDefaultIcon);
     }
 
-    public Node graphicFrom(Class<?> currentPerspective, String size) {
-        final Icon iconAnnotation = currentPerspective.getAnnotation(Icon.class);
-        if (iconAnnotation == null) {
-            return null;
-        }
-        final Text nodeIcon = FontAwesomeIconFactory.get().createIcon(iconAnnotation.icon(), size);
-        final Color color = Color.valueOf(iconAnnotation.color().trim());
-        nodeIcon.setFill(color);
+    private Node graphicFrom(Icon iconAnnotation, String size) {
+        FontAwesomeIcon icon = iconAnnotation.icon();
+        Text nodeIcon = FontAwesomeIconFactory.get().createIcon(icon, size);
+        nodeIcon.setFill(color(iconAnnotation));
         return nodeIcon;
+    }
+
+    private static Color color(final Icon iconAnnotation) {
+        return Color.valueOf(iconAnnotation.color().trim());
     }
 
     // name
 
-    private String nameFromClass(Class<?> viewClass) {
-        Name name = viewClass.getAnnotation(Name.class);
-        if (name != null) {
-            return name.value();
-        }
-
-        return viewClass.getSimpleName();
+    public String perspectiveNameFrom(Class<?> perspective) {
+        return Optional.ofNullable(perspective.getAnnotation(Name.class)).map(Name::value)
+                .orElse(perspective.getSimpleName());
     }
 
-    private String nameFrom(Object view) {
-        return Names.nameFromNameMethod(view).orElse(nameFromClass(view.getClass()));
+    private String viewNameFrom(Object view) {
+        Optional<String> nameFromAnnotation = repository.from(view).getAnnotation(Name.class).map(Name::value);
+        return Optionals.first(nameFromAnnotation, nameFromNameMethod(view),
+                repository.factoryMethodFor(view).map(Method::getName)).orElse(view.getClass().getSimpleName());
     }
 
-    // always show tabs?
+    private int viewOrderFrom(Object view) {
+        Optional<Order> order = repository.from(view).getAnnotation(Order.class);
+        return order.map(Order::value).orElse(LOWEST_PRECEDENCE);
+    }
 
     private boolean alwaysShowTabsFromView(Object view) {
-        return alwaysShowTabsFromClass(view.getClass());
+        return repository.from(view).getAnnotation(View.class).map(View::alwaysAsTab).orElse(false);
     }
 
-    private boolean alwaysShowTabsFromClass(Class<? extends Object> class1) {
-        View shownAnnotation = class1.getAnnotation(View.class);
-        if (shownAnnotation == null) {
-            return false;
-        }
-        return shownAnnotation.alwaysAsTab();
+    private boolean alwaysShowTabsFromFooter(Object footer) {
+        return repository.from(footer).getAnnotation(Footer.class).map(Footer::alwaysAsTab).orElse(false);
     }
 
     // end methods to get information
 
-    public ListMultimap<Class<? extends Perspective>, Object> mapToPerspective(Collection<Object> views2) {
+    private ListMultimap<Class<? extends Perspective>, Object> mapToPerspective(Collection<Object> views2) {
         Builder<Class<? extends Perspective>, Object> perspectiveToViewBuilder = ImmutableListMultimap.builder();
         for (Object view : views2) {
-            perspectiveToViewBuilder.put(perspectiveForView(view), view);
+            perspectiveToViewBuilder.put(perspectiveFor(view), view);
         }
         return perspectiveToViewBuilder.build();
     }
 
-    public List<AbstractPerspectiveInstance> instantiatePerspectives(
+    @Deprecated
+    private List<AbstractPerspectiveInstance> instantiatePerspectives(
             ListMultimap<Class<? extends Perspective>, Object> perspectiveToViews) {
         List<AbstractPerspectiveInstance> perspectiveToNode = new ArrayList<>();
         for (Class<? extends Perspective> perspective : perspectiveToViews.keySet()) {
-            final String name = nameFromClass(perspective);
-            final Node icon = ofNullable(graphicFrom(perspective, PERSPECTIVE_BUTTON_ICON_SIZE))
-                    .orElseGet(this::perspectiveDefaultIcon);
+            final String name = perspectiveNameFrom(perspective);
+            final Node icon = perspectiveGraphicsFrom(perspective);
 
             List<Object> perspectiveViews = new ArrayList<>(perspectiveToViews.get(perspective));
             sort(perspectiveViews, comparingInt(v -> orderFrom(v.getClass())));
             BorderLayoutPerspectiveImpl instance = new BorderLayoutPerspectiveImpl(name, icon, perspectiveViews,
-                    orderFrom(perspective));
+                    perspectiveOrderFrom(perspective));
             initComponents(instance);
             perspectiveToNode.add(instance);
         }
@@ -193,18 +188,67 @@ public class ViewInstantiator {
         return perspectiveToNode;
     }
 
+    @Deprecated
     public List<AbstractPerspectiveInstance> perspectiveInstances() {
-        return instantiatePerspectives(mapToPerspective(factoryMethodsRepository.views()));
+        ListMultimap<Class<? extends Perspective>, Object> mapToPerspective = mapToPerspective(repository.views());
+
+        return instantiatePerspectives(mapToPerspective);
     }
 
-    public Node viewPaneFrom(List<Object> posViews) {
-        return createContainerPaneFrom(posViews);
+    public Set<PerspectiveDefinition> perspectives() {
+        ListMultimap<Class<? extends Perspective>, Object> mapToPerspective = mapToPerspective(repository.views());
+        return definitionsFrom(mapToPerspective);
+
+    }
+
+    private Set<PerspectiveDefinition> definitionsFrom(
+            ListMultimap<Class<? extends Perspective>, Object> mapToPerspective) {
+        return mapToPerspective.asMap().entrySet().stream().map(e -> toPerspectiveDefinition(e.getKey(), e.getValue()))
+                .collect(Collectors.toSet());
+    }
+
+    private PerspectiveDefinition toPerspectiveDefinition(Class<? extends Perspective> perspective,
+            Collection<Object> allViews) {
+        return new PerspectiveDefinition(perspective, perspectiveDisplayProperties(perspective),
+                viewDefinitionsFrom(allViews));
+    }
+
+    private DisplayProperties perspectiveDisplayProperties(Class<? extends Perspective> perspective) {
+        return new DisplayProperties(perspectiveNameFrom(perspective), perspectiveGraphicsFrom(perspective),
+                perspectiveOrderFrom(perspective));
+    }
+
+    private Set<ViewDefinition> viewDefinitionsFrom(Collection<Object> allViews) {
+        return allViews.stream().map(this::toViewDefinition).collect(toImmutableSet());
+    }
+
+    public Set<FooterDefinition> footers() {
+        return footerDefinitionsFrom(repository.footers());
+    }
+
+    private Set<FooterDefinition> footerDefinitionsFrom(Collection<Object> allViews) {
+        return allViews.stream().map(this::toFooterDefinition).collect(toImmutableSet());
+    }
+
+    private ViewDefinition toViewDefinition(Object view) {
+        return new ViewDefinition(MiniFxComponents.fxNodeFrom(view), viewPosFor(view), viewDisplayProperties(view),
+                alwaysShowTabsFromView(view));
+    }
+
+    private FooterDefinition toFooterDefinition(Object footer) {
+        return new FooterDefinition(MiniFxComponents.fxNodeFrom(footer), viewDisplayProperties(footer),
+                alwaysShowTabsFromFooter(footer));
+    }
+
+    private DisplayProperties viewDisplayProperties(Object view) {
+        return new DisplayProperties(viewNameFrom(view), graphicsForView(view).orElse(null), viewOrderFrom(view));
     }
 
     public List<Object> viewsForPosition(List<Object> views, PerspectivePos position) {
-        return views.stream().filter(view -> position.equals(perspectivePosForView(view))).collect(Collectors.toList());
+        return views.stream().filter(view -> position.equals(viewPosFor(view))).collect(Collectors.toList());
     }
 
+    @Deprecated
     public Node createContainerPaneFrom(Collection<?> views) {
         if ((views.size() == 1)) {
             Object singleView = Iterables.getOnlyElement(views);
@@ -215,24 +259,26 @@ public class ViewInstantiator {
         return createTabPaneFrom(views);
     }
 
+    @Deprecated
     private TabPane createTabPaneFrom(Collection<?> posViews) {
-        TabPane tabRoot = new TabPane();
-        for (Object view : posViews) {
-            Tab tab = new Tab();
-            tab.setText(nameFrom(view));
-            tab.setGraphic(graphicsForView(view));
-            tab.setContent(MiniFxComponents.fxNodeFrom(view));
-            tab.setClosable(false);
 
+        List<Node> nodes = posViews.stream().map(MiniFxComponents::fxNodeFrom).collect(toList());
+
+        TabPane tabRoot = new TabPane();
+        for (Node node : nodes) {
+            Tab tab = new Tab();
+            tab.setText(viewNameFrom(node));
+            tab.setGraphic(graphicsForView(node).orElse(null));
+            tab.setContent(node);
+            tab.setClosable(false);
             tabRoot.getTabs().add(tab);
         }
         return tabRoot;
     }
 
     private Node perspectiveDefaultIcon() {
-        Text defaultIcon = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.ANGLE_DOWN,
-                PERSPECTIVE_BUTTON_ICON_SIZE);
-        defaultIcon.setFill(Color.rgb(2, 2, 2));
+        Text defaultIcon = FontAwesomeIconFactory.get().createIcon(DEFAULT_PERSPECTIVE_ICON, PERSPECTIVE_ICON_SIZE);
+        defaultIcon.setFill(DEFAULT_COLOR);
         return defaultIcon;
     }
 
@@ -240,40 +286,44 @@ public class ViewInstantiator {
     // perspective instantiation
     //
 
-    private void initComponents(BorderLayoutPerspectiveImpl perspective) {
-        List<Object> views = perspective.views();
-
-        if (views.isEmpty()) {
-            singleViewInit(perspective, singletonList(new TextWorkbenchView("No views to display")));
-        } else if (allViewsBelongToOnePosition(views)) {
-            singleViewInit(perspective, views);
-        } else {
-            multipleViewInit(perspective, views);
-        }
+    @Deprecated
+    public boolean allViewsBelongToOnePosition(List<Object> views) {
+        return views.stream().collect(groupingBy(this::viewPosFor)).values().stream()
+                .anyMatch(viewsOfAPosition -> viewsOfAPosition.size() == views.size());
     }
 
-    private void singleViewInit(BorderLayoutPerspectiveImpl perspective, List<Object> views) {
-        setupNodeFor(perspective, CENTER, views).getStyleClass().add(SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS);
+    public Node setupNodeFor(BorderLayoutPerspectiveImpl borderLayoutPerspectiveImpl, PerspectivePos position,
+            List<Object> posViews) {
+        Node viewPane = createContainerPaneFrom(posViews);
+        position.set(viewPane).into(borderLayoutPerspectiveImpl);
+        return viewPane;
     }
 
-    private void multipleViewInit(BorderLayoutPerspectiveImpl perspective, List<Object> views) {
+    public void multipleViewInit(BorderLayoutPerspectiveImpl borderLayoutPerspectiveImpl, List<Object> views) {
         for (PerspectivePos position : PerspectivePos.values()) {
             List<Object> posViews = viewsForPosition(views, position);
             if (!posViews.isEmpty()) {
-                setupNodeFor(perspective, position, posViews).getStyleClass().add(COMPONENTS_OF_MAIN_PANEL_CLASS);
+                Node node = setupNodeFor(borderLayoutPerspectiveImpl, position, posViews);
+                MiniFxComponents.configureMultiNodeStyle(node);
             }
         }
     }
 
-    private Node setupNodeFor(BorderLayoutPerspectiveImpl perspective, PerspectivePos position, List<Object> posViews) {
-        Node viewPane = viewPaneFrom(posViews);
-        position.set(viewPane).into(perspective);
-        return viewPane;
+    public void singleViewInit(BorderLayoutPerspectiveImpl borderLayoutPerspectiveImpl, List<Object> views) {
+        Node node = setupNodeFor(borderLayoutPerspectiveImpl, ViewInstantiator.DEFAULT_POSITION, views);
+        MiniFxComponents.configureSingleNodeStyle(node);
     }
 
-    private boolean allViewsBelongToOnePosition(List<Object> views) {
-        return views.stream().collect(groupingBy(this::perspectivePosForView)).values().stream()
-                .anyMatch(viewsOfAPosition -> viewsOfAPosition.size() == views.size());
+    public void initComponents(BorderLayoutPerspectiveImpl borderLayoutPerspectiveImpl) {
+        List<Object> views = borderLayoutPerspectiveImpl.views();
+
+        if (views.isEmpty()) {
+            singleViewInit(borderLayoutPerspectiveImpl, singletonList(new TextWorkbenchView("No views to display")));
+        } else if (allViewsBelongToOnePosition(views)) {
+            singleViewInit(borderLayoutPerspectiveImpl, views);
+        } else {
+            multipleViewInit(borderLayoutPerspectiveImpl, views);
+        }
     }
 
 }

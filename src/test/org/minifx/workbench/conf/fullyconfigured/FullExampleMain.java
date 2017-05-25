@@ -5,9 +5,7 @@
 package org.minifx.workbench.conf.fullyconfigured;
 
 import org.apache.log4j.BasicConfigurator;
-import org.minifx.fxcommons.SingleSceneSpringJavaFxApplication;
 import org.minifx.workbench.MiniFx;
-import org.minifx.workbench.conf.MiniFxWorkbenchConfiguration;
 
 public class FullExampleMain {
 

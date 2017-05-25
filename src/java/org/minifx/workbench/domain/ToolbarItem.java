@@ -4,6 +4,11 @@
 
 package org.minifx.workbench.domain;
 
+/**
+ * @deprecated use the {@link org.minifx.workbench.annotations.ToolbarItem} annotation instead.
+ * @author kfuchsbe
+ */
+@Deprecated
 public interface ToolbarItem {
     /* Marker interface */
 }

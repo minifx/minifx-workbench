@@ -12,12 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.minifx.workbench.annotations.View;
-import org.minifx.workbench.domain.WorkbenchView;
 import org.springframework.core.annotation.Order;
 
 @Order(1)
 @View(in = Perspective1.class, at = CENTER)
-public class EmbeddedSwingPanel extends JPanel implements WorkbenchView {
+public class EmbeddedSwingPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 

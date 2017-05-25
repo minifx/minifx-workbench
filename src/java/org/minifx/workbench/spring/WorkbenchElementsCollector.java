@@ -21,7 +21,6 @@ import org.minifx.workbench.annotations.Footer;
 import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.domain.ToolbarItem;
 import org.minifx.workbench.domain.WorkbenchFooter;
-import org.minifx.workbench.domain.WorkbenchView;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -107,9 +106,6 @@ public class WorkbenchElementsCollector implements BeanFactoryAware, BeanPostPro
     }
 
     private boolean isView(Object bean) {
-        if (bean instanceof WorkbenchView) {
-            return true;
-        }
         return from(bean).getAnnotation(View.class).isPresent();
     }
 
@@ -119,7 +115,7 @@ public class WorkbenchElementsCollector implements BeanFactoryAware, BeanPostPro
     }
 
     @Override
-    public Optional<Method> factoryMethodForBean(Object bean) {
+    public Optional<Method> factoryMethodFor(Object bean) {
         return Optional.ofNullable(beansToFactoryMethod.get(bean));
     }
 

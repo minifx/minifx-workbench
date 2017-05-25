@@ -10,7 +10,7 @@ import java.util.Set;
 
 public interface WorkbenchElementsRepository {
 
-    Optional<Method> factoryMethodForBean(Object bean);
+    Optional<Method> factoryMethodFor(Object bean);
 
     OngoingAnnotationExtraction from(Object object);
     
