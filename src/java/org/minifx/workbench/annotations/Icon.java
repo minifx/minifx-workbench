@@ -9,15 +9,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.minifx.workbench.domain.AbstractFxBorderPaneView;
 import org.minifx.workbench.domain.Perspective;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.scene.paint.Color;
 
 /**
- * Annotation for specifying the Icon of a MiniFx {@link AbstractFxBorderPaneView} or {@link Perspective}. NOTE: the
- * {@link #color()} String must conform to the rules of JavaFX {@link Color#valueOf(String)} method.
+ * Annotation for specifying the Icon of a MiniFx view or {@link Perspective}. NOTE: the {@link #color()} String must
+ * conform to the rules of JavaFX {@link Color#valueOf(String)} method.
  * 
  * @author acalia
  */
@@ -25,7 +24,7 @@ import javafx.scene.paint.Color;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface Icon {
 
-    FontAwesomeIcon icon();
+    FontAwesomeIcon value();
 
     String color() default "#38678e";
 

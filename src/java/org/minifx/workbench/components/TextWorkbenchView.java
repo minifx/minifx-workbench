@@ -2,7 +2,7 @@
  * Copyright (c) 2016 European Organisation for Nuclear Research (CERN), All Rights Reserved.
  */
 
-package org.minifx.workbench.domain;
+package org.minifx.workbench.components;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

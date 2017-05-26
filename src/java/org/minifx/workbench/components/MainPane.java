@@ -2,7 +2,7 @@
  * Copyright (c) 2016 European Organisation for Nuclear Research (CERN), All Rights Reserved.
  */
 
-package org.minifx.workbench.domain;
+package org.minifx.workbench.components;
 
 import static com.google.common.collect.ImmutableList.copyOf;
 import static java.util.Collections.singletonList;
@@ -12,14 +12,24 @@ import static org.minifx.workbench.util.MiniFxComponents.nodesFrom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.minifx.workbench.css.MiniFxCssConstants;
+import org.minifx.workbench.domain.Perspective;
+import org.minifx.workbench.domain.definition.DisplayProperties;
+import org.minifx.workbench.domain.definition.FooterDefinition;
+import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.spring.ActivatePerspectiveCommand;
+import org.minifx.workbench.spring.PerspectiveActivatedEvent;
 import org.minifx.workbench.util.MiniFxComponents;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
@@ -38,30 +48,34 @@ public class MainPane extends BorderPane {
     private static final HBox DEFAULT_FILLER = new HBox();
 
     private final Map<Class<? extends Perspective>, Node> perspectives;
+    private final Map<Class<? extends Perspective>, ToggleButton> perspectivesToButtons = new HashMap<>();
+
+    private final ApplicationEventPublisher publisher;
 
     public MainPane(Collection<PerspectiveDefinition> perspectives, Iterable<Object> toolbarItems,
-            Collection<FooterDefinition> footers) {
-        this(perspectives, toolbarItems, footers, DEFAULT_FILLER);
+            Collection<FooterDefinition> footers, ApplicationEventPublisher publisher) {
+        this(perspectives, toolbarItems, footers, DEFAULT_FILLER, publisher);
     }
 
     public MainPane(Collection<PerspectiveDefinition> perspectives, Iterable<Object> toolbarItems,
-            Collection<FooterDefinition> footers, Node filler) {
+            Collection<FooterDefinition> footers, Node filler, ApplicationEventPublisher publisher) {
 
+        this.publisher = publisher;
         this.perspectives = perspectives.stream()
                 .collect(Collectors.toMap(PerspectiveDefinition::perspective, MiniFxComponents::createPerspective));
 
         List<PerspectiveDefinition> orderedPerspectives = perspectives.stream()
                 .sorted(Comparator.comparingInt(p -> p.displayProperties().order())).collect(Collectors.toList());
 
-        List<ToggleButton> perspectiveNodes = perspectiveButtons(orderedPerspectives);
+        List<ToggleButton> perspectiveButtons = perspectiveButtons(orderedPerspectives);
         List<Node> toolbarNodes = nodesFrom(copyOf(toolbarItems));
 
-        createToolbar(perspectiveNodes, toolbarNodes, filler);
+        createToolbar(perspectiveButtons, toolbarNodes, filler);
 
         Optional<Node> footer = containerPaneFrom(footers).map(MiniFxComponents::configureSingleNodeStyle);
         setBottom(footer.orElse(null));
 
-        triggerAnyPerspectiveSelection(perspectiveNodes);
+        triggerAnyPerspectiveSelection(perspectiveButtons);
     }
 
     private void triggerAnyPerspectiveSelection(List<ToggleButton> perspectiveNodes) {
@@ -100,6 +114,7 @@ public class MainPane extends BorderPane {
             button.setOnAction(evt -> setActive(perspective.perspective()));
             button.getStyleClass().add(MiniFxCssConstants.PERSPECTIVE_BUTTON_CLASS);
 
+            perspectivesToButtons.put(perspective.perspective(), button);
             perspectiveButtons.add(button);
             toggleGroup.getToggles().add(button);
         }
@@ -110,6 +125,15 @@ public class MainPane extends BorderPane {
         Node perspective = this.perspectives.get(perspectiveDefinition);
         perspective.getStyleClass().add(MiniFxCssConstants.MAIN_PANE_CLASS);
         setCenter(perspective);
+        publisher.publishEvent(new PerspectiveActivatedEvent(perspectiveDefinition));
+    }
+
+    @EventListener
+    public void acivatePerspective(ActivatePerspectiveCommand command) {
+        Platform.runLater(() -> {
+            ToggleButton button = this.perspectivesToButtons.get(command.perspective());
+            Optional.ofNullable(button).ifPresent(ToggleButton::fire);
+        });
     }
 
 }

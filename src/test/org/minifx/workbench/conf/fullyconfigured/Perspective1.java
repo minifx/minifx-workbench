@@ -13,7 +13,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 
 @Order(1)
 @Name(Perspective1.LABEL)
-@Icon(icon = FontAwesomeIcon.WHATSAPP, color = "blue")
+@Icon(value = FontAwesomeIcon.WHATSAPP, color = "blue")
 public interface Perspective1 extends Perspective {
 
     public static final String LABEL = "Perspective 1";

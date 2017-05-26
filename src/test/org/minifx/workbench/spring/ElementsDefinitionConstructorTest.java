@@ -1,33 +1,36 @@
 /**
- * Copyright (c) 2016 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ * Copyright (c) 2017 European Organisation for Nuclear Research (CERN), All Rights Reserved.
  */
 
-package org.minifx.workbench.util;
+package org.minifx.workbench.spring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.minifx.workbench.domain.PerspectivePos.LEFT;
-import static org.minifx.workbench.util.ViewInstantiator.DEFAULT_PERSPECTIVE;
+import static org.mockito.Matchers.any;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.minifx.workbench.annotations.View;
-import org.minifx.workbench.domain.AbstractFxBorderPaneView;
+import org.minifx.workbench.conf.fullyconfigured.AbstractFxBorderPaneView;
 import org.minifx.workbench.domain.Perspective;
+import org.minifx.workbench.util.Perspectives;
+import org.mockito.Mockito;
 
-@Ignore
-public class ViewInstantiatorTest {
+public class ElementsDefinitionConstructorTest {
 
-    private ViewInstantiator viewInstantiator;
+    private ElementsDefinitionConstructor viewInstantiator;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
-        viewInstantiator = new ViewInstantiator(null);
+        WorkbenchElementsRepository repository = Mockito.mock(WorkbenchElementsRepository.class);
+        Mockito.when(repository.from(any()))
+                .then(invoc -> new OngoingAnnotationExtraction(null, invoc.getArguments()[0]));
+        viewInstantiator = new ElementsDefinitionConstructor(repository);
     }
 
     @Test
@@ -39,7 +42,7 @@ public class ViewInstantiatorTest {
 
     @Test
     public void unannotatedInstanceRetrievesDefaultPerspective() {
-        assertThat(viewInstantiator.perspectiveFor(new UnannotatedTestView())).isEqualTo(DEFAULT_PERSPECTIVE);
+        assertThat(viewInstantiator.perspectiveFor(new UnannotatedTestView())).isEqualTo(Perspectives.DEFAULT_PERSPECTIVE);
     }
 
     @Test
@@ -59,5 +62,4 @@ public class ViewInstantiatorTest {
     private interface AnyPerspective extends Perspective {
         /* marker */
     }
-
 }

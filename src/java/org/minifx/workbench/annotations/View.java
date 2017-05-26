@@ -15,13 +15,35 @@ import org.minifx.workbench.domain.DefaultPerspective;
 import org.minifx.workbench.domain.Perspective;
 import org.minifx.workbench.domain.PerspectivePos;
 
+/**
+ * Annotation to qualify a bean as a view within MiniFx. This annotation can be placed on the class of the bean or on
+ * the factory method of it.
+ * 
+ * @author kfuchsbe
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface View {
 
+    /**
+     * This property specifies the class representing the perspective in which the view shall be shown.
+     * 
+     * @return the class representing the perspective in which to show the annotated view.
+     */
     Class<? extends Perspective>in() default DefaultPerspective.class;
 
+    /**
+     * This property specifies the position within the given perspective, where the view shall be shown
+     * 
+     * @return the position within the perspective where to show the annotated view.
+     */
     PerspectivePos at() default CENTER;
 
-    boolean alwaysAsTab() default false;
+    /**
+     * If this property is set to {@code true}, then a tab as shown, even if there is only one view specified for the
+     * given position in the given perspective.
+     * 
+     * @return {@code true} if tabs should be enforced, {@code false} otherwise
+     */
+    boolean enforceTab() default false;
 }

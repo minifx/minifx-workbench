@@ -7,7 +7,6 @@ package org.minifx.workbench.conf.fullyconfigured;
 import static org.minifx.workbench.domain.PerspectivePos.CENTER;
 
 import org.minifx.workbench.annotations.View;
-import org.minifx.workbench.domain.AbstractFxBorderPaneView;
 
 import javafx.scene.control.Label;
 

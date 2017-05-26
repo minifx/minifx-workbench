@@ -9,7 +9,6 @@ import static org.minifx.workbench.domain.PerspectivePos.BOTTOM;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.annotations.View;
-import org.minifx.workbench.domain.AbstractFxBorderPaneView;
 import org.springframework.stereotype.Component;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -18,7 +17,7 @@ import javafx.scene.control.Label;
 @Component
 @View(in = Perspective1.class, at = BOTTOM)
 @Name("Bottom A with Icon")
-@Icon(icon = FontAwesomeIcon.AREA_CHART)
+@Icon(value = FontAwesomeIcon.AREA_CHART)
 public class P1BottomA extends AbstractFxBorderPaneView {
 
     public P1BottomA () {

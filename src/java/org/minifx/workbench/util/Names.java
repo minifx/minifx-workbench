@@ -8,8 +8,28 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-public class Names {
+/**
+ * Utility methods to determine names for objects.
+ * 
+ * @author kfuchsbe
+ */
+public final class Names {
 
+    private Names() {
+        /* only static methods */
+    }
+
+    /**
+     * Tries to get the name of an object from one of its methods. Only methods which return strings and have no
+     * parameters are considered. the search is done in the following order:
+     * <ol>
+     * <li>"name()"
+     * <li>"getName()"
+     * </ol>
+     * 
+     * @param object the object for which to retrieve the name
+     * @return the name as derived from a name method, if available.
+     */
     public static final Optional<String> nameFromNameMethod(Object object) {
         Optional<Method> nameMethod = nameMethod(object);
         if (nameMethod.isPresent()) {

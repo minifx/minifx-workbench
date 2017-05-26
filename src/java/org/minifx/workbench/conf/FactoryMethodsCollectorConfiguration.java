@@ -4,12 +4,12 @@
 
 package org.minifx.workbench.conf;
 
-import org.minifx.workbench.spring.WorkbenchElementsCollector;
+import org.minifx.workbench.spring.WorkbenchElementsPostProcessor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackageClasses = WorkbenchElementsCollector.class)
+@ComponentScan(basePackageClasses = WorkbenchElementsPostProcessor.class)
 public class FactoryMethodsCollectorConfiguration {
     /* only annotations relevant */
 }

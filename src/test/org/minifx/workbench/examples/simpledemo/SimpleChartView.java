@@ -16,7 +16,7 @@ import javafx.scene.chart.PieChart.Data;
 import javafx.scene.layout.StackPane;
 
 @Name("A chart")
-@Icon(color="orange", icon=FontAwesomeIcon.PIE_CHART)
+@Icon(color="orange", value=FontAwesomeIcon.PIE_CHART)
 @View(at=PerspectivePos.CENTER, in=DashboardPerspective.class)
 @Component
 public class SimpleChartView extends StackPane {

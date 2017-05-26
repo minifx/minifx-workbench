@@ -13,7 +13,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 
 @Order(2)
 @Name(Perspective2.LABEL)
-@Icon(icon = FontAwesomeIcon.ANDROID, color = "green")
+@Icon(value = FontAwesomeIcon.ANDROID, color = "green")
 public interface Perspective2 extends Perspective {
 
     public static final String LABEL = "Perspective 2";

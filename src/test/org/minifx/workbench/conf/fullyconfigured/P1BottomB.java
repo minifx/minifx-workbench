@@ -7,7 +7,6 @@ package org.minifx.workbench.conf.fullyconfigured;
 import static org.minifx.workbench.domain.PerspectivePos.BOTTOM;
 
 import org.minifx.workbench.annotations.View;
-import org.minifx.workbench.domain.AbstractFxBorderPaneView;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -20,11 +20,11 @@ import java.util.function.Consumer;
 
 import javax.swing.JComponent;
 
-import org.minifx.workbench.domain.AbstractViewDefinition;
-import org.minifx.workbench.domain.PerspectiveDefinition;
+import org.minifx.workbench.components.TextWorkbenchView;
 import org.minifx.workbench.domain.PerspectivePos;
-import org.minifx.workbench.domain.TextWorkbenchView;
-import org.minifx.workbench.domain.ViewDefinition;
+import org.minifx.workbench.domain.definition.AbstractViewDefinition;
+import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.ViewDefinition;
 
 import com.google.common.collect.Iterables;
 
@@ -124,7 +124,7 @@ public class MiniFxComponents {
         if (views.isEmpty()) {
             Node node = new TextWorkbenchView("No views to display");
             configureSingleNodeStyle(node);
-            ViewInstantiator.DEFAULT_POSITION.set(node).into(perspectiveImpl);
+            Perspectives.DEFAULT_POSITION.set(node).into(perspectiveImpl);
         } else {
             Map<PerspectivePos, List<ViewDefinition>> positionViews = views.stream()
                     .collect(groupingBy(ViewDefinition::perspectivePos));

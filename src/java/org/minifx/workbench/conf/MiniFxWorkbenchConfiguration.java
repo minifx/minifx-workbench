@@ -10,11 +10,12 @@ import static org.minifx.fxcommons.MiniFxSceneBuilder.miniFxSceneBuilder;
 import java.util.List;
 
 import org.minifx.fxcommons.MiniFxSceneBuilder;
-import org.minifx.workbench.domain.MainPane;
+import org.minifx.workbench.components.MainPane;
+import org.minifx.workbench.spring.ElementsDefinitionConstructor;
 import org.minifx.workbench.spring.WorkbenchElementsRepository;
-import org.minifx.workbench.util.ViewInstantiator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -38,25 +39,28 @@ public class MiniFxWorkbenchConfiguration {
     private MiniFxSceneBuilder sceneBuilder;
 
     @Bean
-    public Scene mainScene(WorkbenchElementsRepository factoryMethodsRepository) {
-        ViewInstantiator viewInstantiator = new ViewInstantiator(factoryMethodsRepository);
-
-        MainPane mainPanel = new MainPane(viewInstantiator.perspectives(), factoryMethodsRepository.toolbarItems(),
-                viewInstantiator.footers());
-
-        mainPanel.setId(ID_MAIN_PANEL);
-
+    public Scene mainScene(MainPane mainPane) {
         if (sceneBuilder == null) {
             sceneBuilder = miniFxSceneBuilder().withSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         }
 
-        sceneBuilder.withRoot(mainPanel);
+        sceneBuilder.withRoot(mainPane);
 
         if (cssStyleSheets != null) {
             sceneBuilder.withAdditionalCss(cssStyleSheets.stream().flatMap(List::stream).collect(toList()));
         }
 
         return sceneBuilder.build();
+    }
+
+    @Bean
+    public MainPane mainPane(ApplicationEventPublisher publisher,
+            WorkbenchElementsRepository factoryMethodsRepository) {
+        ElementsDefinitionConstructor viewInstantiator = new ElementsDefinitionConstructor(factoryMethodsRepository);
+        MainPane mainPanel = new MainPane(viewInstantiator.perspectives(), factoryMethodsRepository.toolbarItems(),
+                viewInstantiator.footers(), publisher);
+        mainPanel.setId(ID_MAIN_PANEL);
+        return mainPanel;
     }
 
 }
