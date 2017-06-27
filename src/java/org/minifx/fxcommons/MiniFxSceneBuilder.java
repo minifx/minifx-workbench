@@ -24,6 +24,7 @@ public final class MiniFxSceneBuilder {
     private Integer width;
     private Integer height;
     private Collection<String> additionalCss;
+    private boolean useMinifxStyle = false;
 
     private MiniFxSceneBuilder() {
         /* Factory */
@@ -44,6 +45,11 @@ public final class MiniFxSceneBuilder {
         return this;
     }
 
+    public MiniFxSceneBuilder withMiniFxStyle() {
+        useMinifxStyle = true;
+        return this;
+    }
+
     public MiniFxSceneBuilder withAdditionalCss(Collection<String> inAdditionalCss) {
         additionalCss = new HashSet<>(inAdditionalCss);
         return this;
@@ -58,10 +64,14 @@ public final class MiniFxSceneBuilder {
             scene = new Scene(rootNode);
         }
 
-        scene.getStylesheets().addAll(CSS_LOCATIONS);
+        if (useMinifxStyle) {
+            scene.getStylesheets().addAll(CSS_LOCATIONS);
+        }
+
         if (additionalCss != null && !additionalCss.isEmpty()) {
             scene.getStylesheets().addAll(additionalCss);
         }
+
         return scene;
     }
 }
