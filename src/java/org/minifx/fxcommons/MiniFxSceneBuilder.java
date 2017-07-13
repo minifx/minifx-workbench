@@ -24,7 +24,7 @@ public final class MiniFxSceneBuilder {
     private Integer width;
     private Integer height;
     private Collection<String> additionalCss;
-    private boolean useMinifxStyle = false;
+    private boolean useMinifxStyle = true;
 
     private MiniFxSceneBuilder() {
         /* Factory */
@@ -45,8 +45,8 @@ public final class MiniFxSceneBuilder {
         return this;
     }
 
-    public MiniFxSceneBuilder withMiniFxStyle() {
-        useMinifxStyle = true;
+    public MiniFxSceneBuilder withoutMiniFxStyle() {
+        useMinifxStyle = false;
         return this;
     }
 
