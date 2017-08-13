@@ -30,7 +30,8 @@ public class ElementsDefinitionConstructorTest {
         WorkbenchElementsRepository repository = Mockito.mock(WorkbenchElementsRepository.class);
         Mockito.when(repository.from(any()))
                 .then(invoc -> new OngoingAnnotationExtraction(null, invoc.getArguments()[0]));
-        viewInstantiator = new ElementsDefinitionConstructor(repository);
+        BeanInformationExtractor extractor = Mockito.mock(BeanInformationExtractor.class);
+        viewInstantiator = new ElementsDefinitionConstructor(repository, extractor);
     }
 
     @Test
@@ -42,7 +43,8 @@ public class ElementsDefinitionConstructorTest {
 
     @Test
     public void unannotatedInstanceRetrievesDefaultPerspective() {
-        assertThat(viewInstantiator.perspectiveFor(new UnannotatedTestView())).isEqualTo(Perspectives.DEFAULT_PERSPECTIVE);
+        assertThat(viewInstantiator.perspectiveFor(new UnannotatedTestView()))
+                .isEqualTo(Perspectives.DEFAULT_PERSPECTIVE);
     }
 
     @Test

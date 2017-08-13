@@ -29,6 +29,7 @@ import org.minifx.workbench.util.MiniFxComponents;
 import org.minifx.workbench.util.Names;
 import org.minifx.workbench.util.Optionals;
 import org.minifx.workbench.util.Perspectives;
+import org.minifx.workbench.util.Purpose;
 import org.springframework.core.annotation.Order;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -54,7 +55,7 @@ import javafx.scene.Node;
  * factory methods and annotations of the collected elements.
  * <p>
  * For deriving information, usually annotations are used. Those annotations are searched in the order as described in
- * {@link WorkbenchElementsRepository#from(Object)}. Based on this, the following strategies are applied in particular
+ * {@link BeanInformationRepository#from(Object)}. Based on this, the following strategies are applied in particular
  * cases:
  * <ul>
  * <li><b>Views:</b> Each bean for which a {@link View} annotation is found, is considered as view in MiniFx. The view
@@ -74,29 +75,30 @@ import javafx.scene.Node;
  * account.
  * <ul>
  * <p>
- * 
+ *
  * @author kfuchsbe
  */
 public class ElementsDefinitionConstructor {
 
-    private static final String DEFAULT_ICON_SIZE = "1em";
-
-    private WorkbenchElementsRepository repository;
+    private final WorkbenchElementsRepository repository;
+    private final BeanInformationExtractor extractor;
 
     /**
      * Constructor which requires an elements repository, which will be used to look up the collected elements as well
      * as annotations on them and factory methods.
-     * 
+     *
      * @param elementsRepository the repository to use
      * @throws NullPointerException if the given repository is {@code null}
      */
-    public ElementsDefinitionConstructor(WorkbenchElementsRepository elementsRepository) {
+    public ElementsDefinitionConstructor(WorkbenchElementsRepository elementsRepository,
+            BeanInformationExtractor beanInformationExtractor) {
         this.repository = requireNonNull(elementsRepository, "elementsRepository must not be null");
+        this.extractor = requireNonNull(beanInformationExtractor, "beanInformationExtractor must not be null");
     }
 
     /**
      * Returns a perspective definition for each perspective used by at least one of the views found in the repository.
-     * 
+     *
      * @return all perspective definitions as derived from the views in the repository
      */
     public Set<PerspectiveDefinition> perspectives() {
@@ -105,7 +107,7 @@ public class ElementsDefinitionConstructor {
 
     /**
      * Returns a footer definition for each footer found in the repository
-     * 
+     *
      * @return all footer definitions
      */
     public Set<FooterDefinition> footers() {
@@ -127,25 +129,6 @@ public class ElementsDefinitionConstructor {
 
     private Optional<View> viewAnnotation(Object view) {
         return repository.from(view).getAnnotation(View.class);
-    }
-
-    private Optional<Node> viewGraphics(Object view) {
-        return iconAnnotation(view).map(ic -> Icons.graphicFrom(ic, DEFAULT_ICON_SIZE));
-    }
-
-    private Optional<Icon> iconAnnotation(Object view) {
-        return repository.from(view).getAnnotation(Icon.class);
-    }
-
-    private String viewNameFrom(Object view) {
-        Optional<String> nameFromAnnotation = repository.from(view).getAnnotation(Name.class).map(Name::value);
-        return Optionals.first(nameFromAnnotation, nameFromNameMethod(view), repository.beanNameFor(view))
-                .orElse(view.getClass().getSimpleName());
-    }
-
-    private int viewOrderFrom(Object view) {
-        Optional<Order> order = repository.from(view).getAnnotation(Order.class);
-        return order.map(Order::value).orElse(LOWEST_PRECEDENCE);
     }
 
     private boolean alwaysShowTabsFromView(Object view) {
@@ -189,17 +172,17 @@ public class ElementsDefinitionConstructor {
     }
 
     private ViewDefinition toViewDefinition(Object view) {
-        return new ViewDefinition(MiniFxComponents.fxNodeFrom(view), viewPosFor(view), viewDisplayProperties(view),
-                alwaysShowTabsFromView(view));
+        return new ViewDefinition(MiniFxComponents.fxNodeFrom(view), viewPosFor(view),
+                displayPropertiesFrom(view, Purpose.VIEW), alwaysShowTabsFromView(view));
     }
 
     private FooterDefinition toFooterDefinition(Object footer) {
-        return new FooterDefinition(MiniFxComponents.fxNodeFrom(footer), viewDisplayProperties(footer),
+        return new FooterDefinition(MiniFxComponents.fxNodeFrom(footer), displayPropertiesFrom(footer, Purpose.VIEW),
                 alwaysShowTabsFromFooter(footer));
     }
 
-    private DisplayProperties viewDisplayProperties(Object view) {
-        return new DisplayProperties(viewNameFrom(view), viewGraphics(view).orElse(null), viewOrderFrom(view));
+    public DisplayProperties displayPropertiesFrom(Object view, Purpose purpose) {
+        return this.extractor.displayPropertiesFrom(view, purpose);
     }
 
 }

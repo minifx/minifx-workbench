@@ -17,15 +17,17 @@ import javafx.scene.paint.Color;
 /**
  * Annotation for specifying the Icon of a MiniFx view or {@link Perspective}. NOTE: the {@link #color()} String must
  * conform to the rules of JavaFX {@link Color#valueOf(String)} method.
- * 
+ *
  * @author acalia
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface Icon {
 
+    public static final String DEFAULT_COLOR = "#38678e";
+
     FontAwesomeIcon value();
 
-    String color() default "#38678e";
+    String color() default DEFAULT_COLOR;
 
 }

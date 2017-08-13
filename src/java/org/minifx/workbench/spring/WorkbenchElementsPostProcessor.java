@@ -39,13 +39,14 @@ import com.google.common.collect.Iterables;
  * <li>It collects all beans which are recognized as minifx elements (by corresponding annotations). These are: views
  * (see {@link View}), footers (see {@link Footer}) and toolbar items (see {@link ToolbarItem}).
  * </ol>
- * The collected information is exposed through the {@link WorkbenchElementsRepository} interface for further usage.
- * 
+ * The collected information is exposed through the {@link WorkbenchElementsRepository} and
+ * {@link BeanInformationRepository} interfaces for further usage.
+ *
  * @author kfuchsbe
  */
 @Component
 public class WorkbenchElementsPostProcessor
-        implements BeanFactoryAware, BeanPostProcessor, WorkbenchElementsRepository {
+        implements BeanFactoryAware, BeanPostProcessor, WorkbenchElementsRepository, BeanInformationRepository {
 
     private DefaultListableBeanFactory beanFactory;
     private Map<Object, Method> beansToFactoryMethod = new ConcurrentHashMap<>();
@@ -54,6 +55,7 @@ public class WorkbenchElementsPostProcessor
     private Set<Object> views = newSetFromMap(new ConcurrentHashMap<>());
     private Set<Object> footers = newSetFromMap(new ConcurrentHashMap<>());
     private Set<Object> toolbarItems = newSetFromMap(new ConcurrentHashMap<>());
+    private Set<Object> perspectives = newSetFromMap(new ConcurrentHashMap<>());
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
@@ -73,6 +75,8 @@ public class WorkbenchElementsPostProcessor
             toolbarItems.add(bean);
         } else if (isFooter(bean)) {
             footers.add(bean);
+            // } else if (isPerspective(bean)) {
+            // perspectives.add(bean);
         }
         return bean;
     }
@@ -112,6 +116,11 @@ public class WorkbenchElementsPostProcessor
         return ImmutableSet.copyOf(this.footers);
     }
 
+    @Override
+    public Set<Object> perspectives() {
+        return ImmutableSet.copyOf(this.perspectives);
+    }
+
     private boolean isFooter(Object bean) {
         return from(bean).getAnnotation(Footer.class).isPresent();
     }
@@ -142,9 +151,7 @@ public class WorkbenchElementsPostProcessor
     private List<Method> methodsOfName(Class<? extends Object> factoryClass, String factoryMethodName) {
         Set<Method> methods = new HashSet<>(Arrays.asList(factoryClass.getMethods()));
         methods.addAll(Arrays.asList(factoryClass.getDeclaredMethods()));
-        List<Method> filteredMethods = methods.stream().filter(m -> factoryMethodName.equals(m.getName()))
-                .collect(toList());
-        return filteredMethods;
+        return methods.stream().filter(m -> factoryMethodName.equals(m.getName())).collect(toList());
     }
 
     private Class<? extends Object> factoryBeanClass(String factoryBeanName) {

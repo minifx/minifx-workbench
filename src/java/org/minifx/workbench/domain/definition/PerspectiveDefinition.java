@@ -4,27 +4,27 @@
 
 package org.minifx.workbench.domain.definition;
 
-import java.util.Set;
+import static java.util.Objects.requireNonNull;
 
-import org.minifx.workbench.domain.Perspective;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
 public class PerspectiveDefinition {
 
-    private final Class<? extends Perspective> perspective;
+    private final Object perspectiveKey;
     private final DisplayProperties displayProperties;
     private final Set<ViewDefinition> views;
 
-    public PerspectiveDefinition(Class<? extends Perspective> perspective, DisplayProperties displayProperties,
+    public PerspectiveDefinition(Object perspectiveKey, DisplayProperties displayProperties,
             Set<ViewDefinition> views) {
-        this.perspective = perspective;
-        this.displayProperties = displayProperties;
-        this.views = ImmutableSet.copyOf(views);
+        this.perspectiveKey = requireNonNull(perspectiveKey, "perspectiveKey must not be null");
+        this.displayProperties = requireNonNull(displayProperties, "displayProperties must not be null");
+        this.views = ImmutableSet.copyOf(requireNonNull(views, "views must not be null"));
     }
 
-    public Class<? extends Perspective> perspective() {
-        return perspective;
+    public Object perspective() {
+        return perspectiveKey;
     }
 
     public DisplayProperties displayProperties() {
@@ -40,7 +40,7 @@ public class PerspectiveDefinition {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((displayProperties == null) ? 0 : displayProperties.hashCode());
-        result = prime * result + ((perspective == null) ? 0 : perspective.hashCode());
+        result = prime * result + ((perspectiveKey == null) ? 0 : perspectiveKey.hashCode());
         result = prime * result + ((views == null) ? 0 : views.hashCode());
         return result;
     }
@@ -64,11 +64,11 @@ public class PerspectiveDefinition {
         } else if (!displayProperties.equals(other.displayProperties)) {
             return false;
         }
-        if (perspective == null) {
-            if (other.perspective != null) {
+        if (perspectiveKey == null) {
+            if (other.perspectiveKey != null) {
                 return false;
             }
-        } else if (!perspective.equals(other.perspective)) {
+        } else if (!perspectiveKey.equals(other.perspectiveKey)) {
             return false;
         }
         if (views == null) {
@@ -83,7 +83,7 @@ public class PerspectiveDefinition {
 
     @Override
     public String toString() {
-        return "PerspectiveDefinition [perspective=" + perspective + ", displayProperties=" + displayProperties
+        return "PerspectiveDefinition [perspective=" + perspectiveKey + ", displayProperties=" + displayProperties
                 + ", views=" + views + "]";
     }
 

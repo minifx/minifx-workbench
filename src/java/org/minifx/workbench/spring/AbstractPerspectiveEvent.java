@@ -6,17 +6,15 @@ package org.minifx.workbench.spring;
 
 import java.util.Objects;
 
-import org.minifx.workbench.domain.Perspective;
-
 public abstract class AbstractPerspectiveEvent {
 
-    private final Class<? extends Perspective> perspective;
+    private final Object perspective;
 
-    public AbstractPerspectiveEvent(Class<? extends Perspective> perspective) {
+    public AbstractPerspectiveEvent(Object perspective) {
         this.perspective = Objects.requireNonNull(perspective);
     }
 
-    public Class<? extends Perspective> perspective() {
+    public Object perspective() {
         return perspective;
     }
 

@@ -4,11 +4,9 @@
 
 package org.minifx.workbench.spring;
 
-import org.minifx.workbench.domain.Perspective;
-
 public class ActivatePerspectiveCommand extends AbstractPerspectiveEvent {
 
-    public ActivatePerspectiveCommand(Class<? extends Perspective> perspective) {
+    public ActivatePerspectiveCommand(Object perspective) {
         super(perspective);
     }
 

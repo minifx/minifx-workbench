@@ -14,7 +14,7 @@ import javafx.scene.text.Text;
 
 /**
  * Static methods for creating icons
- * 
+ *
  * @author kfuchsbe
  */
 public final class Icons {
@@ -25,7 +25,7 @@ public final class Icons {
 
     /**
      * Creates a JavaFx node as specified from the given icon annotation and the given size
-     * 
+     *
      * @param iconAnnotation the icon annotation to process
      * @param size the size of the icon
      * @return a node to be put into java fx, showing the icon
@@ -39,6 +39,12 @@ public final class Icons {
 
     private static Color color(Icon iconAnnotation) {
         return Color.valueOf(iconAnnotation.color().trim());
+    }
+
+    public static Node graphicFrom(FontAwesomeIcon icon, String size, Color color) {
+        Text nodeIcon = FontAwesomeIconFactory.get().createIcon(icon, size);
+        nodeIcon.setFill(color);
+        return nodeIcon;
     }
 
 }

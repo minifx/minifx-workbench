@@ -7,6 +7,7 @@ package org.minifx.workbench.util;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static org.minifx.workbench.domain.PerspectivePos.CENTER;
+import static org.minifx.workbench.util.Purpose.PERSPECTIVE;
 import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 
 import java.util.Optional;
@@ -28,7 +29,7 @@ import javafx.scene.text.Text;
 
 /**
  * Utility methods for perspective classes.
- * 
+ *
  * @author kfuchsbe
  */
 public final class Perspectives {
@@ -38,7 +39,6 @@ public final class Perspectives {
 
     private static final Color DEFAULT_COLOR = Color.rgb(2, 2, 2);
     private static final FontAwesomeIcon DEFAULT_PERSPECTIVE_ICON = FontAwesomeIcon.ANGLE_DOWN;
-    private static final String PERSPECTIVE_ICON_SIZE = "1.5em";
 
     private Perspectives() {
         /* Only static methods */
@@ -46,7 +46,7 @@ public final class Perspectives {
 
     /**
      * Retrieves the display properties from the given perspective.
-     * 
+     *
      * @param perspective the perspective (class) from which to retrieve properties
      * @return the retrieved properties
      */
@@ -61,16 +61,16 @@ public final class Perspectives {
         return ofNullable(order).map(Order::value).orElse(LOWEST_PRECEDENCE);
     }
 
-    private static Node perspectiveDefaultGraphics() {
+    public static Node perspectiveDefaultGraphics() {
         Text defaultIcon = FontAwesomeIconFactory.get().createIcon(Perspectives.DEFAULT_PERSPECTIVE_ICON,
-                Perspectives.PERSPECTIVE_ICON_SIZE);
+                PERSPECTIVE.defaultIconSize());
         defaultIcon.setFill(Perspectives.DEFAULT_COLOR);
         return defaultIcon;
     }
 
     private static Node perspectiveGraphics(Class<? extends Perspective> perspective) {
         Optional<Icon> annotation = Optional.ofNullable(perspective.getAnnotation(Icon.class));
-        return annotation.map(ic -> Icons.graphicFrom(ic, PERSPECTIVE_ICON_SIZE))
+        return annotation.map(ic -> Icons.graphicFrom(ic, PERSPECTIVE.defaultIconSize()))
                 .orElseGet(Perspectives::perspectiveDefaultGraphics);
     }
 

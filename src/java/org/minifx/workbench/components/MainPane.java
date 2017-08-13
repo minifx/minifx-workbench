@@ -47,8 +47,8 @@ public class MainPane extends BorderPane {
 
     private static final HBox DEFAULT_FILLER = new HBox();
 
-    private final Map<Class<? extends Perspective>, Node> perspectives;
-    private final Map<Class<? extends Perspective>, ToggleButton> perspectivesToButtons = new HashMap<>();
+    private final Map<Object, Node> perspectives;
+    private final Map<Object, ToggleButton> perspectivesToButtons = new HashMap<>();
 
     private final ApplicationEventPublisher publisher;
 
@@ -121,7 +121,7 @@ public class MainPane extends BorderPane {
         return perspectiveButtons;
     }
 
-    private void setActive(Class<? extends Perspective> perspectiveDefinition) {
+    private void setActive(Object perspectiveDefinition) {
         Node perspective = this.perspectives.get(perspectiveDefinition);
         perspective.getStyleClass().add(MiniFxCssConstants.MAIN_PANE_CLASS);
         setCenter(perspective);
