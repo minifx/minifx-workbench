@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.minifx.workbench.css.MiniFxCssConstants;
-import org.minifx.workbench.domain.Perspective;
 import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;

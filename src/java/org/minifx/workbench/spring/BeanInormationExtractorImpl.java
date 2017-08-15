@@ -8,7 +8,6 @@ import static java.util.Objects.requireNonNull;
 import static org.minifx.workbench.util.Names.nameFromNameMethod;
 import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import org.minifx.workbench.annotations.Icon;

@@ -26,6 +26,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.Ordered;
+import org.springframework.core.PriorityOrdered;
 
 import com.google.common.collect.ImmutableList;
 
@@ -33,7 +35,7 @@ import javafx.scene.Scene;
 
 @Configuration
 @Import(FactoryMethodsCollectorConfiguration.class)
-public class MiniFxWorkbenchConfiguration {
+public class MiniFxWorkbenchConfiguration  {
 
     private static final int DEFAULT_HEIGHT = 760;
     private static final int DEFAULT_WIDTH = 1280;
@@ -88,5 +90,10 @@ public class MiniFxWorkbenchConfiguration {
     private Iterable<PerspectiveDefinition> providedPerspectives() {
         return emptyIfNull(perspectiveProviders).stream().flatMap(p -> p.perspectives().stream()).collect(toSet());
     }
+
+//    @Override
+//    public int getOrder() {
+//        return Ordered.LOWEST_PRECEDENCE;
+//    }
 
 }

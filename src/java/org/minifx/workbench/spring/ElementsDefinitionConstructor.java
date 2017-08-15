@@ -6,8 +6,6 @@ package org.minifx.workbench.spring;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Objects.requireNonNull;
-import static org.minifx.workbench.util.Names.nameFromNameMethod;
-import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -24,10 +22,8 @@ import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
 import org.minifx.workbench.domain.definition.ViewDefinition;
-import org.minifx.workbench.util.Icons;
 import org.minifx.workbench.util.MiniFxComponents;
 import org.minifx.workbench.util.Names;
-import org.minifx.workbench.util.Optionals;
 import org.minifx.workbench.util.Perspectives;
 import org.minifx.workbench.util.Purpose;
 import org.springframework.core.annotation.Order;
@@ -36,8 +32,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableListMultimap.Builder;
 import com.google.common.collect.ListMultimap;
-
-import javafx.scene.Node;
 
 /**
  * Contains all the relevant logic to bring together all the information which is required to instantiate the workbench
