@@ -6,7 +6,7 @@ package org.minifx.workbench.domain.definition;
 
 import javafx.scene.Node;
 
-public class FooterDefinition extends AbstractViewDefinition {
+public class FooterDefinition extends TabbableDefinition<Node> {
 
     public FooterDefinition(Node node, DisplayProperties displayProperties, boolean alwaysShowTabs) {
         super(node, displayProperties, alwaysShowTabs);

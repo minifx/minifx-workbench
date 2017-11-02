@@ -10,7 +10,7 @@ import org.minifx.workbench.domain.PerspectivePos;
 
 import javafx.scene.Node;
 
-public class ViewDefinition extends AbstractViewDefinition {
+public class ViewDefinition extends TabbableDefinition<Node> {
 
     private final PerspectivePos perspectivePos;
 

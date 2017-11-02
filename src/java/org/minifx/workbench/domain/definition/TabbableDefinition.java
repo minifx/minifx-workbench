@@ -8,19 +8,19 @@ import static java.util.Objects.requireNonNull;
 
 import javafx.scene.Node;
 
-public abstract class AbstractViewDefinition {
+public class TabbableDefinition<N extends Node> {
 
-    private final Node node;
+    private final N node;
     private final boolean alwaysShowTabs;
     private final DisplayProperties displayProperties;
 
-    public AbstractViewDefinition(Node node, DisplayProperties displayProperties, boolean alwaysShowTabs) {
+    public TabbableDefinition(N node, DisplayProperties displayProperties, boolean alwaysShowTabs) {
         this.node = requireNonNull(node, "node must not be null");
         this.displayProperties = requireNonNull(displayProperties, "displayProperties must not be null");
         this.alwaysShowTabs = alwaysShowTabs;
     }
 
-    public Node node() {
+    public N node() {
         return node;
     }
 
@@ -53,7 +53,7 @@ public abstract class AbstractViewDefinition {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        AbstractViewDefinition other = (AbstractViewDefinition) obj;
+        TabbableDefinition<?> other = (TabbableDefinition<?>) obj;
         if (alwaysShowTabs != other.alwaysShowTabs) {
             return false;
         }

@@ -22,7 +22,7 @@ import javax.swing.JComponent;
 
 import org.minifx.workbench.components.TextWorkbenchView;
 import org.minifx.workbench.domain.PerspectivePos;
-import org.minifx.workbench.domain.definition.AbstractViewDefinition;
+import org.minifx.workbench.domain.definition.TabbableDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
 import org.minifx.workbench.domain.definition.ViewDefinition;
 
@@ -58,12 +58,12 @@ public class MiniFxComponents {
         return toolbarItems.stream().map(MiniFxComponents::fxNodeFrom).collect(toList());
     }
 
-    public static TabPane tabPaneFrom(Collection<? extends AbstractViewDefinition> posViews) {
-        List<AbstractViewDefinition> sortedViews = posViews.stream()
+    public static TabPane tabPaneFrom(Collection<? extends TabbableDefinition<?>> posViews) {
+        List<TabbableDefinition<?>> sortedViews = posViews.stream()
                 .sorted(Comparator.comparingInt(v -> v.displayProperties().order())).collect(toList());
 
         TabPane tabRoot = new TabPane();
-        for (AbstractViewDefinition node : sortedViews) {
+        for (TabbableDefinition<?> node : sortedViews) {
             Tab tab = new Tab();
             tab.setText(node.displayProperties().name());
             tab.setGraphic(node.displayProperties().graphic().orElse(null));
@@ -74,13 +74,13 @@ public class MiniFxComponents {
         return tabRoot;
     }
 
-    public static final Optional<Node> containerPaneFrom(Collection<? extends AbstractViewDefinition> views) {
+    public static final Optional<Node> containerPaneFrom(Collection<? extends TabbableDefinition<?>> views) {
         if (views.isEmpty()) {
             return Optional.empty();
         }
 
         if ((views.size() == 1)) {
-            AbstractViewDefinition singleView = Iterables.getOnlyElement(views);
+            TabbableDefinition<?> singleView = Iterables.getOnlyElement(views);
             if (!singleView.alwaysShowTabs()) {
                 return Optional.of(singleView.node());
             }
