@@ -24,6 +24,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 
+@Deprecated
 public class FxmlWorkbenchView extends StackPane {
     private static final Logger LOGGER = LoggerFactory.getLogger(FxmlWorkbenchView.class);
     private final String fxmlFileName;
