@@ -8,11 +8,14 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.minifx.fxcommons.util.FxmlControllerConvention;
+import org.minifx.fxcommons.util.UniqueUsage;
 
 import javafx.scene.Node;
 import javafx.util.Callback;
 
 public class FxmlPanels {
+
+    private static final UniqueUsage UNIQUE_CONTROLLERS = new UniqueUsage();
 
     /* Note: does NOT support nested calls fxml views */
     public static final Node simpleFromController(Object controller) {
@@ -27,8 +30,6 @@ public class FxmlPanels {
 
     public static class SingleUseCallback implements Callback<Class<?>, Object> {
 
-        private AtomicBoolean used = new AtomicBoolean(false);
-
         private final Object controller;
 
         public SingleUseCallback(Object controller) {
@@ -37,11 +38,7 @@ public class FxmlPanels {
 
         @Override
         public Object call(Class<?> param) {
-            if (used.getAndSet(true)) {
-                throw new IllegalStateException("The Controller '" + controller
-                        + "' was already injected once. A second usage is not allowed!");
-            }
-            return controller;
+            return UNIQUE_CONTROLLERS.uniqueOrThrow(controller);
         }
 
     }
