@@ -10,6 +10,8 @@
 			<dep product="spring-context" version="PRO" />
 			<dep product="spring-test" version="PRO" local="true" excluded="true" />
 
+			<dep product="accsoft-gui-fx-fxmlloading" version="CTX" />
+
 			<dep product="fontawesomefx-fontawesome" version="4.7.0-5" />
 
 			<dep product="slf4j-api" version="PRO" />

@@ -4,7 +4,7 @@
 
 package org.minifx.fxcommons.fxml.commons.spring;
 
-import org.minifx.fxcommons.fxml.commons.factories.ControllerFactory;
+import org.minifx.fxmlloading.factories.impl.ControllerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

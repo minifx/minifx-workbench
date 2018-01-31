@@ -4,8 +4,8 @@
 
 package org.minifx.workbench.nodes.creators;
 
-import org.minifx.fxcommons.fxml.commons.FxmlNodeBuilder;
-import org.minifx.fxcommons.fxml.commons.factories.ControllerFactory;
+import org.minifx.fxmlloading.builder.FxmlNodeBuilder;
+import org.minifx.fxmlloading.factories.impl.ControllerFactory;
 import org.minifx.workbench.nodes.FxNodeCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;

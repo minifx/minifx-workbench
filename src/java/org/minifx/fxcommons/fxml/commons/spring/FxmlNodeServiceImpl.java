@@ -6,8 +6,8 @@ package org.minifx.fxcommons.fxml.commons.spring;
 
 import static java.util.Objects.requireNonNull;
 
-import org.minifx.fxcommons.fxml.commons.FxmlNodeBuilder;
-import org.minifx.fxcommons.fxml.commons.factories.ControllerFactory;
+import org.minifx.fxmlloading.builder.FxmlNodeBuilder;
+import org.minifx.fxmlloading.factories.impl.ControllerFactory;
 
 import javafx.scene.Node;
 
