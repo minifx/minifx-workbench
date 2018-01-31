@@ -15,6 +15,7 @@ import org.junit.rules.ExpectedException;
 import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.conf.fullyconfigured.AbstractFxBorderPaneView;
 import org.minifx.workbench.domain.Perspective;
+import org.minifx.workbench.nodes.FxNodeFactory;
 import org.minifx.workbench.util.Perspectives;
 import org.mockito.Mockito;
 
@@ -27,11 +28,13 @@ public class ElementsDefinitionConstructorTest {
 
     @Before
     public void setUp() {
+        FxNodeFactory fxNodeFactory = Mockito.mock(FxNodeFactory.class);
+
         WorkbenchElementsRepository repository = Mockito.mock(WorkbenchElementsRepository.class);
         Mockito.when(repository.from(any()))
                 .then(invoc -> new OngoingAnnotationExtraction(null, invoc.getArguments()[0]));
         BeanInformationExtractor extractor = Mockito.mock(BeanInformationExtractor.class);
-        viewInstantiator = new ElementsDefinitionConstructor(repository, extractor);
+        viewInstantiator = new ElementsDefinitionConstructor(repository, extractor, fxNodeFactory);
     }
 
     @Test

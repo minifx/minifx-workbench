@@ -44,7 +44,6 @@ import com.google.common.collect.Iterables;
  *
  * @author kfuchsbe
  */
-@Component
 public class WorkbenchElementsPostProcessor
         implements BeanFactoryAware, BeanPostProcessor, WorkbenchElementsRepository, BeanInformationRepository {
 

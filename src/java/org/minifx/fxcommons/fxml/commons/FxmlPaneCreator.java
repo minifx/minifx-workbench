@@ -2,14 +2,13 @@
  * Copyright (c) 2017 European Organisation for Nuclear Research (CERN), All Rights Reserved.
  */
 
-package org.minifx.fxcommons;
+package org.minifx.fxcommons.fxml.commons;
 
 import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.net.URL;
 
-import org.minifx.fxcommons.util.FxmlControllerConvention;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,23 +23,28 @@ public class FxmlPaneCreator {
     private static final Logger LOGGER = LoggerFactory.getLogger(FxmlPaneCreator.class);
 
     private final Callback<Class<?>, Object> controllerFactory;
-    private final FxmlControllerConvention convention;
+    private final FxmlLoadingConfiguration configuration;
 
-    public FxmlPaneCreator(FxmlControllerConvention convention, Callback<Class<?>, Object> childControllerFactory) {
-        this.convention = requireNonNull(convention, "controller convention must not be null");
+    private FxmlPaneCreator(FxmlLoadingConfiguration convention, Callback<Class<?>, Object> childControllerFactory) {
+        this.configuration = requireNonNull(convention, "controller convention must not be null");
         this.controllerFactory = requireNonNull(childControllerFactory, "controllerFactory must not be null");
     }
 
-    public Node create() {
+    public static final Node nodeFrom(FxmlLoadingConfiguration convention,
+            Callback<Class<?>, Object> childControllerFactory) {
+        return new FxmlPaneCreator(convention, childControllerFactory).create();
+    }
+
+    private Node create() {
         Parent root = loadFxml();
         addCssIfPresent(root);
         return stackPaneOf(root);
     }
 
     private Parent loadFxml() {
-        URL fxmlUrl = convention.fxmlResource();
+        URL fxmlUrl = configuration.fxmlResource();
         try {
-            FXMLLoader loader = new FXMLLoader(fxmlUrl, convention.resourceBundle());
+            FXMLLoader loader = new FXMLLoader(fxmlUrl, configuration.resourceBundle());
             loader.setLocation(fxmlUrl);
             loader.setControllerFactory(this::provideController);
             return loader.load();
@@ -66,10 +70,14 @@ public class FxmlPaneCreator {
         return controller;
     }
 
+    /**
+     * @deprecated makes no sense as it does not work with nested views
+     */
+    @Deprecated
     private void addCssIfPresent(Parent root) {
-        URL cssUrl = convention.cssResource();
+        URL cssUrl = configuration.cssResource();
         if (cssUrl != null) {
-            LOGGER.info("Applying CSS: " + cssUrl);
+            LOGGER.info("Applying CSS: {}", cssUrl);
             root.getStylesheets().add(cssUrl.toExternalForm());
         }
     }

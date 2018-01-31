@@ -7,7 +7,6 @@ package org.minifx.workbench.components;
 import static com.google.common.collect.ImmutableList.copyOf;
 import static java.util.Collections.singletonList;
 import static org.minifx.workbench.util.MiniFxComponents.containerPaneFrom;
-import static org.minifx.workbench.util.MiniFxComponents.nodesFrom;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +21,7 @@ import org.minifx.workbench.css.MiniFxCssConstants;
 import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.nodes.FxNodeFactory;
 import org.minifx.workbench.spring.ActivatePerspectiveCommand;
 import org.minifx.workbench.spring.PerspectiveActivatedEvent;
 import org.minifx.workbench.util.MiniFxComponents;
@@ -52,12 +52,13 @@ public class MainPane extends BorderPane {
     private final ApplicationEventPublisher publisher;
 
     public MainPane(Collection<PerspectiveDefinition> perspectives, Iterable<Object> toolbarItems,
-            Collection<FooterDefinition> footers, ApplicationEventPublisher publisher) {
-        this(perspectives, toolbarItems, footers, DEFAULT_FILLER, publisher);
+            Collection<FooterDefinition> footers, ApplicationEventPublisher publisher, FxNodeFactory fxNodeFactory) {
+        this(perspectives, toolbarItems, footers, DEFAULT_FILLER, publisher, fxNodeFactory);
     }
 
     public MainPane(Collection<PerspectiveDefinition> perspectives, Iterable<Object> toolbarItems,
-            Collection<FooterDefinition> footers, Node filler, ApplicationEventPublisher publisher) {
+            Collection<FooterDefinition> footers, Node filler, ApplicationEventPublisher publisher,
+            FxNodeFactory fxNodeFactory) {
 
         this.publisher = publisher;
         this.perspectives = perspectives.stream()
@@ -67,7 +68,7 @@ public class MainPane extends BorderPane {
                 .sorted(Comparator.comparingInt(p -> p.displayProperties().order())).collect(Collectors.toList());
 
         List<ToggleButton> perspectiveButtons = perspectiveButtons(orderedPerspectives);
-        List<Node> toolbarNodes = nodesFrom(copyOf(toolbarItems));
+        List<Node> toolbarNodes = fxNodeFactory.fxNodesFrom(copyOf(toolbarItems));
 
         createToolbar(perspectiveButtons, toolbarNodes, filler);
 

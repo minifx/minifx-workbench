@@ -40,24 +40,6 @@ public class MiniFxComponents {
         /* only static methods */
     }
 
-    public static Node fxNodeFrom(Object view) {
-        if (view instanceof Node) {
-            return (Node) view;
-        }
-        if (view instanceof JComponent) {
-            SwingNode swingNode = new SwingNode();
-            swingNode.setContent((JComponent) view);
-            return swingNode;
-        }
-        throw new IllegalArgumentException(
-                "A view must either be a java-fx Node or swing JComponent. None of this is the case for the view "
-                        + view + ".");
-    }
-
-    public static final List<Node> nodesFrom(List<?> toolbarItems) {
-        return toolbarItems.stream().map(MiniFxComponents::fxNodeFrom).collect(toList());
-    }
-
     public static TabPane tabPaneFrom(Collection<? extends TabbableDefinition<?>> posViews) {
         List<TabbableDefinition<?>> sortedViews = posViews.stream()
                 .sorted(Comparator.comparingInt(v -> v.displayProperties().order())).collect(toList());

@@ -14,6 +14,7 @@ import java.util.List;
 import org.minifx.fxcommons.MiniFxSceneBuilder;
 import org.minifx.workbench.components.MainPane;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.nodes.FxNodeFactory;
 import org.minifx.workbench.providers.PerspectiveProvider;
 import org.minifx.workbench.spring.BeanInformationExtractor;
 import org.minifx.workbench.spring.BeanInformationRepository;
@@ -34,8 +35,8 @@ import com.google.common.collect.ImmutableList;
 import javafx.scene.Scene;
 
 @Configuration
-@Import(FactoryMethodsCollectorConfiguration.class)
-public class MiniFxWorkbenchConfiguration  {
+@Import({ FactoryMethodsCollectorConfiguration.class, FxmlNodeServiceConfiguration.class, NodeFactoryConfiguration.class })
+public class MiniFxWorkbenchConfiguration {
 
     private static final int DEFAULT_HEIGHT = 760;
     private static final int DEFAULT_WIDTH = 1280;
@@ -69,15 +70,15 @@ public class MiniFxWorkbenchConfiguration  {
 
     @Bean
     public MainPane mainPane(ApplicationEventPublisher publisher, WorkbenchElementsRepository factoryMethodsRepository,
-            BeanInformationExtractor beanInformationExtractor) {
+            BeanInformationExtractor beanInformationExtractor, FxNodeFactory fxNodeFactory) {
         ElementsDefinitionConstructor viewInstantiator = new ElementsDefinitionConstructor(factoryMethodsRepository,
-                beanInformationExtractor);
+                beanInformationExtractor, fxNodeFactory);
 
         List<PerspectiveDefinition> allPerspectives = ImmutableList.<PerspectiveDefinition> builder()
                 .addAll(viewInstantiator.perspectives()).addAll(providedPerspectives()).build();
 
         MainPane mainPanel = new MainPane(allPerspectives, factoryMethodsRepository.toolbarItems(),
-                viewInstantiator.footers(), publisher);
+                viewInstantiator.footers(), publisher, fxNodeFactory);
         mainPanel.setId(ID_MAIN_PANEL);
         return mainPanel;
     }
@@ -90,10 +91,5 @@ public class MiniFxWorkbenchConfiguration  {
     private Iterable<PerspectiveDefinition> providedPerspectives() {
         return emptyIfNull(perspectiveProviders).stream().flatMap(p -> p.perspectives().stream()).collect(toSet());
     }
-
-//    @Override
-//    public int getOrder() {
-//        return Ordered.LOWEST_PRECEDENCE;
-//    }
 
 }

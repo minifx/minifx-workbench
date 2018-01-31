@@ -22,6 +22,7 @@ import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
 import org.minifx.workbench.domain.definition.ViewDefinition;
+import org.minifx.workbench.nodes.FxNodeFactory;
 import org.minifx.workbench.util.MiniFxComponents;
 import org.minifx.workbench.util.Names;
 import org.minifx.workbench.util.Perspectives;
@@ -76,6 +77,7 @@ public class ElementsDefinitionConstructor {
 
     private final WorkbenchElementsRepository repository;
     private final BeanInformationExtractor extractor;
+    private final FxNodeFactory fxNodeFactory;
 
     /**
      * Constructor which requires an elements repository, which will be used to look up the collected elements as well
@@ -85,9 +87,10 @@ public class ElementsDefinitionConstructor {
      * @throws NullPointerException if the given repository is {@code null}
      */
     public ElementsDefinitionConstructor(WorkbenchElementsRepository elementsRepository,
-            BeanInformationExtractor beanInformationExtractor) {
+            BeanInformationExtractor beanInformationExtractor, FxNodeFactory fxNodeFactory) {
         this.repository = requireNonNull(elementsRepository, "elementsRepository must not be null");
         this.extractor = requireNonNull(beanInformationExtractor, "beanInformationExtractor must not be null");
+        this.fxNodeFactory = requireNonNull(fxNodeFactory, "fxNodeFactory must not be null");
     }
 
     /**
@@ -166,12 +169,12 @@ public class ElementsDefinitionConstructor {
     }
 
     private ViewDefinition toViewDefinition(Object view) {
-        return new ViewDefinition(MiniFxComponents.fxNodeFrom(view), viewPosFor(view),
+        return new ViewDefinition(fxNodeFactory.fxNodeFrom(view), viewPosFor(view),
                 displayPropertiesFrom(view, Purpose.VIEW), alwaysShowTabsFromView(view));
     }
 
     private FooterDefinition toFooterDefinition(Object footer) {
-        return new FooterDefinition(MiniFxComponents.fxNodeFrom(footer), displayPropertiesFrom(footer, Purpose.VIEW),
+        return new FooterDefinition(fxNodeFactory.fxNodeFrom(footer), displayPropertiesFrom(footer, Purpose.VIEW),
                 alwaysShowTabsFromFooter(footer));
     }
 

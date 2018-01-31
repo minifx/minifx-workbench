@@ -38,7 +38,7 @@ public final class Perspectives {
     public static final Class<? extends Perspective> DEFAULT_PERSPECTIVE = DefaultPerspective.class;
 
     private static final Color DEFAULT_COLOR = Color.rgb(2, 2, 2);
-    private static final FontAwesomeIcon DEFAULT_PERSPECTIVE_ICON = FontAwesomeIcon.ANGLE_DOWN;
+    private static final FontAwesomeIcon DEFAULT_PERSPECTIVE_ICON = FontAwesomeIcon.QUESTION;
 
     private Perspectives() {
         /* Only static methods */
