@@ -6,7 +6,7 @@ package org.minifx.fxcommons.fxml.commons.spring;
 
 import static java.util.Objects.requireNonNull;
 
-import org.minifx.fxmlloading.builder.FxmlNodeBuilder;
+import org.minifx.fxmlloading.builders.FxmlNodeBuilders;
 import org.minifx.fxmlloading.factories.impl.ControllerFactory;
 
 import javafx.scene.Node;
@@ -21,17 +21,17 @@ public class FxmlNodeServiceImpl implements FxmlNodeService {
 
     @Override
     public Node nestedFromFxml(String classPathFxml) {
-        return FxmlNodeBuilder.fromFxml(classPathFxml).controllersFrom(controllerFactory).build();
+        return FxmlNodeBuilders.fromFxml(classPathFxml).controllersFrom(controllerFactory).build();
     }
 
     @Override
     public Node nonNestedFromController(Object controllerInstance) {
-        return FxmlNodeBuilder.byConventionFrom(controllerInstance).build();
+        return FxmlNodeBuilders.byConventionFrom(controllerInstance).build();
     }
 
     @Override
     public Node nestedFromController(Object controllerInstance) {
-        return FxmlNodeBuilder.byConventionFrom(controllerInstance).nestedFrom(controllerFactory).build();
+        return FxmlNodeBuilders.byConventionFrom(controllerInstance).nestedControllersFrom(controllerFactory).build();
     }
 
 }

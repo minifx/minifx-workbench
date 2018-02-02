@@ -4,10 +4,9 @@
 
 package org.minifx.workbench.nodes.creators;
 
-import org.minifx.fxmlloading.builder.FxmlNodeBuilder;
-import org.minifx.fxmlloading.factories.impl.ControllerFactory;
+import org.minifx.fxmlloading.builders.FxmlNodeBuilder;
+import org.minifx.fxmlloading.builders.FxmlNodeBuilders;
 import org.minifx.workbench.nodes.FxNodeCreator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -18,14 +17,11 @@ import javafx.scene.Node;
 @Order(2)
 public class PaneFromControllerCreator implements FxNodeCreator {
 
-    @Autowired
-    private ControllerFactory controllerFactory;
-
     @Override
     public Node fxNodeFrom(Object object) {
         if (object.getClass().getSimpleName().contains(FXMLLoader.CONTROLLER_SUFFIX)) {
             /* For the moment, we restrict this to non-nested controller creation */
-            FxmlNodeBuilder builder = FxmlNodeBuilder.byConventionFrom(object);
+            FxmlNodeBuilder builder = FxmlNodeBuilders.byConventionFrom(object);
             if (builder.canBuild()) {
                 return builder.build();
             }
