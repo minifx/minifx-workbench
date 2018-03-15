@@ -23,7 +23,6 @@ import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
 import org.minifx.workbench.domain.definition.ViewDefinition;
 import org.minifx.workbench.nodes.FxNodeFactory;
-import org.minifx.workbench.util.MiniFxComponents;
 import org.minifx.workbench.util.Names;
 import org.minifx.workbench.util.Perspectives;
 import org.minifx.workbench.util.Purpose;

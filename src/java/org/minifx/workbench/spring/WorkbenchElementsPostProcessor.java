@@ -26,7 +26,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.cglib.proxy.Enhancer;
-import org.springframework.stereotype.Component;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;

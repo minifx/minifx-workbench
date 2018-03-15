@@ -5,7 +5,6 @@
 package org.minifx.workbench.conf.fullyconfigured;
 
 import static org.minifx.workbench.domain.PerspectivePos.CENTER;
-import static org.minifx.workbench.domain.PerspectivePos.LEFT;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.annotations.View;
-import org.minifx.workbench.domain.PerspectivePos;
 import org.minifx.workbench.spring.ActivatePerspectiveCommand;
 import org.minifx.workbench.spring.PerspectiveActivatedEvent;
 import org.minifx.workbench.util.InSwing;

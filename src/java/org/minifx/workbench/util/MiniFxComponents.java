@@ -18,17 +18,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import javax.swing.JComponent;
-
 import org.minifx.workbench.components.TextWorkbenchView;
 import org.minifx.workbench.domain.PerspectivePos;
-import org.minifx.workbench.domain.definition.TabbableDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.TabbableDefinition;
 import org.minifx.workbench.domain.definition.ViewDefinition;
 
 import com.google.common.collect.Iterables;
 
-import javafx.embed.swing.SwingNode;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
