@@ -22,8 +22,10 @@ import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
 import org.minifx.workbench.nodes.FxNodeFactory;
+import org.minifx.workbench.spring.AbstractPerspectiveEvent;
 import org.minifx.workbench.spring.ActivatePerspectiveCommand;
 import org.minifx.workbench.spring.PerspectiveActivatedEvent;
+import org.minifx.workbench.spring.PerspectiveButtonColorCommand;
 import org.minifx.workbench.util.MiniFxComponents;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
@@ -34,6 +36,8 @@ import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -131,9 +135,19 @@ public class MainPane extends BorderPane {
     @EventListener
     public void acivatePerspective(ActivatePerspectiveCommand command) {
         Platform.runLater(() -> {
-            ToggleButton button = this.perspectivesToButtons.get(command.perspective());
-            Optional.ofNullable(button).ifPresent(ToggleButton::fire);
+            perspectiveButton(command).ifPresent(ToggleButton::fire);
         });
     }
+
+    private Optional<ToggleButton> perspectiveButton(AbstractPerspectiveEvent command) {
+        return Optional.of(this.perspectivesToButtons.get(command.perspective()));
+    }
+
+//    @EventListener
+//    public void colorPerspectiveButton(AbstractPerspectiveEvent command) {
+//        Platform.runLater(() -> {
+//            perspectiveButton(command).ifPresent(b -> b.setBackground());
+//        });
+//    }
 
 }
