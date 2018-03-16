@@ -16,8 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.spring.ActivatePerspectiveCommand;
-import org.minifx.workbench.spring.PerspectiveActivatedEvent;
 import org.minifx.workbench.spring.ChangePerspectiveButtonStyleCommand;
+import org.minifx.workbench.spring.PerspectiveActivatedEvent;
 import org.minifx.workbench.util.InSwing;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -26,8 +26,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 
 import com.google.common.collect.ImmutableList;
-
-import javafx.scene.Node;
 
 @Configuration
 @ComponentScan
@@ -84,14 +82,14 @@ public class FullExampleConfiguration {
         service.scheduleAtFixedRate(() -> {
             ChangePerspectiveButtonStyleCommand event;
             if (flag.getAndIncrement() % 2 == 0) {
-                event = ChangePerspectiveButtonStyleCommand.fromPerspectiveAndChange(Perspective2.class, node -> {
-                    node.getStyleClass().remove("error-status");
-                    node.getStyleClass().add("successful-status");
+                event = ChangePerspectiveButtonStyleCommand.from(Perspective2.class, styleClasses -> {
+                    styleClasses.remove("error-status");
+                    styleClasses.add("successful-status");
                 });
             } else {
-                event = ChangePerspectiveButtonStyleCommand.fromPerspectiveAndChange(Perspective2.class, node -> {
-                    node.getStyleClass().remove("successful-status");
-                    node.getStyleClass().add("error-status");
+                event = ChangePerspectiveButtonStyleCommand.from(Perspective2.class, styleClasses -> {
+                    styleClasses.remove("successful-status");
+                    styleClasses.add("error-status");
                 });
             }
             System.out.println("publishing " + event);
