@@ -25,6 +25,7 @@ import org.minifx.workbench.nodes.FxNodeFactory;
 import org.minifx.workbench.spring.AbstractPerspectiveEvent;
 import org.minifx.workbench.spring.ActivatePerspectiveCommand;
 import org.minifx.workbench.spring.PerspectiveActivatedEvent;
+import org.minifx.workbench.spring.ChangePerspectiveButtonStyleCommand;
 import org.minifx.workbench.util.MiniFxComponents;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
@@ -140,11 +141,9 @@ public class MainPane extends BorderPane {
         return Optional.of(this.perspectivesToButtons.get(command.perspective()));
     }
 
-//    @EventListener
-//    public void colorPerspectiveButton(AbstractPerspectiveEvent command) {
-//        Platform.runLater(() -> {
-//            perspectiveButton(command).ifPresent(b -> b.setBackground());
-//        });
-//    }
+    @EventListener
+    public void colorPerspectiveButton(ChangePerspectiveButtonStyleCommand command) {
+        Platform.runLater(() -> perspectiveButton(command).ifPresent(command::apply));
+    }
 
 }

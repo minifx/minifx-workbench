@@ -6,6 +6,7 @@ package org.minifx.workbench.conf.fullyconfigured;
 
 import static org.minifx.workbench.domain.PerspectivePos.CENTER;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -16,12 +17,17 @@ import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.annotations.View;
 import org.minifx.workbench.spring.ActivatePerspectiveCommand;
 import org.minifx.workbench.spring.PerspectiveActivatedEvent;
+import org.minifx.workbench.spring.ChangePerspectiveButtonStyleCommand;
 import org.minifx.workbench.util.InSwing;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+
+import com.google.common.collect.ImmutableList;
+
+import javafx.scene.Node;
 
 @Configuration
 @ComponentScan
@@ -52,7 +58,8 @@ public class FullExampleConfiguration {
         return InSwing.create(EmbeddedSwingPanel::new);
     }
 
-    @Bean
+    // @Bean
+    /* enable this bean to see perspectives automatically switching */
     public ExecutorService perspectiveSwitcher(ApplicationEventPublisher publisher) {
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         AtomicInteger flag = new AtomicInteger();
@@ -69,6 +76,30 @@ public class FullExampleConfiguration {
         return service;
     }
 
+    @Bean
+    /* enable this bean to see perspectives state changes switching */
+    public ExecutorService styleSwitcher(ApplicationEventPublisher publisher) {
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        AtomicInteger flag = new AtomicInteger();
+        service.scheduleAtFixedRate(() -> {
+            ChangePerspectiveButtonStyleCommand event;
+            if (flag.getAndIncrement() % 2 == 0) {
+                event = ChangePerspectiveButtonStyleCommand.fromPerspectiveAndChange(Perspective2.class, node -> {
+                    node.getStyleClass().remove("error-status");
+                    node.getStyleClass().add("successful-status");
+                });
+            } else {
+                event = ChangePerspectiveButtonStyleCommand.fromPerspectiveAndChange(Perspective2.class, node -> {
+                    node.getStyleClass().remove("successful-status");
+                    node.getStyleClass().add("error-status");
+                });
+            }
+            System.out.println("publishing " + event);
+            publisher.publishEvent(event);
+        } , 3, 7, TimeUnit.SECONDS);
+        return service;
+    }
+
     @EventListener
     public void printActivatedPerspective(PerspectiveActivatedEvent evt) {
         System.out.println("Perspective " + evt.perspective() + " was activated.");
@@ -79,6 +110,11 @@ public class FullExampleConfiguration {
     @Bean
     public String webView() {
         return "http://www.cern.ch";
+    }
+
+    @Bean
+    public List<String> cssStyleSheets() {
+        return ImmutableList.of("/org/minifx/workbench/conf/fullyconfigured/checklistPerspectiveButtonStyle.css");
     }
 
 }

@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 
 /**
  * Simple builder for a javaFx {@link Scene}. It includes by default the CSS style of the MiniFx framework.
- * 
+ *
  * @author acalia
  */
 public final class MiniFxSceneBuilder {

@@ -1,0 +1,17 @@
+
+.error-status {
+	-fx-background-color: #F44336;
+}
+
+.error-status:selected {
+	-fx-background-color: #b51f14;
+}
+
+.successful-status {
+	-fx-background-color: #8BC34A;
+}
+
+.successful-status:selected {
+	-fx-background-color: #679234;
+}
+
