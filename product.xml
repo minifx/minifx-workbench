@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <products>
-	<product name="minifx-workbench" version="0.0.19" directory="org/minifx/minifx-workbench">
+	<product name="minifx-workbench" version="0.0.20" directory="org/minifx/minifx-workbench">
 		<jar>minifx-workbench.jar</jar>
 		<desc />
 		<dependencies>
 			<dep product="guava" version="21.0" />
+			<dep product="commons-lang3" version="PRO" />
 
 			<dep product="spring-core" version="PRO" />
 			<dep product="spring-context" version="PRO" />
