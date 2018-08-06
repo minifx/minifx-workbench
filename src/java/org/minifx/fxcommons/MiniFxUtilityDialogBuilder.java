@@ -4,19 +4,21 @@
 
 package org.minifx.fxcommons;
 
-import static org.minifx.fxcommons.MiniFxSceneBuilder.miniFxSceneBuilder;
-
-import java.util.Collection;
-
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.Collection;
+
+import static org.minifx.fxcommons.MiniFxSceneBuilder.miniFxSceneBuilder;
+
 public final class MiniFxUtilityDialogBuilder {
 
     private final MiniFxSceneBuilder sceneBuilder = miniFxSceneBuilder();
     private String title = "";
+    private Node owner;
 
     private MiniFxUtilityDialogBuilder() {
         /* Factory method */
@@ -46,6 +48,11 @@ public final class MiniFxUtilityDialogBuilder {
         return this;
     }
 
+    public MiniFxUtilityDialogBuilder withOwner(Node owner) {
+        this.owner = owner;
+        return this;
+    }
+
     public MiniFxUtilityDialogBuilder withAdditionalCss(Collection<String> inAdditionalCss) {
         sceneBuilder.withAdditionalCss(inAdditionalCss);
         return this;
@@ -56,6 +63,10 @@ public final class MiniFxUtilityDialogBuilder {
         dialog.setTitle(title);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setScene(sceneBuilder.build());
+
+        if(owner != null && owner.getScene() != null && owner.getScene().getWindow() != null) {
+            dialog.initOwner(owner.getScene().getWindow());
+        }
 
         return dialog;
     }
