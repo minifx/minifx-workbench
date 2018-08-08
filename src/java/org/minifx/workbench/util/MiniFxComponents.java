@@ -4,10 +4,16 @@
 
 package org.minifx.workbench.util;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
-import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS;
-import static org.minifx.workbench.css.MiniFxCssConstants.SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS;
+import com.google.common.collect.Iterables;
+import javafx.scene.Node;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
+import org.minifx.workbench.components.TextWorkbenchView;
+import org.minifx.workbench.domain.PerspectivePos;
+import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.TabbableDefinition;
+import org.minifx.workbench.domain.definition.ViewDefinition;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -18,18 +24,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.minifx.workbench.components.TextWorkbenchView;
-import org.minifx.workbench.domain.PerspectivePos;
-import org.minifx.workbench.domain.definition.PerspectiveDefinition;
-import org.minifx.workbench.domain.definition.TabbableDefinition;
-import org.minifx.workbench.domain.definition.ViewDefinition;
-
-import com.google.common.collect.Iterables;
-
-import javafx.scene.Node;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS;
+import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS_NO_GUTTERS;
+import static org.minifx.workbench.css.MiniFxCssConstants.SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS;
 
 public class MiniFxComponents {
 
@@ -73,16 +72,21 @@ public class MiniFxComponents {
         return node;
     }
 
+    public static Node configureMultiNodeStyleNoGutters(Node node) {
+        node.getStyleClass().add(COMPONENTS_OF_MAIN_PANEL_CLASS_NO_GUTTERS);
+        return node;
+    }
+
     public static Node configureSingleNodeStyle(Node node) {
         node.getStyleClass().add(SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS);
         return node;
     }
 
-    public static Consumer<Node> styleConfigurator(Map<PerspectivePos, List<ViewDefinition>> positionViews) {
+    public static Consumer<Node> styleConfigurator(Map<PerspectivePos, List<ViewDefinition>> positionViews, boolean gutters) {
         if (positionViews.size() == 1) {
             return MiniFxComponents::configureSingleNodeStyle;
         } else {
-            return MiniFxComponents::configureMultiNodeStyle;
+            return gutters ? MiniFxComponents::configureMultiNodeStyle : MiniFxComponents::configureMultiNodeStyleNoGutters;
         }
     }
 
@@ -107,7 +111,7 @@ public class MiniFxComponents {
         } else {
             Map<PerspectivePos, List<ViewDefinition>> positionViews = views.stream()
                     .collect(groupingBy(ViewDefinition::perspectivePos));
-            placeViewsIntoPerspective(perspectiveImpl, positionViews, styleConfigurator(positionViews));
+            placeViewsIntoPerspective(perspectiveImpl, positionViews, styleConfigurator(positionViews, definition.displayProperties().hasGutters()));
         }
         return perspectiveImpl;
     }

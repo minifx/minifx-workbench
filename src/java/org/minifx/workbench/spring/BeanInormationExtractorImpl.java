@@ -4,14 +4,11 @@
 
 package org.minifx.workbench.spring;
 
-import static java.util.Objects.requireNonNull;
-import static org.minifx.workbench.util.Names.nameFromNameMethod;
-import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
-
-import java.util.Optional;
-
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
+import org.minifx.workbench.annotations.NoGutters;
 import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.minifx.workbench.util.Icons;
 import org.minifx.workbench.util.Optionals;
@@ -19,8 +16,11 @@ import org.minifx.workbench.util.Perspectives;
 import org.minifx.workbench.util.Purpose;
 import org.springframework.core.annotation.Order;
 
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
+import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
+import static org.minifx.workbench.util.Names.nameFromNameMethod;
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 
 public class BeanInormationExtractorImpl implements BeanInformationExtractor {
 
@@ -32,7 +32,11 @@ public class BeanInormationExtractorImpl implements BeanInformationExtractor {
 
     @Override
     public DisplayProperties displayPropertiesFrom(Object view, Purpose purpose) {
-        return new DisplayProperties(viewNameFrom(view), graphicsFor(view, purpose).orElse(null), viewOrderFrom(view));
+        return new DisplayProperties(viewNameFrom(view), graphicsFor(view, purpose).orElse(null), viewOrderFrom(view), hasGutters(view));
+    }
+
+    private boolean hasGutters(Object view) {
+        return !repository.from(view).getAnnotation(NoGutters.class).isPresent();
     }
 
     private String viewNameFrom(Object view) {

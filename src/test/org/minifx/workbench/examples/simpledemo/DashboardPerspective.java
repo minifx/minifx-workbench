@@ -4,11 +4,10 @@
 
 package org.minifx.workbench.examples.simpledemo;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.domain.Perspective;
-
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 
 @Name("Dashboard")
 @Icon(value = FontAwesomeIcon.AMBULANCE, color = "green")

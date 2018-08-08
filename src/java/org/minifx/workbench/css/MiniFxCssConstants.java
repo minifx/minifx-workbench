@@ -4,13 +4,13 @@
 
 package org.minifx.workbench.css;
 
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import com.google.common.annotations.VisibleForTesting;
 
 import java.util.Collection;
 import java.util.List;
 
-import com.google.common.annotations.VisibleForTesting;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 public final class MiniFxCssConstants {
 
@@ -20,6 +20,7 @@ public final class MiniFxCssConstants {
 
     public static final String MAIN_PANE_CLASS = "main-panel";
     public static final String COMPONENTS_OF_MAIN_PANEL_CLASS = "main-panel-view";
+    public static final String COMPONENTS_OF_MAIN_PANEL_CLASS_NO_GUTTERS = "main-panel-view-no-gutters";
     public static final String SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS = "single-main-panel-view";
     public static final Collection<String> CSS_LOCATIONS = cssStyleLocations();
 

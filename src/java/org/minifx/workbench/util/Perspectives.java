@@ -4,16 +4,14 @@
 
 package org.minifx.workbench.util;
 
-import static java.util.Objects.requireNonNull;
-import static java.util.Optional.ofNullable;
-import static org.minifx.workbench.domain.PerspectivePos.CENTER;
-import static org.minifx.workbench.util.Purpose.PERSPECTIVE;
-import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
-
-import java.util.Optional;
-
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
+import org.minifx.workbench.annotations.NoGutters;
 import org.minifx.workbench.domain.DefaultPerspective;
 import org.minifx.workbench.domain.Perspective;
 import org.minifx.workbench.domain.PerspectivePos;
@@ -21,11 +19,13 @@ import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.annotation.Order;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
+import static org.minifx.workbench.domain.PerspectivePos.CENTER;
+import static org.minifx.workbench.util.Purpose.PERSPECTIVE;
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 
 /**
  * Utility methods for perspective classes.
@@ -52,8 +52,13 @@ public final class Perspectives {
      */
     public static DisplayProperties perspectiveDisplayProperties(Class<? extends Perspective> perspective) {
         return new DisplayProperties(perspectiveNameFrom(perspective), perspectiveGraphics(perspective),
-                orderFrom(perspective));
+                orderFrom(perspective), hasGutters(perspective));
     }
+
+    private static boolean hasGutters(Class<? extends Perspective> perspective) {
+        return perspective.getAnnotation(NoGutters.class) == null;
+    }
+
 
     private static final int orderFrom(Class<?> perspectiveClass) {
         requireNonNull(perspectiveClass, "perspectiveClass must not be null.");

@@ -4,11 +4,12 @@
 
 package org.minifx.workbench.domain.definition;
 
-import static java.util.Objects.requireNonNull;
+import javafx.scene.Node;
 
+import java.util.Objects;
 import java.util.Optional;
 
-import javafx.scene.Node;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author kfuchsbe
@@ -18,12 +19,13 @@ public class DisplayProperties {
     private final String name;
     private final Node graphic;
     private final int order;
+    private final boolean hasGutters;
 
-    public DisplayProperties(String name, Node graphic, int order) {
-        super();
+    public DisplayProperties(String name, Node graphic, int order, boolean hasGutters) {
         this.name = requireNonNull(name, "name must not be null");
         this.graphic = graphic;
         this.order = order;
+        this.hasGutters = hasGutters;
     }
 
     public String name() {
@@ -38,51 +40,30 @@ public class DisplayProperties {
         return this.order;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((graphic == null) ? 0 : graphic.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + order;
-        return result;
+    public boolean hasGutters() {
+        return hasGutters;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object o) {
+        if (this == o)
             return true;
-        }
-        if (obj == null) {
+        if (o == null || getClass() != o.getClass())
             return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        DisplayProperties other = (DisplayProperties) obj;
-        if (graphic == null) {
-            if (other.graphic != null) {
-                return false;
-            }
-        } else if (!graphic.equals(other.graphic)) {
-            return false;
-        }
-        if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
-            return false;
-        }
-        if (order != other.order) {
-            return false;
-        }
-        return true;
+        DisplayProperties that = (DisplayProperties) o;
+        return order == that.order && hasGutters == that.hasGutters && Objects.equals(name, that.name) && Objects
+                .equals(graphic, that.graphic);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name, graphic, order, hasGutters);
     }
 
     @Override
     public String toString() {
-        return "ComponentDisplayProperties [name=" + name + ", graphic=" + graphic + ", order=" + order + "]";
+        return "DisplayProperties{" + "name='" + name + '\'' + ", graphic=" + graphic + ", order=" + order + ", " +
+                "hasGutters=" + hasGutters + '}';
     }
-
 }
