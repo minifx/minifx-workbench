@@ -21,6 +21,10 @@ public class DisplayProperties {
     private final int order;
     private final boolean hasGutters;
 
+    public DisplayProperties(String name, Node graphic, int order) {
+        this(name, graphic, order, false);
+    }
+
     public DisplayProperties(String name, Node graphic, int order, boolean hasGutters) {
         this.name = requireNonNull(name, "name must not be null");
         this.graphic = graphic;
