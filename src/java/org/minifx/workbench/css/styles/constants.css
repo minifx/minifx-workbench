@@ -1,0 +1,10 @@
+* {
+    -minifx-background: #fff;
+	-minifx-button-background: #fdfdfd;
+	-minifx-button-background-selected: #e6e6e6;
+	-minifx-button-background-hover: -minifx-button-background-selected;
+	-minifx-button-text-color-selected: derive(#4682b4, -50.0%);
+	-minifx-button-text-color-hover: -minifx-button-text-color-selected;
+	-minifx-button-border: #b3b3b3;
+	-minifx-button-border-selected: #2e6399;
+}

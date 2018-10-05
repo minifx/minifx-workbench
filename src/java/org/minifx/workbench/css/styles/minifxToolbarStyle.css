@@ -1,5 +1,11 @@
 .perspective-button {
-	
+	-fx-cursor: hand;
+}
+
+.perspective-button:armed, .perspective-button:armed, .perspective-button:selected {
+    -fx-border-color: -minifx-button-border-selected;
+    -fx-background-color: -minifx-button-background-selected;
+    -fx-text-fill: -minifx-button-text-color-selected;
 }
 
 .toolbar-button {

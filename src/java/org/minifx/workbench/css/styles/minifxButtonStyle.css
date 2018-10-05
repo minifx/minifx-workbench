@@ -1,11 +1,3 @@
-* {
-	-minifx-button-background: #fdfdfd;
-	-minifx-button-background-selected: #e6e6e6;
-	-minifx-button-background-hover: -minifx-button-background-selected;
-	-minifx-button-text-color-selected: derive(#4682b4, -20.0%);
-	-minifx-button-text-color-hover: -minifx-button-text-color-selected;
-}
-
 .button, .toggle-button {
 	-fx-border-style: solid;
 	-fx-border-width: 1.0;

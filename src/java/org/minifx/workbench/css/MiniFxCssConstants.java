@@ -15,8 +15,9 @@ import static java.util.stream.Collectors.toList;
 public final class MiniFxCssConstants {
 
     private static final String STYLES_SUBDIR = "styles";
-    private static final List<String> BARE_CSS_STYLES = asList("minifxPerspectiveStyle.css", "minifxTabPaneStyle.css",
-            "minifxToolbarStyle.css", "minifxSplitPaneStyle.css", "minifxButtonStyle.css", "minifxTreeViewStyle.css");
+    private static final List<String> BARE_CSS_STYLES = asList("constants.css", "minifxPerspectiveStyle.css",
+            "minifxTabPaneStyle.css", "minifxToolbarStyle.css", "minifxSplitPaneStyle.css", "minifxButtonStyle.css",
+            "minifxTreeViewStyle.css");
 
     public static final String MAIN_PANE_CLASS = "main-panel";
     public static final String COMPONENTS_OF_MAIN_PANEL_CLASS = "main-panel-view";

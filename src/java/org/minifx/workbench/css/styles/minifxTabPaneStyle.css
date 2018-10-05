@@ -11,24 +11,25 @@
 }
 
 .tab-pane .tab-header-area .tab {
-    -fx-border-style: solid;
-    -fx-border-width: 1;
-    -fx-border-color: #b3b3b3;
-    
-    -fx-background-color: #ffffff; 
+    -fx-border-style: none, none, solid, none;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -minifx-button-border;
+
+    -fx-background-color: -minifx-background;
     -fx-background-insets: 10px;
     
     -fx-padding: 5;
     -fx-border-insets: 0 5 10 0;
     -fx-background-insets: 0 5 10 0;
     
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 2, 0, 1, 1);
+    /*-fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.1), 2, 0, 1, 1);*/
 }
 
 .tab-pane .tab-header-area .tab:selected {
-    -fx-border-color: #2e6399;
-    
-    -fx-background-color: #e6e6e6;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-color: -minifx-button-border-selected;
+    /*-fx-background-color: -minifx-button-background-selected;*/
+    -fx-text-fill: -minifx-button-text-color-selected;
 }
 
 .tab-pane .tab-header-area .tab:hover {
