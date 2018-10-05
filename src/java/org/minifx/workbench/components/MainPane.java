@@ -4,19 +4,15 @@
 
 package org.minifx.workbench.components;
 
-import static com.google.common.collect.ImmutableList.copyOf;
-import static java.util.Collections.singletonList;
-import static org.minifx.workbench.util.MiniFxComponents.containerPaneFrom;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import org.minifx.workbench.css.MiniFxCssConstants;
 import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.minifx.workbench.domain.definition.FooterDefinition;
@@ -30,15 +26,18 @@ import org.minifx.workbench.util.MiniFxComponents;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 
-import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.google.common.collect.ImmutableList.copyOf;
+import static java.util.Collections.singletonList;
+import static org.minifx.workbench.util.MiniFxComponents.containerPaneFrom;
 
 /**
  * Main JavaFX Pane for a MiniFx application. It has a toolbar for perspective switching at the top. The active
@@ -113,6 +112,7 @@ public class MainPane extends BorderPane {
         for (PerspectiveDefinition perspective : perspectiveDefinitions) {
             DisplayProperties displayProperties = perspective.displayProperties();
             ToggleButton button = new ToggleButton(displayProperties.name(), displayProperties.graphic().orElse(null));
+            button.setGraphicTextGap(10);
             button.setOnAction(evt -> setActive(perspective.perspective()));
             button.getStyleClass().add(MiniFxCssConstants.PERSPECTIVE_BUTTON_CLASS);
 
