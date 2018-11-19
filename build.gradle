@@ -32,7 +32,7 @@ buildscript {
             jcenter()
         }
     }
-    dependencies { classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3' }
+    dependencies { classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4' }
 }
 
 apply plugin: 'java'
@@ -56,6 +56,7 @@ repositories {
         maven { url 'http://artifactory.cern.ch/ds-jcenter' }
         maven { url 'http://artifactory.cern.ch/development' }
     } else {
+        maven { url "https://dl.bintray.com/minifx/minifx-repo" }
         mavenCentral()
     }
 }
@@ -114,14 +115,14 @@ jacocoTestReport {
 
 javadoc { options.encoding = "UTF-8" }
 
-if(!project.tasks.findByName("javadocJar")) {
+if (!project.tasks.findByName("javadocJar")) {
     task javadocJar(type: Jar) {
         classifier = 'javadoc'
         from javadoc
     }
 }
 
-if(!project.tasks.findByName("sourcesJar")) {
+if (!project.tasks.findByName("sourcesJar")) {
     task sourcesJar(type: Jar) {
         classifier = 'sources'
         from sourceSets.main.allSource
