@@ -1,0 +1,143 @@
+buildscript {
+    project.ext.CERN_VM = System.getProperty('CERN_TECHNET_VM') ?: System.getenv('CERN_TECHNET_VM') ?: false
+    project.ext.DEPLOYMENT = System.getProperty('deployment') ?: false
+    project.ext.VCS_TAG = System.getProperty('TRAVIS_TAG') ?: System.getenv('TRAVIS_TAG')
+    project.ext.POM = [
+            groupId    : 'org.minifx',
+            artifactId : 'minifx-workbench',
+            description: 'A very minimalistic approach for a workbench using spring and javafx.'
+    ]
+    project.ext.INFO = [
+            repo            : 'https://github.com/minifx/minifx-workbench.git',
+            url             : 'https://minifx.github.io/',
+            github          : 'https://github.com/minifx/minifx-workbench',
+            githubIssues    : 'https://github.com/minifx/minifx-workbench/issues',
+            licenseNameShort: 'Apache-2.0',
+            licenseName     : 'The Apache License, Version 2.0',
+            licenseUrl      : 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    ]
+    project.ext.BINTRAY = [
+            repo        : 'minifx-repo',
+            name        : 'minifx-workbench',
+            organization: 'minifx',
+            userName    : System.getProperty('BINTRAY_USER') ?: System.getenv('BINTRAY_USER'),
+            apiToken    : System.getProperty('BINTRAY_API_TOKEN') ?: System.getenv('BINTRAY_API_TOKEN')
+    ]
+
+    repositories {
+        if (CERN_VM) {
+            maven { url 'http://artifactory.cern.ch/ds-jcenter' }
+            maven { url 'http://artifactory.cern.ch/development' }
+        } else {
+            jcenter()
+        }
+    }
+    dependencies { classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3' }
+}
+
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+group = 'org.minifx'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+if (DEPLOYMENT) {
+    println 'Applying deployment scripts'
+    apply from: './scripts/bintray-deploy.gradle'
+}
+
+repositories {
+    if (CERN_VM) {
+        maven { url 'http://artifactory.cern.ch/ds-jcenter' }
+        maven { url 'http://artifactory.cern.ch/development' }
+    } else {
+        mavenCentral()
+    }
+}
+
+dependencies {
+    compile group: 'org.minifx', name: 'minifx-fxml', version: '+'
+
+    compile group: 'com.google.guava', name: 'guava', version: '21.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+
+    compile group: 'org.springframework', name: 'spring-core', version: '4.3.13.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.13.RELEASE'
+
+    compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: '4.7.0-9.1.2'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+
+
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.9.1'
+    testCompile group: 'org.springframework', name: 'spring-test', version: '4.3.13.RELEASE'
+    testCompile group: 'org.testfx', name: 'testfx-core', version: '4.0.15-alpha'
+    testCompile group: 'org.testfx', name: 'testfx-junit', version: '4.0.15-alpha'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.0'
+}
+
+task wrapper(type: Wrapper) { gradleVersion = '4.10.2' }
+
+sourceSets {
+    main {
+        java { srcDirs = ['src/java'] }
+        resources { srcDirs = ['src/java'] }
+    }
+
+    test {
+        java { srcDirs = ['src/test'] }
+        resources { srcDirs = ['src/test'] }
+    }
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        xml.destination file("$buildDir/reports/jacoco/report.xml")
+        html.enabled true
+        csv.enabled false
+    }
+}
+
+javadoc { options.encoding = "UTF-8" }
+
+if(!project.tasks.findByName("javadocJar")) {
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+}
+
+if(!project.tasks.findByName("sourcesJar")) {
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+}
+
+eclipse {
+    classpath {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}

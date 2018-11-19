@@ -1,0 +1,10 @@
+.settings
+.classpath
+.project
+.gradle
+bin
+out
+build
+cbng*
+fort*
+lyapunov.data
