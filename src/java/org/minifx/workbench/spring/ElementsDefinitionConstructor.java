@@ -54,8 +54,8 @@ import com.google.common.collect.ListMultimap;
  * <ul>
  * <li><b>Views:</b> Each bean for which a {@link View} annotation is found, is considered as view in MiniFx. The view
  * annotation describes the perspective in which the view is displayed and the position within the view. Both values are
- * optional. If omitted, the view is displayed in the perspective {@value Perspectives#DEFAULT_PERSPECTIVE} at the
- * position {@value Perspectives#DEFAULT_POSITION}.
+ * optional. If omitted, the view is displayed in the perspective {@link Perspectives#DEFAULT_PERSPECTIVE} at the
+ * position {@link Perspectives#DEFAULT_POSITION}.
  * <li><b>Icons:</b> They are derived from the {@link Icon} annotation (both for views and perspectives). If none is
  * specified, then perspectives will get a default icon and views will have no icon.
  * <li><b>Names:</b> Names for views are derived in the following order:
@@ -67,8 +67,7 @@ import com.google.common.collect.ListMultimap;
  * </ol>
  * <li><b>Order:</b> if an {@link Order} annotation is specified for a view (or a perspective) then it is taken into
  * account.
- * <ul>
- * <p>
+ * </ul>
  *
  * @author kfuchsbe
  */
@@ -83,6 +82,8 @@ public class ElementsDefinitionConstructor {
      * as annotations on them and factory methods.
      *
      * @param elementsRepository the repository to use
+     * @param beanInformationExtractor the instance who knows about the information of the beans
+     * @param fxNodeFactory the factory to create java fx nodes
      * @throws NullPointerException if the given repository is {@code null}
      */
     public ElementsDefinitionConstructor(WorkbenchElementsRepository elementsRepository,

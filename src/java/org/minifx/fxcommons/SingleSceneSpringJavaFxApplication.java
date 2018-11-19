@@ -20,7 +20,7 @@ import javafx.stage.WindowEvent;
  * {@link FxLauncher#launch(String...)} in order to start the JavaFx application. Once started, a Spring context is
  * created and a {@link Scene} bean is created. Use the {@link Perspective} beans to build your application. In order to
  * customize the JavaFx {@link Stage}, use the {@link FxLauncher}.
- * 
+ *
  * @author acalia, mgalilee
  */
 @Component
@@ -37,7 +37,7 @@ public class SingleSceneSpringJavaFxApplication extends Application {
         }
 
         @SuppressWarnings("resource") /* Closed automatically by the hook */
-        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(LAUNCHER.configurationClasses);
+                AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(LAUNCHER.configurationClasses);
         /* Spring context register itself in the shutdown hook. It automatically keeps a reference to it this way */
         ctx.registerShutdownHook();
         Scene mainScene = ctx.getBean(Scene.class);
@@ -51,6 +51,8 @@ public class SingleSceneSpringJavaFxApplication extends Application {
     /**
      * Returns the static builder of {@link SingleSceneSpringJavaFxApplication}. Use this method to configure and launch
      * a {@link SingleSceneSpringJavaFxApplication}.
+     *
+     * @return the single instance of the application launcher
      */
     public static FxLauncher applicationLauncher() {
         return LAUNCHER;
@@ -83,6 +85,8 @@ public class SingleSceneSpringJavaFxApplication extends Application {
 
         /**
          * Use {@link Application#launch(String...)} to start {@link SingleSceneSpringJavaFxApplication}.
+         *
+         * @param args the command line arguments to be passed to the application
          */
         public void launch(String... args) {
             this.readyToLaunch = true;

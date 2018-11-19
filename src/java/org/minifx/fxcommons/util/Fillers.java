@@ -17,6 +17,8 @@ public final class Fillers {
 
     /**
      * Creates a vertical filler
+     *
+     * @return a new instance of a vertical filler
      */
     public static Node verticalFiller() {
         VBox filler = new VBox();
@@ -26,6 +28,8 @@ public final class Fillers {
 
     /**
      * Creates an horizontal filler
+     *
+     * @return a new instance of a horizontal filler
      */
     public static Node horizontalFiller() {
         HBox filler = new HBox();
