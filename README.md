@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.com/minifx/minifx-workbench.svg?branch=master)](https://travis-ci.com/minifx/minifx-workbench)
 [![License](https://img.shields.io/github/license/minifx/minifx-workbench.svg)](https://opensource.org/licenses/Apache-2.0)
 
+[![codecov](https://codecov.io/gh/minifx/minifx-workbench/branch/master/graph/badge.svg)](https://codecov.io/gh/minifx/minifx-workbench)
+
 
 # MiniFx Workbench
 
