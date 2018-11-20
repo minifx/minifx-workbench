@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fc1500db4cb34e398616c2085a509612)](https://app.codacy.com/app/minifx-developers/minifx-workbench?utm_source=github.com&utm_medium=referral&utm_content=minifx/minifx-workbench&utm_campaign=Badge_Grade_Dashboard)
 [![GitHub release](https://img.shields.io/github/release/minifx/minifx-workbench.svg)](https://github.com/minifx/minifx-workbench/releases/)
 [![Build Status](https://travis-ci.com/minifx/minifx-workbench.svg?branch=master)](https://travis-ci.com/minifx/minifx-workbench)
 [![License](https://img.shields.io/github/license/minifx/minifx-workbench.svg)](https://opensource.org/licenses/Apache-2.0) 
