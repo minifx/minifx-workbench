@@ -52,10 +52,10 @@ public final class Perspectives {
      */
     public static DisplayProperties perspectiveDisplayProperties(Class<? extends Perspective> perspective) {
         return new DisplayProperties(perspectiveNameFrom(perspective), perspectiveGraphics(perspective),
-                orderFrom(perspective), hasGetters(perspective));
+                orderFrom(perspective), hasGutters(perspective));
     }
 
-    private static boolean hasGetters(Class<? extends Perspective> perspective) {
+    private static boolean hasGutters(Class<? extends Perspective> perspective) {
         return perspective.getAnnotation(NoGutters.class) == null;
     }
 

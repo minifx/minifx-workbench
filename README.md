@@ -7,10 +7,10 @@
 
 # MiniFx Workbench
 
-We believe that organizing java applications in spring contexts is beneficial most of the times. 
-Even when writing GUIs. Doing so makes such applications very modular. Further, we wanted to have an 
-easy (!) way to organize our applications in a workbench manner (e.g. like eclipse does), 
-but without a big overhead of osgi or similar. Based on these two premises, minifx-workbench was born.
+We believe that organizing java applications inside a dependency-injection container (like spring) is (almost) always beneficial. 
+Even when writing GUIs. Doing so makes such applications very modular. Further, we wanted to organize our applications 
+in a workbench manner (e.g. like eclipse does), but without a big overhead of osgi or similar. Based on these two premises, minifx-workbench was born: 
+It is based on spring and provides custom annotations
 
 ## Gradle
 
@@ -18,13 +18,15 @@ To add a dependency on minifx-workbench in gradle, add the following to your ```
 
 ```gradle
 dependencies {
-    testCompile "org.minifx:minifx-workbench:x.x.x"
+    compile "org.minifx:minifx-workbench:x.x.x"
 }
 ```
 
 ```x.x.x``` corresponds to the latest version, which can be found at the top of this page.
 
 ## Maven
+
+To add a dependency on minifx-workbench in maven, add the following to your ```pom.xml``` file:
 
 ```xml
 <dependency>
