@@ -81,6 +81,20 @@ This would bring up something like this:
 
 ![SimplisticMiniFxApplication](docs/images/SimplisticMiniFxApplication.PNG "SimplisticMiniFxApplication")
 
+### Defining Custom Perspectives
+As seen in the simplistic example, per default MiniFx creates one perspective (the 'Default perspective') in which it 
+places all the views for which nothing else is specified. Usually, we want to group our views in different perspectives.
+The minimal thing to define a new perspective, is to create an interface (or a class) that inherits from 
+[```Perspective```](src/main/java/org/minifx/workbench/domain/Perspective.java).
+
+
+### MiniFx Configuration
+MiniFx is configured through custom annotations which complement the spring built in annotations for the purpose of layouting GUIs.
+As shown in the previous example, it is very easy to bootstrap a javafx application with minifx. MiniFx assumes 
+proper defaults so that all the views are displayed in the application. However, usually we want to define ourselves 
+where our view shall be placed.
+
+
 
 ## Launching General JavaFx applications from spring contexts
 
@@ -105,7 +119,7 @@ The reason for this proprietary launcher is that at a first glance,
 it is not trivial to bootstrap a javafx application from a spring context: 
 All the javafx components have to be created within the javafx thread. This is usually accomplished
 by inheriting from ```javafx.application.Application``` and overriding the ```start(Stage primaryStage)``` 
-method. However, when using spring we want to already be our primary stage configured (e.g. autowired) 
+method. However, when using spring we want already our primary stage to be configured (e.g. autowired) 
 by spring...
 
 #### Optional Launcher Parameters
