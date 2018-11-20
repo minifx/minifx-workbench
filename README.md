@@ -1,5 +1,6 @@
+[![Build Status](https://travis-ci.com/minifx/minifx-workbench.svg?branch=master)](https://travis-ci.com/minifx/minifx-workbench)
 [![License](https://img.shields.io/github/license/minifx/minifx-workbench.svg)](https://opensource.org/licenses/Apache-2.0)
-[![GitHub release](https://img.shields.io/github/release/minifx/minifx/minifx-workbench.svg?maxAge=1000)]("https://github.com/minifx/minifx-workbench/releases")
+[![GitHub release](https://img.shields.io/github/release/minifx/minifx-workbench.svg)](https://github.com/minifx/minifx-workbench/releases/)
 
 
 # MiniFx Workbench
