@@ -85,7 +85,7 @@ This would bring up something like this:
 As seen in the simplistic example, per default MiniFx creates one perspective (the 'Default perspective') in which it 
 places all the views for which nothing else is specified. Usually, we want to group our views in different perspectives.
 The minimal thing to define a new perspective, is to create an interface (or a class) that inherits from 
-[```Perspective```](src/main/java/org/minifx/workbench/domain/Perspective.java).
+[```Perspective```](src/java/org/minifx/workbench/domain/Perspective.java).
 
 
 ### MiniFx Configuration
