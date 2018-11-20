@@ -38,42 +38,7 @@ To add a dependency on minifx-workbench in maven, add the following to your ```p
 
 ```x.x.x``` corresponds to the latest version, which can be found at the top of this page.
 
-## Launching JavaFx applications from spring contexts
 
-Assuming, we would have a spring configuration class ```MyConfiguration```, which provides _exactly one(!)_ scene 
-in its resulting application context, then we can launch a new javafx application like this: 
-
-```java
-public class MyJavaFxApplication {
-    public static void main(String... args) {
-        SingleSceneSpringJavaFxApplication.launcher().configurationClasses(MyConfiguration.class).launch(args);
-    }
-}
-``` 
-
-Note that in this case, ```MyJavaFxApplication``` does not inherit from ```javafx.application.Application```.
-
-The reason for this proprietary launcher is that at a first glance, 
-it is not trivial to bootstrap a javafx application from a spring context: 
-All the javafx components have to be created within the javafx thread. This is usually accomplished
-by inheriting from ```javafx.application.Application``` and overriding the ```start(Stage primaryStage)``` 
-method. However, when using spring we want to already be our primary stage configured (e.g. autowired) 
-by spring...
-
-#### Optional Launcher Parameters
-To Further customize the resulting application, the javafx launcher has some more options. For example: 
-```java
-public class MyJavaFxApplication {
-    public static void main(String... args) {
-        SingleSceneSpringJavaFxApplication.launcher()
-            .configurationClasses(MyConfiguration.class)
-            .windowTitle("First JavaFx Application")
-            .windowCloseHandler(evt -> System.exit(0))
-            .launch(args);
-    }
-}
-``` 
-This provides a custom window title and an handler for the event of closing the window.
 
 ## The Workbench
 When organizing our javafx applications in a workbench-like manner within minifx, then we have to understand two 
@@ -115,3 +80,45 @@ public class SimplisticMiniFxApplication {
 This would bring up something like this:
 
 ![SimplisticMiniFxApplication](docs/images/SimplisticMiniFxApplication.PNG "SimplisticMiniFxApplication")
+
+
+## Launching General JavaFx applications from spring contexts
+
+In the background, MiniFx uses a proprietary launcher to construct javafx applications from spring context. 
+This launcher can be also used to launch general javafx applications from spring contexts, even if the features 
+of the workbench are not intended to be used. 
+
+Assuming, we would have a spring configuration class ```MyConfiguration```, which provides _exactly one(!)_ scene 
+in its resulting application context, then we can launch a new javafx application like this: 
+
+```java
+public class MyJavaFxApplication {
+    public static void main(String... args) {
+        SingleSceneSpringJavaFxApplication.launcher().configurationClasses(MyConfiguration.class).launch(args);
+    }
+}
+``` 
+
+Note that in this case, ```MyJavaFxApplication``` does not inherit from ```javafx.application.Application```.
+
+The reason for this proprietary launcher is that at a first glance, 
+it is not trivial to bootstrap a javafx application from a spring context: 
+All the javafx components have to be created within the javafx thread. This is usually accomplished
+by inheriting from ```javafx.application.Application``` and overriding the ```start(Stage primaryStage)``` 
+method. However, when using spring we want to already be our primary stage configured (e.g. autowired) 
+by spring...
+
+#### Optional Launcher Parameters
+To Further customize the resulting application, the javafx launcher has some more options. For example: 
+```java
+public class MyJavaFxApplication {
+    public static void main(String... args) {
+        SingleSceneSpringJavaFxApplication.launcher()
+            .configurationClasses(MyConfiguration.class)
+            .windowTitle("First JavaFx Application")
+            .windowCloseHandler(evt -> System.exit(0))
+            .launch(args);
+    }
+}
+``` 
+This provides a custom window title and an handler for the event of closing the window.
