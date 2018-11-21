@@ -4,14 +4,10 @@
 
 package org.minifx.workbench.spring;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static java.util.Objects.requireNonNull;
-
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableListMultimap.Builder;
+import com.google.common.collect.ListMultimap;
 import org.minifx.workbench.annotations.Footer;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
@@ -28,10 +24,12 @@ import org.minifx.workbench.util.Perspectives;
 import org.minifx.workbench.util.Purpose;
 import org.springframework.core.annotation.Order;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ImmutableListMultimap.Builder;
-import com.google.common.collect.ListMultimap;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Contains all the relevant logic to bring together all the information which is required to instantiate the workbench
@@ -151,7 +149,7 @@ public class ElementsDefinitionConstructor {
     private Set<PerspectiveDefinition> definitionsFrom(
             ListMultimap<Class<? extends Perspective>, Object> mapToPerspective) {
         return mapToPerspective.asMap().entrySet().stream().map(e -> toPerspectiveDefinition(e.getKey(), e.getValue()))
-                .collect(Collectors.toSet());
+                .collect(toSet());
     }
 
     private PerspectiveDefinition toPerspectiveDefinition(Class<? extends Perspective> perspective,
@@ -161,11 +159,11 @@ public class ElementsDefinitionConstructor {
     }
 
     private Set<ViewDefinition> viewDefinitionsFrom(Collection<Object> allViews) {
-        return allViews.stream().map(this::toViewDefinition).collect(toImmutableSet());
+        return allViews.stream().map(this::toViewDefinition).collect(toSet());
     }
 
     private Set<FooterDefinition> footerDefinitionsFrom(Collection<Object> allViews) {
-        return allViews.stream().map(this::toFooterDefinition).collect(toImmutableSet());
+        return allViews.stream().map(this::toFooterDefinition).collect(toSet());
     }
 
     private ViewDefinition toViewDefinition(Object view) {
