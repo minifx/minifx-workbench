@@ -66,7 +66,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.minifx', name: 'minifx-fxml', version: '+'
+    compile group: 'org.minifx', name: 'minifx-fxml', version: '0.0.1'
 
     compile group: 'com.google.guava', name: 'guava', version: '21.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
