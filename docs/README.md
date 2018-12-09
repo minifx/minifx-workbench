@@ -79,13 +79,13 @@ public class SimplisticMiniFxApplication {
 
 This would bring up something like this:
 
-![SimplisticMiniFxApplication](docs/images/SimplisticMiniFxApplication.PNG "SimplisticMiniFxApplication")
+![SimplisticMiniFxApplication](images/SimplisticMiniFxApplication.PNG "SimplisticMiniFxApplication")
 
 ### Defining Custom Perspectives
 As seen in the simplistic example, per default MiniFx creates one perspective (the 'Default perspective') in which it 
 places all the views for which nothing else is specified. Usually, we want to group our views in different perspectives.
 The minimal thing to define a new perspective, is to create an interface (or a class) that inherits from 
-[```Perspective```](src/java/org/minifx/workbench/domain/Perspective.java).
+[```Perspective```](../src/java/org/minifx/workbench/domain/Perspective.java).
 
 For example, we could create a new perspective like:
 ```java
@@ -136,12 +136,12 @@ The following table lists the annotations to be used for configuring components 
 
 | Annotation | Can be used on | Description | Default Value (if not specified)
 |----------|-----------|------------|--------|
-|[```@View```](src/java/org/minifx/workbench/annotations/View.java)| View | Specifies in which perspective and at what position the node represented by the given bean shall be placed.| CENTER in the default perspective|
-|[```@Name```](src/java/org/minifx/workbench/annotations/Name.java)| View, Perspective, Footer | Specifies the name which shall be used for displaying the view/perspective | The name of the bean if constructed by a factory method, otherwise the class name of the view/perspective. |
-|[```@Icon```](src/java/org/minifx/workbench/annotations/Icon.java)| View, Perspective, Footer | Specifies the icon and its color for a view/perspective | a default icon in black |
+|[```@View```](../src/java/org/minifx/workbench/annotations/View.java)| View | Specifies in which perspective and at what position the node represented by the given bean shall be placed.| CENTER in the default perspective|
+|[```@Name```](../src/java/org/minifx/workbench/annotations/Name.java)| View, Perspective, Footer | Specifies the name which shall be used for displaying the view/perspective | The name of the bean if constructed by a factory method, otherwise the class name of the view/perspective. |
+|[```@Icon```](../src/java/org/minifx/workbench/annotations/Icon.java)| View, Perspective, Footer | Specifies the icon and its color for a view/perspective | a default icon in black |
 |[```@Order```](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/annotation/Order.html)|View, Perspective, Footer | Per default, minifx guarantees no order when it inserts Views and Footers. However, if an integer value for the order is provided through this spring-internal annotation, then this is taken into account when placing perspectives, views at the same position and footers. | No order guaranteed. |
-|[```@Footer```](src/java/org/minifx/workbench/annotations/Icon.java)|Footer | Specifies that the given bean shall be laid out as a footer in the workbench. This is basically a view outside of all perspectives, placed at the lower part of the GUI and thus always visible. | If no footer specified, the footer region is suppressed. |
-|[```@ToolbarItem```](src/java/org/minifx/workbench/annotations/ToolbarItem.java)|ToolbarItem | Specifies that the given bean shall be placed in the toolbar. This item is NOT converted and thus has to be a javafx Node! No order is guaranteed! | |
+|[```@Footer```](../src/java/org/minifx/workbench/annotations/Icon.java)|Footer | Specifies that the given bean shall be laid out as a footer in the workbench. This is basically a view outside of all perspectives, placed at the lower part of the GUI and thus always visible. | If no footer specified, the footer region is suppressed. |
+|[```@ToolbarItem```](../src/java/org/minifx/workbench/annotations/ToolbarItem.java)|ToolbarItem | Specifies that the given bean shall be placed in the toolbar. This item is NOT converted and thus has to be a javafx Node! No order is guaranteed! | |
 
 
 ### Supported Views
@@ -158,14 +158,14 @@ different type of beans:
 ## Some more examples
 
 * An example, demonstrating some more of the minifx features, can be found in the test package under
-[org/minifx/workbench/examples/simpledemo](src/test/org/minifx/workbench/examples/simpledemo).
-When running the [corresponding main class](src/test/org/minifx/workbench/examples/simpledemo/DemoMain.java), 
+[org/minifx/workbench/examples/simpledemo](../src/test/org/minifx/workbench/examples/simpledemo).
+When running the [corresponding main class](../src/test/org/minifx/workbench/examples/simpledemo/DemoMain.java), 
 it looks somehow like this:
-![ChartDemo](docs/images/ChartDemo.PNG "ChartDemo")
+![ChartDemo](images/ChartDemo.PNG "ChartDemo")
 
 * Another example, with even more views, can be found in the test package under
-[org/minifx/workbench/conf/fullyconfigured](src/test/org/minifx/workbench/conf/fullyconfigured).
-The corresponding screenshot is not so beautiful, but still can be found here: [docs/images/FullyConfiguredExample.PNG](docs/images/FullyConfiguredExample.PNG)
+[org/minifx/workbench/conf/fullyconfigured](../src/test/org/minifx/workbench/conf/fullyconfigured).
+The corresponding screenshot is not so beautiful, but still can be found here: [docs/images/FullyConfiguredExample.PNG](images/FullyConfiguredExample.PNG)
 
 ## Launching other JavaFx applications from spring contexts
 
