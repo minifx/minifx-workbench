@@ -20,7 +20,7 @@ deploy:
     github-token: $GITHUB_TOKEN
     local-dir: build/reports
     on:
-      tags: true
+      bracnch: master
       jdk: oraclejdk8
 after_success:
 - bash <(curl -s https://codecov.io/bash)
