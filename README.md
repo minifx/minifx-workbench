@@ -20,7 +20,7 @@ To add a dependency on minifx-workbench in gradle, add the following to your ```
 dependencies {
     compile "org.minifx:minifx-workbench:x.x.x"
 }
-```
+``` 
 
 ```x.x.x``` corresponds to the latest version, which can be found at the top of this page.
 
