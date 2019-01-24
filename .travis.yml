@@ -8,6 +8,7 @@ script:
 - xvfb-run ./gradlew check
 - ./gradlew jacocoTestReport
 - ./gradlew generateLicenseReport
+- ./scripts/prepare-artifacts.sh
 deploy:
   - provider: script
     skip_cleanup: true
@@ -18,8 +19,8 @@ deploy:
   - provider: pages
     skip_cleanup: true
     github-token: $GITHUB_TOKEN
-    local-dir: build/reports
-    keep-history: true
+    local-dir: artifacts
+    keep-history: false
     on:
       branch: master
       jdk: oraclejdk8
