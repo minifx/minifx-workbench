@@ -3,7 +3,7 @@
 # this script assumes to be run from the project dir.
 
 mkdir artifacts
-cp -r reports/* artifacts
-cp -r docs/* artifacts
-cp templates/index.md artifacts
+cp -rv build/reports/* artifacts
+cp -rv build/docs/* artifacts
+cp -v templates/index.md artifacts
 
