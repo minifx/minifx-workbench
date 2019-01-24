@@ -4,6 +4,7 @@ jdk:
 - oraclejdk8
 before_install:
 - chmod +x ./gradlew
+- chmod +x ./scripts/prepare-artifacts.sh
 script:
 - xvfb-run ./gradlew check
 - ./gradlew jacocoTestReport
