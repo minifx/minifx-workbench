@@ -7,12 +7,20 @@ before_install:
 script:
 - xvfb-run ./gradlew check
 - ./gradlew jacocoTestReport
+- ./gradlew generateLicenseReport
 deploy:
-  provider: script
-  skip_cleanup: true
-  script: ./gradlew bintrayUpload -Ddeployment=true
-  on:
-    tags: true
-    jdk: oraclejdk8
+  - provider: script
+    skip_cleanup: true
+    script: ./gradlew bintrayUpload -Ddeployment=true
+    on:
+      tags: true
+      jdk: oraclejdk8
+  - provider: pages
+    skip_cleanup: true
+    github-token: $GITHUB_TOKEN
+    local-dir: build/reports
+    on:
+      tags: true
+      jdk: oraclejdk8
 after_success:
 - bash <(curl -s https://codecov.io/bash)
