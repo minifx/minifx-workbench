@@ -4,12 +4,16 @@ jdk:
 - oraclejdk8
 before_install:
 - chmod +x ./gradlew
-- chmod +x ./scripts/prepare-artifacts.sh
 script:
 - xvfb-run ./gradlew check
 - ./gradlew jacocoTestReport
+before_deploy:
 - ./gradlew generateLicenseReport
-- ./scripts/prepare-artifacts.sh
+- ./gradlew javadoc
+- mkdir projectpage
+- cp -rv build/reports/* projectpage
+- cp -rv build/docs/* projectpage
+- cp -rv docs/* projectpage
 deploy:
   - provider: script
     skip_cleanup: true

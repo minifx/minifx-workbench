@@ -45,3 +45,4 @@ Further descriptions and examples can be found on the [minifx web page](https://
 * [dependency license report](https://minifx.org/minifx-workbench/dependency-license/index.html)
 * [junit test report](https://minifx.org/minifx-workbench/tests/test/index.html)
 * [jacoco test report](https://minifx.org/minifx-workbench/jacoco/test/html/index.html) 
+* [javadoc](https://minifx.org/minifx-workbench/javadoc/index.html) 
