@@ -37,6 +37,12 @@ bintray {
             released = new Date()
             vcsTag = VCS_TAG
             gpg { sign = true }
+            mavenCentralSync {
+                //sync = true 
+                //user = 'userToken' //OSS user token: mandatory
+                //password = 'paasword' //OSS user password: mandatory
+                //close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+            }
         }
     }
 }
