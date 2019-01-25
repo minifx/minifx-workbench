@@ -27,6 +27,10 @@ buildscript {
             userName    : System.getProperty('BINTRAY_USER') ?: System.getenv('BINTRAY_USER'),
             apiToken    : System.getProperty('BINTRAY_API_TOKEN') ?: System.getenv('BINTRAY_API_TOKEN')
     ]
+    project.ext.OSS = [
+            userName   : System.getProperty('OSS_USER') ?: System.getenv('OSS_USER'),
+            password   : System.getProperty('OSS_PASSWORD') ?: System.getenv('OSS_PASSWORD')
+    ]
 
 
     repositories {
