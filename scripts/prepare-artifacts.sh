@@ -5,5 +5,5 @@
 mkdir projectpage
 cp -rv build/reports/* projectpage
 cp -rv build/docs/* projectpage
-cp -v README.md projectpage
+cp -rv docs/* projectpage
 
