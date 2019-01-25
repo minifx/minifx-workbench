@@ -2,8 +2,8 @@
 #
 # this script assumes to be run from the project dir.
 
-mkdir artifacts
-cp -rv build/reports/* artifacts
-cp -rv build/docs/* artifacts
-cp -v README.md artifacts
+mkdir projectpage
+cp -rv build/reports/* projectpage
+cp -rv build/docs/* projectpage
+cp -v README.md projectpage
 
