@@ -5,5 +5,5 @@
 mkdir artifacts
 cp -rv build/reports/* artifacts
 cp -rv build/docs/* artifacts
-cp -v templates/index.md artifacts
+cp -v README.md artifacts
 
