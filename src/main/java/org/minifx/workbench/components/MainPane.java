@@ -87,7 +87,7 @@ public class MainPane extends BorderPane {
             throw new IllegalStateException("Footer already initialized!");
         }
 
-        setBottom(containerPaneFrom(footers).map(MiniFxComponents::configureSingleNodeStyle).orElse(null));
+        Platform.runLater(() -> containerPaneFrom(footers).map(MiniFxComponents::configureSingleNodeStyle).ifPresent(this::setBottom));
     }
 
     /**
@@ -111,9 +111,6 @@ public class MainPane extends BorderPane {
                 .collect(Collectors.toList());
 
         addToolbarButtonsTo(orderedPerspectiveButtons, perspectiveButtonsBox);
-
-        /* First perspective active by default */
-        orderedPerspectiveButtons.get(0).fire();
     }
 
     private static HBox horizontalBoxOf(Pos alignment) {
