@@ -4,36 +4,39 @@
 
 package org.minifx.workbench.conf;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
-import static org.minifx.fxcommons.MiniFxSceneBuilder.miniFxSceneBuilder;
-import static org.minifx.workbench.util.MoreCollections.emptyIfNull;
-
-import java.util.List;
-
+import javafx.scene.Scene;
 import org.minifx.fxcommons.MiniFxSceneBuilder;
 import org.minifx.workbench.components.MainPane;
+import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
 import org.minifx.workbench.nodes.FxNodeFactory;
 import org.minifx.workbench.providers.PerspectiveProvider;
 import org.minifx.workbench.spring.BeanInformationExtractor;
+import org.minifx.workbench.spring.BeanInformationExtractorImpl;
 import org.minifx.workbench.spring.BeanInformationRepository;
-import org.minifx.workbench.spring.BeanInormationExtractorImpl;
 import org.minifx.workbench.spring.ElementsDefinitionConstructor;
 import org.minifx.workbench.spring.WorkbenchElementsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
 
-import javafx.scene.Scene;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
+import static org.minifx.fxcommons.MiniFxSceneBuilder.miniFxSceneBuilder;
 
 @Configuration
-@Import({ FactoryMethodsCollectorConfiguration.class, FxmlNodeServiceConfiguration.class, NodeFactoryConfiguration.class })
+@Import({FactoryMethodsCollectorConfiguration.class, FxmlNodeServiceConfiguration.class,
+        NodeFactoryConfiguration.class, MiniFxWorkbenchInitialization.class})
 public class MiniFxWorkbenchConfiguration {
 
     private static final int DEFAULT_HEIGHT = 760;
@@ -47,9 +50,6 @@ public class MiniFxWorkbenchConfiguration {
 
     @Autowired(required = false)
     private MiniFxSceneBuilder sceneBuilder;
-
-    @Autowired(required = false)
-    private List<PerspectiveProvider> perspectiveProviders;
 
     @Bean
     public Scene mainScene(MainPane mainPane) {
@@ -67,27 +67,23 @@ public class MiniFxWorkbenchConfiguration {
     }
 
     @Bean
-    public MainPane mainPane(ApplicationEventPublisher publisher, WorkbenchElementsRepository factoryMethodsRepository,
-            BeanInformationExtractor beanInformationExtractor, FxNodeFactory fxNodeFactory) {
-        ElementsDefinitionConstructor viewInstantiator = new ElementsDefinitionConstructor(factoryMethodsRepository,
-                beanInformationExtractor, fxNodeFactory);
-
-        List<PerspectiveDefinition> allPerspectives = ImmutableList.<PerspectiveDefinition> builder()
-                .addAll(viewInstantiator.perspectives()).addAll(providedPerspectives()).build();
-
-        MainPane mainPanel = new MainPane(allPerspectives, factoryMethodsRepository.toolbarItems(),
-                viewInstantiator.footers(), publisher, fxNodeFactory);
-        mainPanel.setId(ID_MAIN_PANEL);
-        return mainPanel;
+    public ElementsDefinitionConstructor elementsDefinitionConstructor(
+            WorkbenchElementsRepository factoryMethodsRepository, BeanInformationExtractor beanInformationExtractor,
+            FxNodeFactory fxNodeFactory) {
+        return new ElementsDefinitionConstructor(factoryMethodsRepository, beanInformationExtractor, fxNodeFactory);
     }
 
     @Bean
     public BeanInformationExtractor beanInformationExtractor(BeanInformationRepository factoryMethodsRepository) {
-        return new BeanInormationExtractorImpl(factoryMethodsRepository);
+        return new BeanInformationExtractorImpl(factoryMethodsRepository);
     }
 
-    private Iterable<PerspectiveDefinition> providedPerspectives() {
-        return emptyIfNull(perspectiveProviders).stream().flatMap(p -> p.perspectives().stream()).collect(toSet());
+    @Bean
+    public MainPane mainPane(ApplicationEventPublisher publisher, WorkbenchElementsRepository factoryMethodsRepository,
+            FxNodeFactory fxNodeFactory) {
+        MainPane mainPanel = new MainPane(factoryMethodsRepository.toolbarItems(), publisher, fxNodeFactory);
+        mainPanel.setId(ID_MAIN_PANEL);
+        return mainPanel;
     }
 
 }

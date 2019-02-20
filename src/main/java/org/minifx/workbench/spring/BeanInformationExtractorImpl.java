@@ -22,11 +22,11 @@ import static java.util.Objects.requireNonNull;
 import static org.minifx.workbench.util.Names.nameFromNameMethod;
 import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 
-public class BeanInormationExtractorImpl implements BeanInformationExtractor {
+public class BeanInformationExtractorImpl implements BeanInformationExtractor {
 
     private final BeanInformationRepository repository;
 
-    public BeanInormationExtractorImpl(BeanInformationRepository beanInformationRepository) {
+    public BeanInformationExtractorImpl(BeanInformationRepository beanInformationRepository) {
         this.repository = requireNonNull(beanInformationRepository, "beanInformationRepository must not be null");
     }
 
