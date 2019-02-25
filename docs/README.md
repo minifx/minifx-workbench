@@ -40,7 +40,7 @@ To add a dependency on minifx-workbench in maven, add the following to your ```p
 
 Further descriptions and examples can be found on the [minifx web page](https://minifx.org).
 
-## Build Artifacts of the Last Version
+## Build Artifacts of the Latest Version
 
 * [dependency license report](https://minifx.org/minifx-workbench/dependency-license/index.html)
 * [junit test report](https://minifx.org/minifx-workbench/tests/test/index.html)
