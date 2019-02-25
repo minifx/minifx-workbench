@@ -140,12 +140,12 @@ The following table lists the annotations to be used for configuring components 
 
 | Annotation | Can be used on | Description | Default Value (if not specified)
 |----------|-----------|------------|--------|
-|[```@View```](https://minifx.org/minifx-workbench/javadoc/org/minifx/workbench/annotations/View.java)| View | Specifies in which perspective and at what position the node represented by the given bean shall be placed.| CENTER in the default perspective|
-|[```@Name```](https://minifx.org/minifx-workbench/javadoc/org/minifx/workbench/annotations/Name.java)| View, Perspective, Footer | Specifies the name which shall be used for displaying the view/perspective | The name of the bean if constructed by a factory method, otherwise the class name of the view/perspective. |
-|[```@Icon```](https://minifx.org/minifx-workbench/javadoc/org/minifx/workbench/annotations/Icon.java)| View, Perspective, Footer | Specifies the icon and its color for a view/perspective | a default icon in black |
+|[```@View```](https://minifx.org/minifx-workbench/javadoc/org/minifx/workbench/annotations/View.html)| View | Specifies in which perspective and at what position the node represented by the given bean shall be placed.| CENTER in the default perspective|
+|[```@Name```](https://minifx.org/minifx-workbench/javadoc/org/minifx/workbench/annotations/Name.html)| View, Perspective, Footer | Specifies the name which shall be used for displaying the view/perspective | The name of the bean if constructed by a factory method, otherwise the class name of the view/perspective. |
+|[```@Icon```](https://minifx.org/minifx-workbench/javadoc/org/minifx/workbench/annotations/Icon.html)| View, Perspective, Footer | Specifies the icon and its color for a view/perspective | a default icon in black |
 |[```@Order```](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/annotation/Order.html)|View, Perspective, Footer | Per default, minifx guarantees no order when it inserts Views and Footers. However, if an integer value for the order is provided through this spring-internal annotation, then this is taken into account when placing perspectives, views at the same position and footers. | No order guaranteed. |
-|[```@Footer```](https://minifx.org/minifx-workbench/javadoc/org/minifx/workbench/annotations/Icon.java)|Footer | Specifies that the given bean shall be laid out as a footer in the workbench. This is basically a view outside of all perspectives, placed at the lower part of the GUI and thus always visible. | If no footer specified, the footer region is suppressed. |
-|[```@ToolbarItem```](https://minifx.org/minifx-workbench/javadoc/org/minifx/workbench/annotations/ToolbarItem.java)|ToolbarItem | Specifies that the given bean shall be placed in the toolbar. This item is NOT converted and thus has to be a javafx Node! No order is guaranteed! | |
+|[```@Footer```](https://minifx.org/minifx-workbench/javadoc/org/minifx/workbench/annotations/Icon.html)|Footer | Specifies that the given bean shall be laid out as a footer in the workbench. This is basically a view outside of all perspectives, placed at the lower part of the GUI and thus always visible. | If no footer specified, the footer region is suppressed. |
+|[```@ToolbarItem```](https://minifx.org/minifx-workbench/javadoc/org/minifx/workbench/annotations/ToolbarItem.html)|ToolbarItem | Specifies that the given bean shall be placed in the toolbar. This item is NOT converted and thus has to be a javafx Node! No order is guaranteed! | |
 
 
 ### Supported Views
