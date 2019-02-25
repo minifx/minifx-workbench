@@ -162,13 +162,13 @@ different type of beans:
 ## Some more examples
 
 * An example, demonstrating some more of the minifx features, can be found in the test package under
-[org/minifx/workbench/examples/simpledemo](https://github.com/minifx/minifx-workbench/blob/master/src/test/org/minifx/workbench/examples/simpledemo).
-When running the [corresponding main class](https://github.com/minifx/minifx-workbench/blob/master/src/test/org/minifx/workbench/examples/simpledemo/DemoMain.java), 
+[org/minifx/workbench/examples/simpledemo](https://github.com/minifx/minifx-workbench/blob/master/src/test/java/org/minifx/workbench/examples/simpledemo).
+When running the [corresponding main class](https://github.com/minifx/minifx-workbench/blob/master/src/test/java/org/minifx/workbench/examples/simpledemo/DemoMain.java), 
 it looks somehow like this:
 ![ChartDemo](images/ChartDemo.PNG "ChartDemo")
 
 * Another example, with even more views, can be found in the test package under
-[org/minifx/workbench/conf/fullyconfigured](https://github.com/minifx/minifx-workbench/blob/master/src/test/org/minifx/workbench/conf/fullyconfigured).
+[org/minifx/workbench/conf/fullyconfigured](https://github.com/minifx/minifx-workbench/blob/master/src/test/java/org/minifx/workbench/conf/fullyconfigured).
 The corresponding screenshot is not so beautiful, but still can be found here: [docs/images/FullyConfiguredExample.PNG](images/FullyConfiguredExample.PNG)
 
 ## Launching other JavaFx applications from spring contexts
