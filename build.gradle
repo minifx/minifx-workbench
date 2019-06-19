@@ -153,9 +153,3 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.web' ]
 }
 
-
-task showBuildscriptClasspath {
-    doLast {
-        buildscript.configurations.classpath.each { println it.name }
-    }
-}
