@@ -1,3 +1,5 @@
+import org.gradle.api.JavaVersion
+
 buildscript {
     project.ext['CERN_VM'] = System.getProperty('CERN_TECHNET_VM') ?: System.getenv('CERN_TECHNET_VM') ?: project.hasProperty('CERN_TECHNET_VM') ?: false
     project.ext['DEPLOYMENT'] = System.getProperty('deployment') ?: false
@@ -6,8 +8,13 @@ buildscript {
     project.ext['BINTRAY.userName'] = System.getProperty('BINTRAY_USER') ?: System.getenv('BINTRAY_USER')
     project.ext['BINTRAY.apiToken'] = System.getProperty('BINTRAY_API_TOKEN') ?: System.getenv('BINTRAY_API_TOKEN')
 
-    project.ext['SONATYPE.userName'] = System.getProperty('SONATYPE_USER') ?: System.getenv('SONATYPE_USER')
-    project.ext['SONATYPE.password'] = System.getProperty('SONATYPE_PASSWORD') ?: System.getenv('SONATYPE_PASSWORD')
+    if (System.getProperty('enable.java.version.suffix') ?: false) {
+        project.ext['VERSION_SUFFIX'] = "-" + JavaVersion.current();
+    } else {
+        /* Just for testing we disable syc to sonatype, as it is hard to remove things from there */
+        project.ext['SONATYPE.userName'] = System.getProperty('SONATYPE_USER') ?: System.getenv('SONATYPE_USER')
+        project.ext['SONATYPE.password'] = System.getProperty('SONATYPE_PASSWORD') ?: System.getenv('SONATYPE_PASSWORD')
+    }
 
     repositories {
         if (project['CERN_VM']) {
@@ -60,9 +67,17 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-core', version: springVersion
     compile group: 'org.springframework', name: 'spring-context', version: springVersion
 
-    compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: '4.7.0-11'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    compile("javax.annotation:javax.annotation-api:1.3.2")
+
+    if(JavaVersion.current() < JavaVersion.VERSION_11){
+        compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: '4.7.0-5'
+    } else {
+        compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: '4.7.0-11'
+        compile("javax.annotation:javax.annotation-api:1.3.2")
+    }
+
+
+
 
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
     testCompile group: 'junit', name: 'junit', version: '4.12'
@@ -151,5 +166,9 @@ if (project['DEPLOYMENT']) {
 javafx {
     // version = "12.0.1"
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.web' ]
+}
+
+task printJavaVersion {
+    println 'Java Version: ' + JavaVersion.current();
 }
 

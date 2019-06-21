@@ -1,6 +1,7 @@
 language: java
 sudo: false
 jdk:
+- oraclejdk8
 - oraclejdk11
 before_install:
 - chmod +x ./gradlew
@@ -18,6 +19,12 @@ deploy:
   - provider: script
     skip_cleanup: true
     script: ./gradlew bintrayUpload -Ddeployment=true
+    on:
+      tags: true
+      jdk: oraclejdk8
+  - provider: script
+    skip_cleanup: true
+    script: ./gradlew bintrayUpload -Ddeployment=true -Denable.java.version.suffix=true
     on:
       tags: true
       jdk: oraclejdk11
