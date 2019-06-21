@@ -32,8 +32,13 @@ buildscript {
     }
 }
 
+
 plugins {
-    id 'org.openjfx.javafxplugin' version '0.0.7'
+    id 'org.openjfx.javafxplugin' version '0.0.7' apply false
+}
+
+if (JavaVersion.current() >= JavaVersion.VERSION_11) {
+    apply plugin: 'org.openjfx.javafxplugin'
 }
 
 apply plugin: 'java'
@@ -69,14 +74,12 @@ dependencies {
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
 
-    if(JavaVersion.current() < JavaVersion.VERSION_11){
+    if (JavaVersion.current() < JavaVersion.VERSION_11) {
         compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: '4.7.0-5'
     } else {
         compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: '4.7.0-11'
         compile("javax.annotation:javax.annotation-api:1.3.2")
     }
-
-
 
 
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
@@ -165,7 +168,7 @@ if (project['DEPLOYMENT']) {
 
 javafx {
     // version = "12.0.1"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.web' ]
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.web']
 }
 
 task printJavaVersion {
