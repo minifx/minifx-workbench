@@ -18,13 +18,13 @@ before_deploy:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./gradlew bintrayUpload -Ddeployment=true
+    script: ./gradlew bintrayUpload -Ddeployment=true -Dclassifier=jdk8
     on:
       tags: true
       jdk: oraclejdk8
   - provider: script
     skip_cleanup: true
-    script: ./gradlew bintrayUpload -Ddeployment=true -Denable.java.version.suffix=true
+    script: ./gradlew bintrayUpload -Ddeployment=true -Dclassifier=jdk11
     on:
       tags: true
       jdk: oraclejdk11
