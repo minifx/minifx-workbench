@@ -12,7 +12,7 @@ buildscript {
     if (classifier != null) {
         project.ext['CLASSIFIER'] = classifier;
         println "In case of deployment, using classifier: '" + project.ext['CLASSIFIER'] +"'"
-    } 
+    }
     if (false) {
         /* Just for testing we disable syc to sonatype, as it is hard to remove things from there */
         project.ext['SONATYPE.userName'] = System.getProperty('SONATYPE_USER') ?: System.getenv('SONATYPE_USER')
@@ -59,7 +59,8 @@ repositories {
         maven { url "https://dl.bintray.com/minifx/minifx-repo" }
         /* For the fontawesome icons, to be compatible with java 8 */
         maven { url "https://dl.bintray.com/jerady/maven" }
-        mavenCentral()
+        jcenter()
+        //mavenCentral()
     }
 }
 
