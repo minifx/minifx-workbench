@@ -2,7 +2,7 @@ language: java
 sudo: false
 jdk:
 - oraclejdk8
-- oraclejdk11
+- openjdk11
 before_install:
 - chmod +x ./gradlew
 script:
@@ -27,7 +27,7 @@ deploy:
     script: ./gradlew bintrayUpload -Ddeployment=true -Dclassifier=jdk11
     on:
       tags: true
-      jdk: oraclejdk11
+      jdk: openjdk11
   - provider: pages
     skip_cleanup: true
     github-token: $GITHUB_TOKEN
