@@ -18,7 +18,7 @@ before_deploy:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./gradlew bintrayUpload -Ddeployment=true -Dclassifier=jdk8
+    script: ./gradlew bintrayUpload -Ddeployment=true -Dclassifier=jdk8 -Dpublish.jar.only=true
     on:
       tags: true
       jdk: oraclejdk8

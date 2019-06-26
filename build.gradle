@@ -8,11 +8,6 @@ buildscript {
     project.ext['BINTRAY.userName'] = System.getProperty('BINTRAY_USER') ?: System.getenv('BINTRAY_USER')
     project.ext['BINTRAY.apiToken'] = System.getProperty('BINTRAY_API_TOKEN') ?: System.getenv('BINTRAY_API_TOKEN')
 
-    def classifier = System.getProperty('classifier');
-    if (classifier != null) {
-        project.ext['CLASSIFIER'] = classifier;
-        println "In case of deployment, using classifier: '" + project.ext['CLASSIFIER'] +"'"
-    }
     if (false) {
         /* Just for testing we disable syc to sonatype, as it is hard to remove things from there */
         project.ext['SONATYPE.userName'] = System.getProperty('SONATYPE_USER') ?: System.getenv('SONATYPE_USER')
