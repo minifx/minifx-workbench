@@ -1,7 +1,6 @@
 language: java
 sudo: false
 jdk:
-- oraclejdk8
 - openjdk11
 before_install:
 - chmod +x ./gradlew
@@ -18,12 +17,6 @@ before_deploy:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./gradlew bintrayUpload -Ddeployment=true -Dqualifier=jdk8
-    on:
-      tags: true
-      jdk: oraclejdk8
-  - provider: script
-    skip_cleanup: true
     script: ./gradlew bintrayUpload -Ddeployment=true
     on:
       tags: true
@@ -35,6 +28,6 @@ deploy:
     keep-history: false
     on:
       branch: master
-      jdk: oraclejdk8
+      jdk: openjdk11
 after_success:
 - bash <(curl -s https://codecov.io/bash)
