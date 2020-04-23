@@ -8,11 +8,8 @@ buildscript {
     project.ext['BINTRAY.userName'] = System.getProperty('BINTRAY_USER') ?: System.getenv('BINTRAY_USER')
     project.ext['BINTRAY.apiToken'] = System.getProperty('BINTRAY_API_TOKEN') ?: System.getenv('BINTRAY_API_TOKEN')
 
-    if (false) {
-        /* Just for testing we disable syc to sonatype, as it is hard to remove things from there */
-        project.ext['SONATYPE.userName'] = System.getProperty('SONATYPE_USER') ?: System.getenv('SONATYPE_USER')
-        project.ext['SONATYPE.password'] = System.getProperty('SONATYPE_PASSWORD') ?: System.getenv('SONATYPE_PASSWORD')
-    }
+    project.ext['SONATYPE.userName'] = System.getProperty('SONATYPE_USER') ?: System.getenv('SONATYPE_USER')
+    project.ext['SONATYPE.password'] = System.getProperty('SONATYPE_PASSWORD') ?: System.getenv('SONATYPE_PASSWORD')
 
     repositories {
         if (project['CERN_VM']) {
