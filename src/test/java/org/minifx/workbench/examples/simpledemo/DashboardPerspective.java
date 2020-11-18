@@ -4,13 +4,14 @@
 
 package org.minifx.workbench.examples.simpledemo;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.domain.Perspective;
 
+import static org.controlsfx.glyphfont.FontAwesome.Glyph.AMBULANCE;
+
 @Name("Dashboard")
-@Icon(value = FontAwesomeIcon.AMBULANCE, color = "green")
+@Icon(value = AMBULANCE, color = "green")
 public interface DashboardPerspective extends Perspective {
     /* marker */
 }

@@ -49,8 +49,6 @@ repositories {
     } else {
         /* For minifx components: */
         maven { url "https://dl.bintray.com/minifx/minifx-repo" }
-        /* For the fontawesome icons, to be compatible with java 8 */
-        maven { url "https://dl.bintray.com/jerady/maven" }
         jcenter()
         //mavenCentral()
     }
@@ -59,7 +57,7 @@ repositories {
 dependencies {
     compile group: 'org.minifx', name: 'minifx-fxml', version: '2.0.0'
 
-    compile group: 'org.controlsfx', name: 'controlsfx', version: '11.0.3'
+    compile group: 'org.controlsfx', name: 'controlsfx', version: '11.0.1'
 
     compile group: 'com.google.guava', name: 'guava', version: guavaVersion
     compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
@@ -158,7 +156,7 @@ if (project['DEPLOYMENT']) {
 }
 
 javafx {
-    // version = "12.0.1"
+    version = "11"
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.web']
 }
 

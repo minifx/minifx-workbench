@@ -4,15 +4,14 @@
 
 package org.minifx.workbench.annotations;
 
+import javafx.scene.paint.Color;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.minifx.workbench.domain.Perspective;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import org.minifx.workbench.domain.Perspective;
-
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import javafx.scene.paint.Color;
 
 /**
  * Annotation for specifying the Icon of a MiniFx view or {@link Perspective}. NOTE: the {@link #color()} String must
@@ -26,7 +25,7 @@ public @interface Icon {
 
     public static final String DEFAULT_COLOR = "#38678e";
 
-    FontAwesomeIcon value();
+    FontAwesome.Glyph value();
 
     String color() default DEFAULT_COLOR;
 

@@ -9,12 +9,13 @@ import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.domain.Perspective;
 import org.springframework.core.annotation.Order;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import static org.controlsfx.glyphfont.FontAwesome.Glyph.ANDROID;
 
 @Order(2)
 @Name(Perspective2.LABEL)
-@Icon(value = FontAwesomeIcon.ANDROID, color = "green")
+@Icon(value = ANDROID, color = "green")
 public interface Perspective2 extends Perspective {
 
-    public static final String LABEL = "Perspective 2";
+    String LABEL = "Perspective 2";
+
 }
