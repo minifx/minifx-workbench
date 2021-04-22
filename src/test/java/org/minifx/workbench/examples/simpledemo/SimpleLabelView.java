@@ -8,7 +8,7 @@ import org.minifx.workbench.annotations.View;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import static de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon.BARS;
+import static org.controlsfx.glyphfont.FontAwesome.Glyph.BARS;
 import static org.minifx.workbench.domain.PerspectivePos.CENTER;
 
 @Icon(color = "darkred", value = BARS)

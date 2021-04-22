@@ -4,11 +4,9 @@
 
 package org.minifx.workbench.util;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import org.controlsfx.glyphfont.FontAwesome;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.annotations.NoGutters;
@@ -38,7 +36,7 @@ public final class Perspectives {
     public static final Class<? extends Perspective> DEFAULT_PERSPECTIVE = DefaultPerspective.class;
 
     private static final Color DEFAULT_COLOR = Color.rgb(2, 2, 2);
-    private static final FontAwesomeIcon DEFAULT_PERSPECTIVE_ICON = FontAwesomeIcon.QUESTION;
+    private static final FontAwesome.Glyph DEFAULT_PERSPECTIVE_ICON = FontAwesome.Glyph.QUESTION;
 
     private Perspectives() {
         /* Only static methods */
@@ -67,15 +65,12 @@ public final class Perspectives {
     }
 
     public static Node perspectiveDefaultGraphics() {
-        Text defaultIcon = FontAwesomeIconFactory.get().createIcon(Perspectives.DEFAULT_PERSPECTIVE_ICON,
-                PERSPECTIVE.defaultIconSize());
-        defaultIcon.setFill(Perspectives.DEFAULT_COLOR);
-        return defaultIcon;
+        return Icons.graphicFrom(Perspectives.DEFAULT_PERSPECTIVE_ICON, PERSPECTIVE.getSizeScaling(), Perspectives.DEFAULT_COLOR);
     }
 
     private static Node perspectiveGraphics(Class<? extends Perspective> perspective) {
-        Optional<Icon> annotation = Optional.ofNullable(perspective.getAnnotation(Icon.class));
-        return annotation.map(ic -> Icons.graphicFrom(ic, PERSPECTIVE.defaultIconSize()))
+        return Optional.ofNullable(perspective.getAnnotation(Icon.class))
+                .<Node>map(ic -> Icons.graphicFrom(ic, PERSPECTIVE.getSizeScaling()))
                 .orElseGet(Perspectives::perspectiveDefaultGraphics);
     }
 

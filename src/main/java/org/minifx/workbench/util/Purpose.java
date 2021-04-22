@@ -5,17 +5,16 @@
 package org.minifx.workbench.util;
 
 public enum Purpose {
-    PERSPECTIVE("1.5em"),
-    VIEW("1em");
+    PERSPECTIVE(1.5),
+    VIEW(1);
 
-    private Purpose(String defaultIconSize) {
-        this.defaultIconSize = defaultIconSize;
+    private final double sizeScaling;
+
+    private Purpose(double sizeScaling) {
+        this.sizeScaling = sizeScaling;
     }
 
-    private final String defaultIconSize;
-
-    public String defaultIconSize() {
-        return this.defaultIconSize;
+    public double getSizeScaling() {
+        return sizeScaling;
     }
-
 }

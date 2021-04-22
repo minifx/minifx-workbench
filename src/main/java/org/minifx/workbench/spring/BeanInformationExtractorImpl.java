@@ -46,7 +46,7 @@ public class BeanInformationExtractorImpl implements BeanInformationExtractor {
     }
 
     private Optional<Node> graphicsFor(Object view, Purpose purpose) {
-        Optional<Node> icon = iconAnnotation(view).map(ic -> Icons.graphicFrom(ic, purpose.defaultIconSize()));
+        Optional<Node> icon = iconAnnotation(view).map(ic -> Icons.graphicFrom(ic, purpose.getSizeScaling()));
         Optional<Node> defaultIcon = defaultFor(purpose);
         return Optionals.first(icon, defaultIcon);
     }

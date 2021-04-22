@@ -4,10 +4,10 @@
 
 package org.minifx.workbench.domain;
 
-import static de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon.RANDOM;
-
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
+
+import static org.controlsfx.glyphfont.FontAwesome.Glyph.RANDOM;
 
 @Name("Default perspective")
 @Icon(RANDOM)

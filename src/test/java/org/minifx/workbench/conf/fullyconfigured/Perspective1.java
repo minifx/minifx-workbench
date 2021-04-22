@@ -9,13 +9,13 @@ import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.domain.Perspective;
 import org.springframework.core.annotation.Order;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import static org.controlsfx.glyphfont.FontAwesome.Glyph.WHATSAPP;
 
 @Order(1)
 @Name(Perspective1.LABEL)
-@Icon(value = FontAwesomeIcon.WHATSAPP, color = "blue")
+@Icon(value = WHATSAPP, color = "blue")
 public interface Perspective1 extends Perspective {
 
-    public static final String LABEL = "Perspective 1";
+    String LABEL = "Perspective 1";
 
 }
