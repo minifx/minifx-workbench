@@ -138,5 +138,5 @@ if (!project['CERN_VM']) {
 
 if (project['DEPLOYMENT']) {
     println 'Applying deployment scripts'
-    apply from: 'https://raw.githubusercontent.com/ossgang/gradle-scripts/master/deployment/deploy-to-maven-central.gradle'
+    apply from: 'https://raw.githubusercontent.com/ossgang/gradle-scripts/master/deployment/deploy-to-maven-central-fx.gradle'
 }
