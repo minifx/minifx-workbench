@@ -10,6 +10,7 @@ script:
 before_deploy:
   - ./gradlew generateLicenseReport
   - ./gradlew javadoc
+  - ./gradlew dependencies
   - echo $SIGNING_KEY_SECRING_BASE64 | base64 --decode > ./signing.key.secring
   - export SIGNING_KEY_PATH=./signing.key.secring
   - mkdir -p projectpage
