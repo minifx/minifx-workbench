@@ -1,14 +1,15 @@
 package org.minifx.fxcommons.service;
 
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import org.apache.commons.lang3.time.DurationFormatUtils;
-
-import java.time.Instant;
-
 import static java.lang.String.format;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
+
+import java.time.Instant;
+
+import org.apache.commons.lang3.time.DurationFormatUtils;
+
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 
 public final class AgingService extends Service<Void> {
     private static final int DEFAULT_AGING_INTERVAL = 1000;

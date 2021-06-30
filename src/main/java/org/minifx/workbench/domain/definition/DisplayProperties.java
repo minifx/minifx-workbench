@@ -4,12 +4,12 @@
 
 package org.minifx.workbench.domain.definition;
 
-import javafx.scene.Node;
+import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
+import javafx.scene.Node;
 
 /**
  * @author kfuchsbe

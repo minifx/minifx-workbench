@@ -4,8 +4,12 @@
 
 package org.minifx.workbench.spring;
 
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
+import static java.util.Objects.requireNonNull;
+import static org.minifx.workbench.util.Names.nameFromNameMethod;
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
+
+import java.util.Optional;
+
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
 import org.minifx.workbench.annotations.NoGutters;
@@ -16,11 +20,8 @@ import org.minifx.workbench.util.Perspectives;
 import org.minifx.workbench.util.Purpose;
 import org.springframework.core.annotation.Order;
 
-import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
-import static org.minifx.workbench.util.Names.nameFromNameMethod;
-import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
 
 public class BeanInformationExtractorImpl implements BeanInformationExtractor {
 

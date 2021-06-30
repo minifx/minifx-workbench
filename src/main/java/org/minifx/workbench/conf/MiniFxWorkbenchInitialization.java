@@ -1,9 +1,16 @@
 package org.minifx.workbench.conf;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.minifx.workbench.components.MainPane;
 import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
-import org.minifx.workbench.domain.definition.ToolbarItemDefinition;
 import org.minifx.workbench.providers.PerspectiveProvider;
 import org.minifx.workbench.spring.ActivatePerspectiveCommand;
 import org.minifx.workbench.spring.ElementsDefinitionConstructor;
@@ -11,14 +18,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
 
 @Configuration
 public class MiniFxWorkbenchInitialization {

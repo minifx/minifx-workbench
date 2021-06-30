@@ -1,8 +1,8 @@
 package org.minifx.fxcommons.util;
 
-import javafx.beans.value.ChangeListener;
-
 import java.util.function.Consumer;
+
+import javafx.beans.value.ChangeListener;
 
 public final class ChangeListeners {
 

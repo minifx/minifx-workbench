@@ -4,13 +4,13 @@
 
 package org.minifx.workbench.css;
 
-import com.google.common.annotations.VisibleForTesting;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import com.google.common.annotations.VisibleForTesting;
 
 public final class MiniFxCssConstants {
 

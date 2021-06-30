@@ -4,15 +4,15 @@
 
 package org.minifx.fxcommons;
 
+import static org.minifx.fxcommons.MiniFxSceneBuilder.miniFxSceneBuilder;
+
+import java.util.Collection;
+
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import java.util.Collection;
-
-import static org.minifx.fxcommons.MiniFxSceneBuilder.miniFxSceneBuilder;
 
 public final class MiniFxUtilityDialogBuilder {
 

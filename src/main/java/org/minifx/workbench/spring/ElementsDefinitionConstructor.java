@@ -4,10 +4,13 @@
 
 package org.minifx.workbench.spring;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ImmutableListMultimap.Builder;
-import com.google.common.collect.ListMultimap;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toSet;
+
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+
 import org.minifx.workbench.annotations.Footer;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
@@ -25,12 +28,10 @@ import org.minifx.workbench.util.Perspectives;
 import org.minifx.workbench.util.Purpose;
 import org.springframework.core.annotation.Order;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
-
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toSet;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableListMultimap.Builder;
+import com.google.common.collect.ListMultimap;
 
 /**
  * Contains all the relevant logic to bring together all the information which is required to instantiate the workbench
