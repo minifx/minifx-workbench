@@ -3,6 +3,7 @@ package org.minifx.workbench.conf;
 import org.minifx.workbench.components.MainPane;
 import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.ToolbarItemDefinition;
 import org.minifx.workbench.providers.PerspectiveProvider;
 import org.minifx.workbench.spring.ActivatePerspectiveCommand;
 import org.minifx.workbench.spring.ElementsDefinitionConstructor;
@@ -42,6 +43,10 @@ public class MiniFxWorkbenchInitialization {
     private static Collection<FooterDefinition> allFooters(ApplicationContext ctx) {
         return ctx.getBean(ElementsDefinitionConstructor.class).footers();
     }
+
+//    private static Collection<ToolbarItemDefinition> allToolbarItems(ApplicationContext ctx) {
+//        return ctx.getBean(ElementsDefinitionConstructor.class).toolbarItems();
+//    }
 
     private static List<PerspectiveDefinition> allPerspectives(ApplicationContext ctx) {
         ElementsDefinitionConstructor instantiator = ctx.getBean(ElementsDefinitionConstructor.class);

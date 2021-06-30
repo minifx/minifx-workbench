@@ -32,7 +32,7 @@ public class BeanInformationExtractorImpl implements BeanInformationExtractor {
 
     @Override
     public DisplayProperties displayPropertiesFrom(Object view, Purpose purpose) {
-        return new DisplayProperties(viewNameFrom(view), graphicsFor(view, purpose).orElse(null), viewOrderFrom(view), hasGutters(view));
+        return new DisplayProperties(viewNameFrom(view), graphicsFor(view, purpose).orElse(null), orderFrom(view), hasGutters(view));
     }
 
     private boolean hasGutters(Object view) {
@@ -65,7 +65,8 @@ public class BeanInformationExtractorImpl implements BeanInformationExtractor {
         return Color.valueOf(color);
     }
 
-    private int viewOrderFrom(Object view) {
+    @Override
+    public int orderFrom(Object view) {
         Optional<Order> order = repository.from(view).getAnnotation(Order.class);
         return order.map(Order::value).orElse(LOWEST_PRECEDENCE);
     }

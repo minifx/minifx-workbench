@@ -26,8 +26,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import javafx.scene.control.MenuBar;
-
 @Configuration
 @Import({ FactoryMethodsCollectorConfiguration.class, FxmlNodeServiceConfiguration.class,
         NodeFactoryConfiguration.class, MiniFxWorkbenchInitialization.class })
@@ -59,21 +57,21 @@ public class MiniFxWorkbenchConfiguration {
     }
 
     @Bean
-    public ElementsDefinitionConstructor elementsDefinitionConstructor(
+    public static ElementsDefinitionConstructor elementsDefinitionConstructor(
             WorkbenchElementsRepository factoryMethodsRepository, BeanInformationExtractor beanInformationExtractor,
             FxNodeFactory fxNodeFactory) {
         return new ElementsDefinitionConstructor(factoryMethodsRepository, beanInformationExtractor, fxNodeFactory);
     }
 
     @Bean
-    public BeanInformationExtractor beanInformationExtractor(BeanInformationRepository factoryMethodsRepository) {
+    public static BeanInformationExtractor beanInformationExtractor(BeanInformationRepository factoryMethodsRepository) {
         return new BeanInformationExtractorImpl(factoryMethodsRepository);
     }
 
     @Bean
-    public MainPane mainPane(ApplicationEventPublisher publisher, WorkbenchElementsRepository factoryMethodsRepository,
-            FxNodeFactory fxNodeFactory, @Autowired(required=false) MenuBar menuBar) {
-        MainPane mainPanel = new MainPane(factoryMethodsRepository.toolbarItems(), publisher, fxNodeFactory);
+    public static MainPane mainPane(ApplicationEventPublisher publisher,
+            ElementsDefinitionConstructor elementsDefinitionConstructor) {
+        MainPane mainPanel = new MainPane(elementsDefinitionConstructor.toolbarItems(), publisher);
         mainPanel.setId(ID_MAIN_PANEL);
         return mainPanel;
     }

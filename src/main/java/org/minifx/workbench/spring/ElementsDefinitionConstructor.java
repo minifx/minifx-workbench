@@ -17,6 +17,7 @@ import org.minifx.workbench.domain.PerspectivePos;
 import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.ToolbarItemDefinition;
 import org.minifx.workbench.domain.definition.ViewDefinition;
 import org.minifx.workbench.nodes.FxNodeFactory;
 import org.minifx.workbench.util.Names;
@@ -109,6 +110,10 @@ public class ElementsDefinitionConstructor {
         return footerDefinitionsFrom(repository.footers());
     }
 
+    public Set<ToolbarItemDefinition> toolbarItems() {
+        return toolbarItemDefinitionsFrom(repository.toolbarItems());
+    }
+    
     @VisibleForTesting
     PerspectivePos viewPosFor(Object view) {
         requireNonNull(view, "view must not be null");
@@ -164,6 +169,14 @@ public class ElementsDefinitionConstructor {
 
     private Set<FooterDefinition> footerDefinitionsFrom(Collection<Object> allViews) {
         return allViews.stream().map(this::toFooterDefinition).collect(toSet());
+    }
+
+    private Set<ToolbarItemDefinition> toolbarItemDefinitionsFrom(Collection<Object> toolbarItems) {
+        return toolbarItems.stream().map(this::toToolbarItemDefinition).collect(toSet());
+    }
+
+    private ToolbarItemDefinition toToolbarItemDefinition(Object tbItem) {
+        return new ToolbarItemDefinition(fxNodeFactory.fxNodeFrom(tbItem), extractor.orderFrom(tbItem));
     }
 
     private ViewDefinition toViewDefinition(Object view) {
