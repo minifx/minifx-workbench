@@ -63,7 +63,11 @@ public final class MiniFxSceneBuilder {
         } else {
             scene = new Scene(rootNode);
         }
+        applyStylesTo(scene);
+        return scene;
+    }
 
+    public void applyStylesTo(Scene scene) {
         if (useMinifxStyle) {
             scene.getStylesheets().addAll(CSS_LOCATIONS);
         }
@@ -71,7 +75,5 @@ public final class MiniFxSceneBuilder {
         if (additionalCss != null && !additionalCss.isEmpty()) {
             scene.getStylesheets().addAll(additionalCss);
         }
-
-        return scene;
     }
 }
