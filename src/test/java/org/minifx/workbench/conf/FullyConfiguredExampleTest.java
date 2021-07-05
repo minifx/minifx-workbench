@@ -24,7 +24,7 @@ import javafx.scene.control.ToggleButton;
 public class FullyConfiguredExampleTest extends AbstractSpringApplicationTest {
 
     public FullyConfiguredExampleTest() {
-        super(MiniFxWorkbenchConfiguration.class, FullExampleConfiguration.class);
+        super(MiniFxWorkbenchSceneConfiguration.class, FullExampleConfiguration.class);
     }
 
     @Before

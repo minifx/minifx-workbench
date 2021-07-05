@@ -4,16 +4,11 @@
 
 package org.minifx.workbench.util;
 
-import com.google.common.collect.Iterables;
-import javafx.scene.Node;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
-import org.minifx.workbench.components.TextWorkbenchView;
-import org.minifx.workbench.domain.PerspectivePos;
-import org.minifx.workbench.domain.definition.PerspectiveDefinition;
-import org.minifx.workbench.domain.definition.TabbableDefinition;
-import org.minifx.workbench.domain.definition.ViewDefinition;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS;
+import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS_NO_GUTTERS;
+import static org.minifx.workbench.css.MiniFxCssConstants.SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -24,11 +19,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
-import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS;
-import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS_NO_GUTTERS;
-import static org.minifx.workbench.css.MiniFxCssConstants.SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS;
+import org.minifx.workbench.components.TextWorkbenchView;
+import org.minifx.workbench.domain.PerspectivePos;
+import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.TabbableDefinition;
+import org.minifx.workbench.domain.definition.ViewDefinition;
+
+import com.google.common.collect.Iterables;
+
+import javafx.scene.Node;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
 
 public class MiniFxComponents {
 

@@ -1,5 +1,13 @@
 package org.minifx.workbench.conf;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.minifx.workbench.components.MainPane;
 import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
@@ -10,14 +18,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
 
 @Configuration
 public class MiniFxWorkbenchInitialization {
@@ -42,6 +42,10 @@ public class MiniFxWorkbenchInitialization {
     private static Collection<FooterDefinition> allFooters(ApplicationContext ctx) {
         return ctx.getBean(ElementsDefinitionConstructor.class).footers();
     }
+
+//    private static Collection<ToolbarItemDefinition> allToolbarItems(ApplicationContext ctx) {
+//        return ctx.getBean(ElementsDefinitionConstructor.class).toolbarItems();
+//    }
 
     private static List<PerspectiveDefinition> allPerspectives(ApplicationContext ctx) {
         ElementsDefinitionConstructor instantiator = ctx.getBean(ElementsDefinitionConstructor.class);

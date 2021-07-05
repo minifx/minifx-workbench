@@ -133,20 +133,34 @@ public class WorkbenchElementsPostProcessor
 
     private Method factoryMethodForBeanName(String beanName) {
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
-        String factoryBeanName = beanDefinition.getFactoryBeanName();
+
+        Class<? extends Object> factoryBeanClass = factoryBeanClass(beanDefinition);
         String factoryMethodName = beanDefinition.getFactoryMethodName();
-        if ((factoryBeanName != null) && (factoryMethodName != null)) {
-            List<Method> filteredMethods = methodsOfName(factoryBeanClass(factoryBeanName), factoryMethodName);
+        if ((factoryBeanClass != null) && (factoryMethodName != null)) {
+            List<Method> filteredMethods = methodsOfName(factoryBeanClass, factoryMethodName);
             if (filteredMethods.isEmpty()) {
-                throw new IllegalStateException("No method of name " + factoryMethodName + " found in class "
-                        + factoryBeanClass(factoryBeanName) + ".");
+                throw new IllegalStateException(
+                        "No method of name " + factoryMethodName + " found in class " + factoryBeanClass + ".");
             }
             return Iterables.getOnlyElement(filteredMethods);
         }
         return null;
     }
 
-    private List<Method> methodsOfName(Class<? extends Object> factoryClass, String factoryMethodName) {
+    private Class<? extends Object> factoryBeanClass(BeanDefinition beanDefinition) {
+        String factoryBeanName = beanDefinition.getFactoryBeanName();
+        if (factoryBeanName == null) {
+            /* This is the case for static factory methods. However, might fail in other cases...? */
+            try {
+                return superIfNotConcrete(Class.forName(beanDefinition.getBeanClassName()));
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return superIfNotConcrete(factoryBeanClass(factoryBeanName));
+    }
+
+    private static List<Method> methodsOfName(Class<? extends Object> factoryClass, String factoryMethodName) {
         Set<Method> methods = new HashSet<>(Arrays.asList(factoryClass.getMethods()));
         methods.addAll(Arrays.asList(factoryClass.getDeclaredMethods()));
         return methods.stream().filter(m -> factoryMethodName.equals(m.getName())).collect(toList());
@@ -154,7 +168,10 @@ public class WorkbenchElementsPostProcessor
 
     private Class<? extends Object> factoryBeanClass(String factoryBeanName) {
         Object factoryBean = beanFactory.getBean(factoryBeanName);
-        Class<? extends Object> factoryClass = factoryBean.getClass();
+        return factoryBean.getClass();
+    }
+
+    private Class<? extends Object> superIfNotConcrete(Class<? extends Object> factoryClass) {
         if (Proxy.isProxyClass(factoryClass) || Enhancer.isEnhanced(factoryClass)) {
             factoryClass = factoryClass.getSuperclass();
         }

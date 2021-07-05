@@ -4,13 +4,14 @@
 
 package org.minifx.workbench.util;
 
-import javafx.scene.paint.Color;
+import java.util.Optional;
+
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.minifx.workbench.annotations.Icon;
 
-import java.util.Optional;
+import javafx.scene.paint.Color;
 
 /**
  * Static methods for creating icons

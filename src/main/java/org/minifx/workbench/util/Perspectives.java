@@ -4,8 +4,14 @@
 
 package org.minifx.workbench.util;
 
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
+import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
+import static org.minifx.workbench.domain.PerspectivePos.CENTER;
+import static org.minifx.workbench.util.Purpose.PERSPECTIVE;
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
+
+import java.util.Optional;
+
 import org.controlsfx.glyphfont.FontAwesome;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
@@ -17,13 +23,8 @@ import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.annotation.Order;
 
-import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
-import static java.util.Optional.ofNullable;
-import static org.minifx.workbench.domain.PerspectivePos.CENTER;
-import static org.minifx.workbench.util.Purpose.PERSPECTIVE;
-import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
 
 /**
  * Utility methods for perspective classes.

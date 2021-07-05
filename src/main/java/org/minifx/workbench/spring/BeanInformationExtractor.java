@@ -20,4 +20,6 @@ public interface BeanInformationExtractor {
      */
     Color iconColor(Object view);
 
+    int orderFrom(Object view);
+
 }

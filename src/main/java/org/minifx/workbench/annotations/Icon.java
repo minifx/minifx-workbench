@@ -4,14 +4,15 @@
 
 package org.minifx.workbench.annotations;
 
-import javafx.scene.paint.Color;
-import org.controlsfx.glyphfont.FontAwesome;
-import org.minifx.workbench.domain.Perspective;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.controlsfx.glyphfont.FontAwesome;
+import org.minifx.workbench.domain.Perspective;
+
+import javafx.scene.paint.Color;
 
 /**
  * Annotation for specifying the Icon of a MiniFx view or {@link Perspective}. NOTE: the {@link #color()} String must

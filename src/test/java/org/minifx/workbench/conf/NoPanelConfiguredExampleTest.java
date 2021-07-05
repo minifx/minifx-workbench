@@ -16,7 +16,7 @@ import javafx.scene.Node;
 public class NoPanelConfiguredExampleTest extends AbstractSpringApplicationTest {
 
     public NoPanelConfiguredExampleTest() {
-        super(MiniFxWorkbenchConfiguration.class);
+        super(MiniFxWorkbenchSceneConfiguration.class);
     }
 
     @Test

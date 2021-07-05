@@ -9,6 +9,10 @@ import static org.minifx.workbench.css.MiniFxCssConstants.CSS_LOCATIONS;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -63,15 +67,25 @@ public final class MiniFxSceneBuilder {
         } else {
             scene = new Scene(rootNode);
         }
+        applyStylesTo(scene);
+        return scene;
+    }
 
+    public void applyStylesTo(Scene scene) {
+        scene.getStylesheets().addAll(cssLocations());
+    }
+
+    public List<String> cssLocations() {
+        Builder<String> builder = ImmutableList.builder();
         if (useMinifxStyle) {
-            scene.getStylesheets().addAll(CSS_LOCATIONS);
+            builder.addAll(CSS_LOCATIONS);
         }
 
         if (additionalCss != null && !additionalCss.isEmpty()) {
-            scene.getStylesheets().addAll(additionalCss);
+            builder.addAll(additionalCss);
         }
 
-        return scene;
+        return builder.build();
     }
+
 }

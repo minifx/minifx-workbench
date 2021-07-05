@@ -4,10 +4,13 @@
 
 package org.minifx.workbench.spring;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ImmutableListMultimap.Builder;
-import com.google.common.collect.ListMultimap;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toSet;
+
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+
 import org.minifx.workbench.annotations.Footer;
 import org.minifx.workbench.annotations.Icon;
 import org.minifx.workbench.annotations.Name;
@@ -17,6 +20,7 @@ import org.minifx.workbench.domain.PerspectivePos;
 import org.minifx.workbench.domain.definition.DisplayProperties;
 import org.minifx.workbench.domain.definition.FooterDefinition;
 import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.ToolbarItemDefinition;
 import org.minifx.workbench.domain.definition.ViewDefinition;
 import org.minifx.workbench.nodes.FxNodeFactory;
 import org.minifx.workbench.util.Names;
@@ -24,12 +28,10 @@ import org.minifx.workbench.util.Perspectives;
 import org.minifx.workbench.util.Purpose;
 import org.springframework.core.annotation.Order;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
-
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toSet;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableListMultimap.Builder;
+import com.google.common.collect.ListMultimap;
 
 /**
  * Contains all the relevant logic to bring together all the information which is required to instantiate the workbench
@@ -109,6 +111,10 @@ public class ElementsDefinitionConstructor {
         return footerDefinitionsFrom(repository.footers());
     }
 
+    public Set<ToolbarItemDefinition> toolbarItems() {
+        return toolbarItemDefinitionsFrom(repository.toolbarItems());
+    }
+    
     @VisibleForTesting
     PerspectivePos viewPosFor(Object view) {
         requireNonNull(view, "view must not be null");
@@ -164,6 +170,14 @@ public class ElementsDefinitionConstructor {
 
     private Set<FooterDefinition> footerDefinitionsFrom(Collection<Object> allViews) {
         return allViews.stream().map(this::toFooterDefinition).collect(toSet());
+    }
+
+    private Set<ToolbarItemDefinition> toolbarItemDefinitionsFrom(Collection<Object> toolbarItems) {
+        return toolbarItems.stream().map(this::toToolbarItemDefinition).collect(toSet());
+    }
+
+    private ToolbarItemDefinition toToolbarItemDefinition(Object tbItem) {
+        return new ToolbarItemDefinition(fxNodeFactory.fxNodeFrom(tbItem), extractor.orderFrom(tbItem));
     }
 
     private ViewDefinition toViewDefinition(Object view) {

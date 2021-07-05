@@ -4,27 +4,13 @@
 
 package org.minifx.workbench.components;
 
-import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import org.minifx.workbench.css.MiniFxCssConstants;
-import org.minifx.workbench.domain.definition.DisplayProperties;
-import org.minifx.workbench.domain.definition.FooterDefinition;
-import org.minifx.workbench.domain.definition.PerspectiveDefinition;
-import org.minifx.workbench.nodes.FxNodeFactory;
-import org.minifx.workbench.spring.AbstractPerspectiveEvent;
-import org.minifx.workbench.spring.ActivatePerspectiveCommand;
-import org.minifx.workbench.spring.ChangePerspectiveButtonStyleCommand;
-import org.minifx.workbench.spring.PerspectiveActivatedEvent;
-import org.minifx.workbench.util.MiniFxComponents;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
+import static java.util.Collections.singletonList;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
+import static org.minifx.workbench.css.MiniFxCssConstants.PERSPECTIVE_BUTTON_CLASS;
+import static org.minifx.workbench.css.MiniFxCssConstants.TOOLBAR_BUTTON_CLASS;
+import static org.minifx.workbench.util.MiniFxComponents.containerPaneFrom;
+import static org.minifx.workbench.util.MiniFxComponents.createPerspective;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -34,12 +20,28 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.ImmutableList.copyOf;
-import static java.util.Collections.singletonList;
-import static org.minifx.workbench.css.MiniFxCssConstants.PERSPECTIVE_BUTTON_CLASS;
-import static org.minifx.workbench.css.MiniFxCssConstants.TOOLBAR_BUTTON_CLASS;
-import static org.minifx.workbench.util.MiniFxComponents.containerPaneFrom;
-import static org.minifx.workbench.util.MiniFxComponents.createPerspective;
+import org.minifx.workbench.css.MiniFxCssConstants;
+import org.minifx.workbench.domain.definition.DisplayProperties;
+import org.minifx.workbench.domain.definition.FooterDefinition;
+import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.ToolbarItemDefinition;
+import org.minifx.workbench.spring.AbstractPerspectiveEvent;
+import org.minifx.workbench.spring.ActivatePerspectiveCommand;
+import org.minifx.workbench.spring.ChangePerspectiveButtonStyleCommand;
+import org.minifx.workbench.spring.PerspectiveActivatedEvent;
+import org.minifx.workbench.util.MiniFxComponents;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 /**
  * Main JavaFX Pane for a MiniFx application. It has a toolbar for perspective switching at the top. The active
@@ -56,14 +58,16 @@ public class MainPane extends BorderPane {
     private HBox perspectiveButtonsBox;
     private ToggleGroup perspectiveButtonToggleGroup = new ToggleGroup();
 
-    public MainPane(Iterable<Object> toolbarItems, ApplicationEventPublisher publisher, FxNodeFactory fxNodeFactory) {
-        this(toolbarItems, DEFAULT_FILLER, publisher, fxNodeFactory);
+    public MainPane(Collection<ToolbarItemDefinition> toolbarItems, ApplicationEventPublisher publisher) {
+        this(toolbarItems, DEFAULT_FILLER, publisher);
     }
 
-    public MainPane(Iterable<Object> toolbarItems, Node filler, ApplicationEventPublisher publisher,
-            FxNodeFactory fxNodeFactory) {
+    public MainPane(Collection<ToolbarItemDefinition> toolbarItems, Node filler, ApplicationEventPublisher publisher) {
         this.publisher = publisher;
-        List<Node> toolbarNodes = fxNodeFactory.fxNodesFrom(copyOf(toolbarItems));
+        List<Node> toolbarNodes = toolbarItems.stream()//
+                .sorted(comparing(ToolbarItemDefinition::order))//
+                .map(ToolbarItemDefinition::node)//
+                .collect(toList());
 
         HBox toolbarBox = horizontalBoxOf(Pos.TOP_LEFT);
         HBox centralBox = horizontalBoxOf(Pos.TOP_CENTER);
@@ -87,7 +91,8 @@ public class MainPane extends BorderPane {
             throw new IllegalStateException("Footer already initialized!");
         }
 
-        Platform.runLater(() -> containerPaneFrom(footers).map(MiniFxComponents::configureSingleNodeStyle).ifPresent(this::setBottom));
+        Platform.runLater(() -> containerPaneFrom(footers).map(MiniFxComponents::configureSingleNodeStyle)
+                .ifPresent(this::setBottom));
     }
 
     /**
