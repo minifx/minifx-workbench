@@ -1,5 +1,7 @@
 package org.minifx.fxcommons;
 
+import java.util.List;
+
 import org.minifx.workbench.components.MainPane;
 import org.springframework.context.ApplicationContext;
 
@@ -26,10 +28,10 @@ public class MiniFxWorkbench {
         return sceneBuilder.withRoot(mainPane).build();
     }
 
-    public void applyStylesTo(Scene scene) {
-        sceneBuilder.applyStylesTo(scene);
+    public List<String> cssLocations() {
+        return sceneBuilder.cssLocations();
     }
-
+    
     public ApplicationContext springContext() {
         return springContext;
     }
