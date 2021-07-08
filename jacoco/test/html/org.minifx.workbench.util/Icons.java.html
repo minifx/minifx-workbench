@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Icons.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.util</a> &gt; <span class="el_source">Icons.java</span></div><h1>Icons.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2017 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.util;
+
+import java.util.Optional;
+
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
+import org.minifx.workbench.annotations.Icon;
+
+import javafx.scene.paint.Color;
+
+/**
+ * Static methods for creating icons
+ *
+ * @author kfuchsbe
+ */
+public final class Icons {
+
+    private Icons() {
+        /* Only static methods */
+    }
+
+    /**
+     * Creates a JavaFx node as specified from the given icon annotation and the given size
+     *
+     * @param iconAnnotation the icon annotation to process
+     * @param sizeFactor     the size of the icon
+     * @return a node to be put into java fx, showing the icon
+     */
+    public static Glyph graphicFrom(Icon iconAnnotation, double sizeFactor) {
+<span class="nc" id="L35">        FontAwesome.Glyph icon = iconAnnotation.value();</span>
+<span class="nc" id="L36">        return applySizeFactor(graphicFrom(icon).color(color(iconAnnotation)), sizeFactor);</span>
+    }
+
+    /**
+     * Materialize the given icon into something displayable
+     *
+     * @param icon to materialize
+     * @return the {@link Glyph} that can be added to the GUI
+     */
+    public static Glyph graphicFrom(FontAwesome.Glyph icon) {
+<span class="nc" id="L46">        return GlyphFontRegistry.font(&quot;FontAwesome&quot;).create(icon);</span>
+    }
+
+    public static Glyph graphicFrom(FontAwesome.Glyph icon, double sizeFactor, Color color) {
+<span class="nc" id="L50">        return applySizeFactor(graphicFrom(icon).color(color), sizeFactor);</span>
+    }
+
+    private static Glyph applySizeFactor(Glyph glyph, double sizeFactor) {
+<span class="nc" id="L54">        Optional.ofNullable(GlyphFontRegistry.font(glyph.getFont().getFamily()))</span>
+<span class="nc" id="L55">                .ifPresent(glyphFont -&gt; glyph.setFontSize(glyphFont.getDefaultSize() * sizeFactor));</span>
+<span class="nc" id="L56">        return glyph;</span>
+    }
+
+    private static Color color(Icon iconAnnotation) {
+<span class="nc" id="L60">        return Color.valueOf(iconAnnotation.color().trim());</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MiniFxWorkbench.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.fxcommons</a> &gt; <span class="el_source">MiniFxWorkbench.java</span></div><h1>MiniFxWorkbench.java</h1><pre class="source lang-java linenums">package org.minifx.fxcommons;
+
+import java.util.List;
+
+import org.minifx.workbench.components.MainPane;
+import org.springframework.context.ApplicationContext;
+
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
+public class MiniFxWorkbench {
+
+    private final MiniFxSceneBuilder sceneBuilder;
+    private final MainPane mainPane;
+    private final ApplicationContext springContext;
+
+<span class="fc" id="L17">    public MiniFxWorkbench(MiniFxSceneBuilder sceneBuilder, MainPane mainPane, ApplicationContext springContext) {</span>
+<span class="fc" id="L18">        this.sceneBuilder = sceneBuilder;</span>
+<span class="fc" id="L19">        this.mainPane = mainPane;</span>
+<span class="fc" id="L20">        this.springContext = springContext;</span>
+<span class="fc" id="L21">    }</span>
+
+    public Parent mainPane() {
+<span class="nc" id="L24">        return mainPane;</span>
+    }
+
+    public Scene createScene() {
+<span class="fc" id="L28">        return sceneBuilder.withRoot(mainPane).build();</span>
+    }
+
+    public List&lt;String&gt; cssLocations() {
+<span class="nc" id="L32">        return sceneBuilder.cssLocations();</span>
+    }
+    
+    public ApplicationContext springContext() {
+<span class="nc" id="L36">        return springContext;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

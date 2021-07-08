@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PerspectiveDefinition.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.domain.definition</a> &gt; <span class="el_source">PerspectiveDefinition.java</span></div><h1>PerspectiveDefinition.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2017 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.domain.definition;
+
+import static java.util.Objects.requireNonNull;
+
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
+
+public class PerspectiveDefinition {
+
+    private final Object perspectiveKey;
+    private final DisplayProperties displayProperties;
+    private final Set&lt;ViewDefinition&gt; views;
+
+    public PerspectiveDefinition(Object perspectiveKey, DisplayProperties displayProperties,
+<span class="nc" id="L20">            Set&lt;ViewDefinition&gt; views) {</span>
+<span class="nc" id="L21">        this.perspectiveKey = requireNonNull(perspectiveKey, &quot;perspectiveKey must not be null&quot;);</span>
+<span class="nc" id="L22">        this.displayProperties = requireNonNull(displayProperties, &quot;displayProperties must not be null&quot;);</span>
+<span class="nc" id="L23">        this.views = ImmutableSet.copyOf(requireNonNull(views, &quot;views must not be null&quot;));</span>
+<span class="nc" id="L24">    }</span>
+
+    public Object perspective() {
+<span class="nc" id="L27">        return perspectiveKey;</span>
+    }
+
+    public DisplayProperties displayProperties() {
+<span class="nc" id="L31">        return displayProperties;</span>
+    }
+
+    public final Set&lt;ViewDefinition&gt; views() {
+<span class="nc" id="L35">        return views;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L40">        final int prime = 31;</span>
+<span class="nc" id="L41">        int result = 1;</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        result = prime * result + ((displayProperties == null) ? 0 : displayProperties.hashCode());</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        result = prime * result + ((perspectiveKey == null) ? 0 : perspectiveKey.hashCode());</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        result = prime * result + ((views == null) ? 0 : views.hashCode());</span>
+<span class="nc" id="L45">        return result;</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L51">            return true;</span>
+        }
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (obj == null) {</span>
+<span class="nc" id="L54">            return false;</span>
+        }
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (getClass() != obj.getClass()) {</span>
+<span class="nc" id="L57">            return false;</span>
+        }
+<span class="nc" id="L59">        PerspectiveDefinition other = (PerspectiveDefinition) obj;</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (displayProperties == null) {</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            if (other.displayProperties != null) {</span>
+<span class="nc" id="L62">                return false;</span>
+            }
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        } else if (!displayProperties.equals(other.displayProperties)) {</span>
+<span class="nc" id="L65">            return false;</span>
+        }
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (perspectiveKey == null) {</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            if (other.perspectiveKey != null) {</span>
+<span class="nc" id="L69">                return false;</span>
+            }
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        } else if (!perspectiveKey.equals(other.perspectiveKey)) {</span>
+<span class="nc" id="L72">            return false;</span>
+        }
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (views == null) {</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">            if (other.views != null) {</span>
+<span class="nc" id="L76">                return false;</span>
+            }
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        } else if (!views.equals(other.views)) {</span>
+<span class="nc" id="L79">            return false;</span>
+        }
+<span class="nc" id="L81">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L86">        return &quot;PerspectiveDefinition [perspective=&quot; + perspectiveKey + &quot;, displayProperties=&quot; + displayProperties</span>
+                + &quot;, views=&quot; + views + &quot;]&quot;;
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

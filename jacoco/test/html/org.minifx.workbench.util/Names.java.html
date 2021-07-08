@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Names.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.util</a> &gt; <span class="el_source">Names.java</span></div><h1>Names.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2016 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.util;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Optional;
+
+/**
+ * Utility methods to determine names for objects.
+ * 
+ * @author kfuchsbe
+ */
+public final class Names {
+
+    private Names() {
+        /* only static methods */
+    }
+
+    /**
+     * Tries to get the name of an object from one of its methods. Only methods which return strings and have no
+     * parameters are considered. the search is done in the following order:
+     * &lt;ol&gt;
+     * &lt;li&gt;&quot;name()&quot;
+     * &lt;li&gt;&quot;getName()&quot;
+     * &lt;/ol&gt;
+     * 
+     * @param object the object for which to retrieve the name
+     * @return the name as derived from a name method, if available.
+     */
+    public static final Optional&lt;String&gt; nameFromNameMethod(Object object) {
+<span class="nc" id="L34">        Optional&lt;Method&gt; nameMethod = nameMethod(object);</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (nameMethod.isPresent()) {</span>
+            try {
+<span class="nc" id="L37">                return Optional.ofNullable((String) nameMethod.get().invoke(object));</span>
+<span class="nc" id="L38">            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {</span>
+                /* do nothing on purpose */
+            }
+        }
+<span class="nc" id="L42">        return Optional.empty();</span>
+    }
+
+    private static Optional&lt;Method&gt; nameMethod(Object object) {
+<span class="nc" id="L46">        return Optionals.first(stringMethodOfName(object, &quot;name&quot;), stringMethodOfName(object, &quot;getName&quot;));</span>
+    }
+
+    private static Optional&lt;Method&gt; stringMethodOfName(Object object, String methodName) {
+        try {
+<span class="nc" id="L51">            Method nameMethod = object.getClass().getMethod(methodName);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            if (returnsString(nameMethod)) {</span>
+<span class="nc" id="L53">                return Optional.of(nameMethod);</span>
+            }
+<span class="nc" id="L55">        } catch (NoSuchMethodException e) {</span>
+            /* do nothing on purpose */
+<span class="nc" id="L57">        }</span>
+<span class="nc" id="L58">        return Optional.empty();</span>
+    }
+
+    private static boolean returnsString(Method nameMethod) {
+<span class="nc" id="L62">        return String.class.isAssignableFrom(nameMethod.getReturnType());</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

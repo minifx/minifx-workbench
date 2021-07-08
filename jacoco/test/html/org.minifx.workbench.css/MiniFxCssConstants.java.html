@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MiniFxCssConstants.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.css</a> &gt; <span class="el_source">MiniFxCssConstants.java</span></div><h1>MiniFxCssConstants.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2016 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.css;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+
+import java.util.Collection;
+import java.util.List;
+
+import com.google.common.annotations.VisibleForTesting;
+
+public final class MiniFxCssConstants {
+
+    private static final String STYLES_SUBDIR = &quot;styles&quot;;
+<span class="fc" id="L18">    private static final List&lt;String&gt; BARE_CSS_STYLES = asList(&quot;constants.css&quot;, &quot;minifxPerspectiveStyle.css&quot;,</span>
+            &quot;minifxTabPaneStyle.css&quot;, &quot;minifxToolbarStyle.css&quot;, &quot;minifxSplitPaneStyle.css&quot;, &quot;minifxButtonStyle.css&quot;,
+            &quot;minifxTreeViewStyle.css&quot;);
+
+    public static final String MAIN_PANE_CLASS = &quot;main-panel&quot;;
+    public static final String COMPONENTS_OF_MAIN_PANEL_CLASS = &quot;main-panel-view&quot;;
+    public static final String COMPONENTS_OF_MAIN_PANEL_CLASS_NO_GUTTERS = &quot;main-panel-view-no-gutters&quot;;
+    public static final String SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS = &quot;single-main-panel-view&quot;;
+<span class="fc" id="L26">    public static final Collection&lt;String&gt; CSS_LOCATIONS = cssStyleLocations();</span>
+
+    public static final String PERSPECTIVE_BUTTON_CLASS = &quot;perspective-button&quot;;
+    public static final String TOOLBAR_BUTTON_CLASS = &quot;toolbar-button&quot;;
+
+    private MiniFxCssConstants() {
+        /* Just constants */
+    }
+
+    @VisibleForTesting
+    static final String path() {
+<span class="fc" id="L37">        return MiniFxCssConstants.class.getPackage().getName().replace(&quot;.&quot;, &quot;/&quot;) + &quot;/&quot; + STYLES_SUBDIR;</span>
+    }
+
+    private static List&lt;String&gt; cssStyleLocations() {
+<span class="fc" id="L41">        return BARE_CSS_STYLES.stream().map(name -&gt; path() + &quot;/&quot; + name).collect(toList());</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

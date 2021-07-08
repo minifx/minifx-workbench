@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MainPane.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.components</a> &gt; <span class="el_source">MainPane.java</span></div><h1>MainPane.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2016 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.components;
+
+import static java.util.Collections.singletonList;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
+import static org.minifx.workbench.css.MiniFxCssConstants.PERSPECTIVE_BUTTON_CLASS;
+import static org.minifx.workbench.css.MiniFxCssConstants.TOOLBAR_BUTTON_CLASS;
+import static org.minifx.workbench.util.MiniFxComponents.containerPaneFrom;
+import static org.minifx.workbench.util.MiniFxComponents.createPerspective;
+
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.minifx.workbench.css.MiniFxCssConstants;
+import org.minifx.workbench.domain.definition.DisplayProperties;
+import org.minifx.workbench.domain.definition.FooterDefinition;
+import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.ToolbarItemDefinition;
+import org.minifx.workbench.spring.AbstractPerspectiveEvent;
+import org.minifx.workbench.spring.ActivatePerspectiveCommand;
+import org.minifx.workbench.spring.ChangePerspectiveButtonStyleCommand;
+import org.minifx.workbench.spring.PerspectiveActivatedEvent;
+import org.minifx.workbench.util.MiniFxComponents;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+
+/**
+ * Main JavaFX Pane for a MiniFx application. It has a toolbar for perspective switching at the top. The active
+ * perspective is integrated in the center.
+ */
+public class MainPane extends BorderPane {
+
+<span class="fc" id="L52">    private static final HBox DEFAULT_FILLER = new HBox();</span>
+
+<span class="fc" id="L54">    private final Map&lt;Object, Node&gt; perspectives = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L55">    private final Map&lt;Object, ToggleButton&gt; perspectivesToButtons = new HashMap&lt;&gt;();</span>
+
+    private final ApplicationEventPublisher publisher;
+    private HBox perspectiveButtonsBox;
+<span class="fc" id="L59">    private ToggleGroup perspectiveButtonToggleGroup = new ToggleGroup();</span>
+
+    public MainPane(Collection&lt;ToolbarItemDefinition&gt; toolbarItems, ApplicationEventPublisher publisher) {
+<span class="fc" id="L62">        this(toolbarItems, DEFAULT_FILLER, publisher);</span>
+<span class="fc" id="L63">    }</span>
+
+<span class="fc" id="L65">    public MainPane(Collection&lt;ToolbarItemDefinition&gt; toolbarItems, Node filler, ApplicationEventPublisher publisher) {</span>
+<span class="fc" id="L66">        this.publisher = publisher;</span>
+<span class="fc" id="L67">        List&lt;Node&gt; toolbarNodes = toolbarItems.stream()//</span>
+<span class="fc" id="L68">                .sorted(comparing(ToolbarItemDefinition::order))//</span>
+<span class="fc" id="L69">                .map(ToolbarItemDefinition::node)//</span>
+<span class="fc" id="L70">                .collect(toList());</span>
+
+<span class="fc" id="L72">        HBox toolbarBox = horizontalBoxOf(Pos.TOP_LEFT);</span>
+<span class="fc" id="L73">        HBox centralBox = horizontalBoxOf(Pos.TOP_CENTER);</span>
+<span class="fc" id="L74">        perspectiveButtonsBox = horizontalBoxOf(Pos.TOP_RIGHT);</span>
+
+<span class="fc" id="L76">        addToolbarButtonsTo(toolbarNodes, toolbarBox);</span>
+<span class="fc" id="L77">        addToolbarButtonsTo(singletonList(filler), centralBox);</span>
+
+<span class="fc" id="L79">        HBox.setHgrow(centralBox, Priority.ALWAYS);</span>
+
+<span class="fc" id="L81">        setTop(new ToolBar(toolbarBox, centralBox, perspectiveButtonsBox));</span>
+<span class="fc" id="L82">    }</span>
+
+    /**
+     * Set the {@link FooterDefinition}s that will be added to the pane. NOTE: this method can be called only once
+     * in the current implementation!
+     */
+    public void setFooters(Collection&lt;FooterDefinition&gt; footers) {
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if (getBottom() != null) {</span>
+            /* A refactor of MiniFxComponents#containerPaneFrom would allow dynamic insertions of footer items */
+<span class="nc" id="L91">            throw new IllegalStateException(&quot;Footer already initialized!&quot;);</span>
+        }
+
+<span class="fc" id="L94">        Platform.runLater(() -&gt; containerPaneFrom(footers).map(MiniFxComponents::configureSingleNodeStyle)</span>
+<span class="fc" id="L95">                .ifPresent(this::setBottom));</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Add {@link PerspectiveDefinition}s to the pane. NOTE: this method can be called only once in the current
+     * implementation!
+     */
+    public void setPerspectives(Collection&lt;PerspectiveDefinition&gt; definitions) {
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        if (definitions.isEmpty()) {</span>
+<span class="fc" id="L104">            return;</span>
+        }
+
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (!perspectives.isEmpty()) {</span>
+<span class="nc" id="L108">            throw new IllegalStateException(&quot;Perspectives already initialized!&quot;);</span>
+        }
+
+<span class="nc" id="L111">        definitions.forEach(definition -&gt; perspectives.put(definition.perspective(), createPerspective(definition)));</span>
+
+<span class="nc" id="L113">        List&lt;ToggleButton&gt; orderedPerspectiveButtons = definitions.stream() //</span>
+<span class="nc" id="L114">                .sorted(Comparator.comparingInt(p -&gt; p.displayProperties().order())) //</span>
+<span class="nc" id="L115">                .map(this::createPerspectiveButton) //</span>
+<span class="nc" id="L116">                .collect(Collectors.toList());</span>
+
+<span class="nc" id="L118">        addToolbarButtonsTo(orderedPerspectiveButtons, perspectiveButtonsBox);</span>
+<span class="nc" id="L119">    }</span>
+
+    private static HBox horizontalBoxOf(Pos alignment) {
+<span class="fc" id="L122">        HBox box = new HBox();</span>
+<span class="fc" id="L123">        box.setSpacing(3);</span>
+<span class="fc" id="L124">        box.setAlignment(alignment);</span>
+<span class="fc" id="L125">        box.setFillHeight(true);</span>
+<span class="fc" id="L126">        return box;</span>
+    }
+
+    private static void addToolbarButtonsTo(List&lt;? extends Node&gt; nodes, HBox box) {
+<span class="fc" id="L130">        nodes.forEach(node -&gt; node.getStyleClass().add(TOOLBAR_BUTTON_CLASS));</span>
+<span class="fc" id="L131">        box.getChildren().addAll(nodes);</span>
+<span class="fc" id="L132">    }</span>
+
+    private ToggleButton createPerspectiveButton(PerspectiveDefinition perspective) {
+<span class="nc" id="L135">        DisplayProperties displayProperties = perspective.displayProperties();</span>
+<span class="nc" id="L136">        ToggleButton button = new ToggleButton(displayProperties.name(), displayProperties.graphic().orElse(null));</span>
+<span class="nc" id="L137">        button.setGraphicTextGap(10);</span>
+<span class="nc" id="L138">        button.setOnAction(evt -&gt; setActive(perspective.perspective()));</span>
+<span class="nc" id="L139">        button.getStyleClass().addAll(PERSPECTIVE_BUTTON_CLASS, TOOLBAR_BUTTON_CLASS);</span>
+
+<span class="nc" id="L141">        perspectivesToButtons.put(perspective.perspective(), button);</span>
+<span class="nc" id="L142">        perspectiveButtonToggleGroup.getToggles().add(button);</span>
+<span class="nc" id="L143">        return button;</span>
+    }
+
+    private void setActive(Object perspectiveDefinition) {
+<span class="nc" id="L147">        Node perspective = this.perspectives.get(perspectiveDefinition);</span>
+<span class="nc" id="L148">        perspective.getStyleClass().add(MiniFxCssConstants.MAIN_PANE_CLASS);</span>
+<span class="nc" id="L149">        setCenter(perspective);</span>
+<span class="nc" id="L150">        publisher.publishEvent(new PerspectiveActivatedEvent(perspectiveDefinition));</span>
+<span class="nc" id="L151">    }</span>
+
+    private Optional&lt;ToggleButton&gt; perspectiveButton(AbstractPerspectiveEvent command) {
+<span class="nc" id="L154">        return Optional.of(this.perspectivesToButtons.get(command.perspective()));</span>
+    }
+
+    @EventListener
+    public void activatePerspective(ActivatePerspectiveCommand command) {
+<span class="nc" id="L159">        Platform.runLater(() -&gt; perspectiveButton(command).ifPresent(ToggleButton::fire));</span>
+<span class="nc" id="L160">    }</span>
+
+    @EventListener
+    public void colorPerspectiveButton(ChangePerspectiveButtonStyleCommand command) {
+<span class="nc" id="L164">        Platform.runLater(() -&gt; perspectiveButton(command).map(b -&gt; b.getStyleClass()).ifPresent(command::apply));</span>
+<span class="nc" id="L165">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

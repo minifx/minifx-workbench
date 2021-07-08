@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AgingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.fxcommons.service</a> &gt; <span class="el_source">AgingService.java</span></div><h1>AgingService.java</h1><pre class="source lang-java linenums">package org.minifx.fxcommons.service;
+
+import static java.lang.String.format;
+import static java.time.Duration.between;
+import static java.time.Instant.now;
+
+import java.time.Instant;
+
+import org.apache.commons.lang3.time.DurationFormatUtils;
+
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+
+public final class AgingService extends Service&lt;Void&gt; {
+    private static final int DEFAULT_AGING_INTERVAL = 1000;
+    private Instant referenceTime;
+    private final int agingInterval;
+
+    public AgingService() {
+<span class="nc" id="L20">        this(DEFAULT_AGING_INTERVAL);</span>
+<span class="nc" id="L21">    }</span>
+
+<span class="nc" id="L23">    public AgingService(int agingInterval) {</span>
+<span class="nc" id="L24">        this.agingInterval = agingInterval;</span>
+<span class="nc" id="L25">    }</span>
+
+    public void setReferenceTime(Instant referenceTime) {
+<span class="nc" id="L28">        this.referenceTime = referenceTime;</span>
+<span class="nc" id="L29">    }</span>
+
+    @Override
+    protected Task&lt;Void&gt; createTask() {
+<span class="nc" id="L33">        return new Task&lt;Void&gt;() {</span>
+            @Override
+            protected Void call() throws Exception {
+<span class="nc" id="L36">                updateMessage(&quot;0 seconds ago&quot;);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">                while (!isDone()) {</span>
+<span class="nc" id="L38">                    Thread.sleep(agingInterval);</span>
+<span class="nc" id="L39">                    long elapsedMillis = between(referenceTime, now()).toMillis();</span>
+<span class="nc" id="L40">                    String elapsedTime = DurationFormatUtils.formatDurationWords(elapsedMillis, true, true);</span>
+<span class="nc" id="L41">                    updateMessage(format(&quot;%s ago&quot;, elapsedTime));</span>
+<span class="nc" id="L42">                }</span>
+<span class="nc" id="L43">                return null;</span>
+            }
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

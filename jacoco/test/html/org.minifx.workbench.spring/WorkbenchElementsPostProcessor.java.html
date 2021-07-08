@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WorkbenchElementsPostProcessor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.spring</a> &gt; <span class="el_source">WorkbenchElementsPostProcessor.java</span></div><h1>WorkbenchElementsPostProcessor.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2017 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.spring;
+
+import static java.util.Collections.newSetFromMap;
+import static java.util.stream.Collectors.toList;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.minifx.workbench.annotations.Footer;
+import org.minifx.workbench.annotations.ToolbarItem;
+import org.minifx.workbench.annotations.View;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.cglib.proxy.Enhancer;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+
+/**
+ * A Spring bean post processor which has two main responsibilities:
+ * &lt;ol&gt;
+ * &lt;li&gt;It collects factory methods of all beans created in the application context. This allows to get the name check
+ * for annotations on both, the factory methods and the bean classes themselves.
+ * &lt;li&gt;It collects all beans which are recognized as minifx elements (by corresponding annotations). These are: views
+ * (see {@link View}), footers (see {@link Footer}) and toolbar items (see {@link ToolbarItem}).
+ * &lt;/ol&gt;
+ * The collected information is exposed through the {@link WorkbenchElementsRepository} and
+ * {@link BeanInformationRepository} interfaces for further usage.
+ *
+ * @author kfuchsbe
+ */
+<span class="fc" id="L46">public class WorkbenchElementsPostProcessor</span>
+        implements BeanFactoryAware, BeanPostProcessor, WorkbenchElementsRepository, BeanInformationRepository {
+
+    private DefaultListableBeanFactory beanFactory;
+<span class="fc" id="L50">    private Map&lt;Object, Method&gt; beansToFactoryMethod = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L51">    private Map&lt;Object, String&gt; beansToBeanNames = new ConcurrentHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L53">    private Set&lt;Object&gt; views = newSetFromMap(new ConcurrentHashMap&lt;&gt;());</span>
+<span class="fc" id="L54">    private Set&lt;Object&gt; footers = newSetFromMap(new ConcurrentHashMap&lt;&gt;());</span>
+<span class="fc" id="L55">    private Set&lt;Object&gt; toolbarItems = newSetFromMap(new ConcurrentHashMap&lt;&gt;());</span>
+<span class="fc" id="L56">    private Set&lt;Object&gt; perspectives = newSetFromMap(new ConcurrentHashMap&lt;&gt;());</span>
+
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) {
+<span class="fc" id="L60">        beansToBeanNames.put(bean, beanName);</span>
+<span class="fc" id="L61">        Method factoryMethod = factoryMethodForBeanName(beanName);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (factoryMethod != null) {</span>
+<span class="fc" id="L63">            beansToFactoryMethod.put(bean, factoryMethod);</span>
+        }
+<span class="fc" id="L65">        return bean;</span>
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) {
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (isView(bean)) {</span>
+<span class="nc" id="L71">            views.add(bean);</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        } else if (isToolbarItem(bean)) {</span>
+<span class="nc" id="L73">            toolbarItems.add(bean);</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        } else if (isFooter(bean)) {</span>
+<span class="nc" id="L75">            footers.add(bean);</span>
+            // } else if (isPerspective(bean)) {
+            // perspectives.add(bean);
+        }
+<span class="fc" id="L79">        return bean;</span>
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) {
+<span class="fc" id="L84">        this.beanFactory = (DefaultListableBeanFactory) beanFactory;</span>
+<span class="fc" id="L85">    }</span>
+
+    @Override
+    public Optional&lt;Method&gt; factoryMethodFor(Object bean) {
+<span class="fc" id="L89">        return Optional.ofNullable(beansToFactoryMethod.get(bean));</span>
+    }
+
+    @Override
+    public Optional&lt;String&gt; beanNameFor(Object bean) {
+<span class="nc" id="L94">        return Optional.ofNullable(beansToBeanNames.get(bean));</span>
+    }
+
+    @Override
+    public OngoingAnnotationExtraction from(Object object) {
+<span class="fc" id="L99">        return new OngoingAnnotationExtraction(beansToFactoryMethod.get(object), object);</span>
+    }
+
+    @Override
+    public Set&lt;Object&gt; views() {
+<span class="fc" id="L104">        return ImmutableSet.copyOf(this.views);</span>
+    }
+
+    @Override
+    public Set&lt;Object&gt; toolbarItems() {
+<span class="fc" id="L109">        return ImmutableSet.copyOf(this.toolbarItems);</span>
+    }
+
+    @Override
+    public Set&lt;Object&gt; footers() {
+<span class="fc" id="L114">        return ImmutableSet.copyOf(this.footers);</span>
+    }
+
+    @Override
+    public Set&lt;Object&gt; perspectives() {
+<span class="nc" id="L119">        return ImmutableSet.copyOf(this.perspectives);</span>
+    }
+
+    private boolean isFooter(Object bean) {
+<span class="fc" id="L123">        return from(bean).getAnnotation(Footer.class).isPresent();</span>
+    }
+
+    private boolean isToolbarItem(Object bean) {
+<span class="fc" id="L127">        return from(bean).getAnnotation(ToolbarItem.class).isPresent();</span>
+    }
+
+    private boolean isView(Object bean) {
+<span class="fc" id="L131">        return from(bean).getAnnotation(View.class).isPresent();</span>
+    }
+
+    private Method factoryMethodForBeanName(String beanName) {
+<span class="fc" id="L135">        BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);</span>
+
+<span class="fc" id="L137">        Class&lt;? extends Object&gt; factoryBeanClass = factoryBeanClass(beanDefinition);</span>
+<span class="fc" id="L138">        String factoryMethodName = beanDefinition.getFactoryMethodName();</span>
+<span class="pc bpc" id="L139" title="1 of 4 branches missed.">        if ((factoryBeanClass != null) &amp;&amp; (factoryMethodName != null)) {</span>
+<span class="fc" id="L140">            List&lt;Method&gt; filteredMethods = methodsOfName(factoryBeanClass, factoryMethodName);</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">            if (filteredMethods.isEmpty()) {</span>
+<span class="nc" id="L142">                throw new IllegalStateException(</span>
+                        &quot;No method of name &quot; + factoryMethodName + &quot; found in class &quot; + factoryBeanClass + &quot;.&quot;);
+            }
+<span class="fc" id="L145">            return Iterables.getOnlyElement(filteredMethods);</span>
+        }
+<span class="fc" id="L147">        return null;</span>
+    }
+
+    private Class&lt;? extends Object&gt; factoryBeanClass(BeanDefinition beanDefinition) {
+<span class="fc" id="L151">        String factoryBeanName = beanDefinition.getFactoryBeanName();</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (factoryBeanName == null) {</span>
+            /* This is the case for static factory methods. However, might fail in other cases...? */
+            try {
+<span class="fc" id="L155">                return superIfNotConcrete(Class.forName(beanDefinition.getBeanClassName()));</span>
+<span class="nc" id="L156">            } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L157">                throw new RuntimeException(e);</span>
+            }
+        }
+<span class="fc" id="L160">        return superIfNotConcrete(factoryBeanClass(factoryBeanName));</span>
+    }
+
+    private static List&lt;Method&gt; methodsOfName(Class&lt;? extends Object&gt; factoryClass, String factoryMethodName) {
+<span class="fc" id="L164">        Set&lt;Method&gt; methods = new HashSet&lt;&gt;(Arrays.asList(factoryClass.getMethods()));</span>
+<span class="fc" id="L165">        methods.addAll(Arrays.asList(factoryClass.getDeclaredMethods()));</span>
+<span class="fc" id="L166">        return methods.stream().filter(m -&gt; factoryMethodName.equals(m.getName())).collect(toList());</span>
+    }
+
+    private Class&lt;? extends Object&gt; factoryBeanClass(String factoryBeanName) {
+<span class="fc" id="L170">        Object factoryBean = beanFactory.getBean(factoryBeanName);</span>
+<span class="fc" id="L171">        return factoryBean.getClass();</span>
+    }
+
+    private Class&lt;? extends Object&gt; superIfNotConcrete(Class&lt;? extends Object&gt; factoryClass) {
+<span class="pc bpc" id="L175" title="1 of 4 branches missed.">        if (Proxy.isProxyClass(factoryClass) || Enhancer.isEnhanced(factoryClass)) {</span>
+<span class="fc" id="L176">            factoryClass = factoryClass.getSuperclass();</span>
+        }
+<span class="fc" id="L178">        return factoryClass;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

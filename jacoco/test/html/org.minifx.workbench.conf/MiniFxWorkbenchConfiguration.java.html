@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MiniFxWorkbenchConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.conf</a> &gt; <span class="el_source">MiniFxWorkbenchConfiguration.java</span></div><h1>MiniFxWorkbenchConfiguration.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2016 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.conf;
+
+import static java.util.stream.Collectors.toList;
+import static org.minifx.fxcommons.MiniFxSceneBuilder.miniFxSceneBuilder;
+
+import java.util.List;
+
+import org.minifx.fxcommons.MiniFxSceneBuilder;
+import org.minifx.fxcommons.MiniFxWorkbench;
+import org.minifx.workbench.components.MainPane;
+import org.minifx.workbench.nodes.FxNodeFactory;
+import org.minifx.workbench.spring.BeanInformationExtractor;
+import org.minifx.workbench.spring.BeanInformationExtractorImpl;
+import org.minifx.workbench.spring.BeanInformationRepository;
+import org.minifx.workbench.spring.ElementsDefinitionConstructor;
+import org.minifx.workbench.spring.WorkbenchElementsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+@Configuration
+@Import({ FactoryMethodsCollectorConfiguration.class, FxmlNodeServiceConfiguration.class,
+        NodeFactoryConfiguration.class, MiniFxWorkbenchInitialization.class })
+<span class="fc" id="L32">public class MiniFxWorkbenchConfiguration {</span>
+
+    private static final int DEFAULT_HEIGHT = 760;
+    private static final int DEFAULT_WIDTH = 1280;
+
+    public static final String ID_MAIN_PANEL = &quot;minifx-workbench-main-panel&quot;;
+
+    @Autowired(required = false)
+    @Qualifier(&quot;cssStyleSheets&quot;)
+    private List&lt;List&lt;String&gt;&gt; cssStyleSheets;
+
+    @Autowired(required = false)
+    private MiniFxSceneBuilder sceneBuilder;
+
+    @Bean
+    public MiniFxWorkbench miniFxContext(MainPane mainPane, ApplicationContext ctx) {
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        if (sceneBuilder == null) {</span>
+<span class="fc" id="L49">            sceneBuilder = miniFxSceneBuilder().withSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);</span>
+        }
+
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (cssStyleSheets != null) {</span>
+<span class="nc" id="L53">            sceneBuilder.withAdditionalCss(cssStyleSheets.stream().flatMap(List::stream).collect(toList()));</span>
+        }
+
+<span class="fc" id="L56">        return new MiniFxWorkbench(sceneBuilder, mainPane, ctx);</span>
+    }
+
+    @Bean
+    public static ElementsDefinitionConstructor elementsDefinitionConstructor(
+            WorkbenchElementsRepository factoryMethodsRepository, BeanInformationExtractor beanInformationExtractor,
+            FxNodeFactory fxNodeFactory) {
+<span class="fc" id="L63">        return new ElementsDefinitionConstructor(factoryMethodsRepository, beanInformationExtractor, fxNodeFactory);</span>
+    }
+
+    @Bean
+    public static BeanInformationExtractor beanInformationExtractor(BeanInformationRepository factoryMethodsRepository) {
+<span class="fc" id="L68">        return new BeanInformationExtractorImpl(factoryMethodsRepository);</span>
+    }
+
+    @Bean
+    public static MainPane mainPane(ApplicationEventPublisher publisher,
+            ElementsDefinitionConstructor elementsDefinitionConstructor) {
+<span class="fc" id="L74">        MainPane mainPanel = new MainPane(elementsDefinitionConstructor.toolbarItems(), publisher);</span>
+<span class="fc" id="L75">        mainPanel.setId(ID_MAIN_PANEL);</span>
+<span class="fc" id="L76">        return mainPanel;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

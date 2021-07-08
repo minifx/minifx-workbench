@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Perspectives.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.util</a> &gt; <span class="el_source">Perspectives.java</span></div><h1>Perspectives.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2016 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.util;
+
+import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
+import static org.minifx.workbench.domain.PerspectivePos.CENTER;
+import static org.minifx.workbench.util.Purpose.PERSPECTIVE;
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
+
+import java.util.Optional;
+
+import org.controlsfx.glyphfont.FontAwesome;
+import org.minifx.workbench.annotations.Icon;
+import org.minifx.workbench.annotations.Name;
+import org.minifx.workbench.annotations.NoGutters;
+import org.minifx.workbench.domain.DefaultPerspective;
+import org.minifx.workbench.domain.Perspective;
+import org.minifx.workbench.domain.PerspectivePos;
+import org.minifx.workbench.domain.definition.DisplayProperties;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.annotation.Order;
+
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+
+/**
+ * Utility methods for perspective classes.
+ *
+ * @author kfuchsbe
+ */
+public final class Perspectives {
+
+<span class="fc" id="L36">    public static final PerspectivePos DEFAULT_POSITION = CENTER;</span>
+<span class="fc" id="L37">    public static final Class&lt;? extends Perspective&gt; DEFAULT_PERSPECTIVE = DefaultPerspective.class;</span>
+
+<span class="fc" id="L39">    private static final Color DEFAULT_COLOR = Color.rgb(2, 2, 2);</span>
+<span class="fc" id="L40">    private static final FontAwesome.Glyph DEFAULT_PERSPECTIVE_ICON = FontAwesome.Glyph.QUESTION;</span>
+
+    private Perspectives() {
+        /* Only static methods */
+    }
+
+    /**
+     * Retrieves the display properties from the given perspective.
+     *
+     * @param perspective the perspective (class) from which to retrieve properties
+     * @return the retrieved properties
+     */
+    public static DisplayProperties perspectiveDisplayProperties(Class&lt;? extends Perspective&gt; perspective) {
+<span class="nc" id="L53">        return new DisplayProperties(perspectiveNameFrom(perspective), perspectiveGraphics(perspective),</span>
+<span class="nc" id="L54">                orderFrom(perspective), hasGutters(perspective));</span>
+    }
+
+    private static boolean hasGutters(Class&lt;? extends Perspective&gt; perspective) {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        return perspective.getAnnotation(NoGutters.class) == null;</span>
+    }
+
+
+    private static final int orderFrom(Class&lt;?&gt; perspectiveClass) {
+<span class="nc" id="L63">        requireNonNull(perspectiveClass, &quot;perspectiveClass must not be null.&quot;);</span>
+<span class="nc" id="L64">        Order order = perspectiveClass.getAnnotation(Order.class);</span>
+<span class="nc" id="L65">        return ofNullable(order).map(Order::value).orElse(LOWEST_PRECEDENCE);</span>
+    }
+
+    public static Node perspectiveDefaultGraphics() {
+<span class="nc" id="L69">        return Icons.graphicFrom(Perspectives.DEFAULT_PERSPECTIVE_ICON, PERSPECTIVE.getSizeScaling(), Perspectives.DEFAULT_COLOR);</span>
+    }
+
+    private static Node perspectiveGraphics(Class&lt;? extends Perspective&gt; perspective) {
+<span class="nc" id="L73">        return Optional.ofNullable(perspective.getAnnotation(Icon.class))</span>
+<span class="nc" id="L74">                .&lt;Node&gt;map(ic -&gt; Icons.graphicFrom(ic, PERSPECTIVE.getSizeScaling()))</span>
+<span class="nc" id="L75">                .orElseGet(Perspectives::perspectiveDefaultGraphics);</span>
+    }
+
+    private static String perspectiveNameFrom(Class&lt;?&gt; perspective) {
+<span class="nc" id="L79">        return Optional.ofNullable(AnnotationUtils.findAnnotation(perspective, Name.class)).map(Name::value)</span>
+<span class="nc" id="L80">                .orElse(perspective.getSimpleName());</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

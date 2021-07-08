@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MiniFxComponents.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.util</a> &gt; <span class="el_source">MiniFxComponents.java</span></div><h1>MiniFxComponents.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2016 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.util;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS;
+import static org.minifx.workbench.css.MiniFxCssConstants.COMPONENTS_OF_MAIN_PANEL_CLASS_NO_GUTTERS;
+import static org.minifx.workbench.css.MiniFxCssConstants.SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS;
+
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+
+import org.minifx.workbench.components.TextWorkbenchView;
+import org.minifx.workbench.domain.PerspectivePos;
+import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.TabbableDefinition;
+import org.minifx.workbench.domain.definition.ViewDefinition;
+
+import com.google.common.collect.Iterables;
+
+import javafx.scene.Node;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
+
+public class MiniFxComponents {
+
+    private MiniFxComponents() {
+        /* only static methods */
+    }
+
+    public static TabPane tabPaneFrom(Collection&lt;? extends TabbableDefinition&lt;?&gt;&gt; posViews) {
+<span class="nc" id="L42">        List&lt;TabbableDefinition&lt;?&gt;&gt; sortedViews = posViews.stream()</span>
+<span class="nc" id="L43">                .sorted(Comparator.comparingInt(v -&gt; v.displayProperties().order())).collect(toList());</span>
+
+<span class="nc" id="L45">        TabPane tabRoot = new TabPane();</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        for (TabbableDefinition&lt;?&gt; node : sortedViews) {</span>
+<span class="nc" id="L47">            Tab tab = new Tab();</span>
+<span class="nc" id="L48">            tab.setText(node.displayProperties().name());</span>
+<span class="nc" id="L49">            tab.setGraphic(node.displayProperties().graphic().orElse(null));</span>
+<span class="nc" id="L50">            tab.setContent(node.node());</span>
+<span class="nc" id="L51">            tab.setClosable(false);</span>
+<span class="nc" id="L52">            tabRoot.getTabs().add(tab);</span>
+<span class="nc" id="L53">        }</span>
+<span class="nc" id="L54">        return tabRoot;</span>
+    }
+
+    public static final Optional&lt;Node&gt; containerPaneFrom(Collection&lt;? extends TabbableDefinition&lt;?&gt;&gt; views) {
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (views.isEmpty()) {</span>
+<span class="fc" id="L59">            return Optional.empty();</span>
+        }
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if ((views.size() == 1)) {</span>
+<span class="nc" id="L63">            TabbableDefinition&lt;?&gt; singleView = Iterables.getOnlyElement(views);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">            if (!singleView.alwaysShowTabs()) {</span>
+<span class="nc" id="L65">                return Optional.of(singleView.node());</span>
+            }
+        }
+
+<span class="nc" id="L69">        return Optional.of(tabPaneFrom(views));</span>
+    }
+
+    public static Node configureMultiNodeStyle(Node node) {
+<span class="nc" id="L73">        node.getStyleClass().add(COMPONENTS_OF_MAIN_PANEL_CLASS);</span>
+<span class="nc" id="L74">        return node;</span>
+    }
+
+    public static Node configureMultiNodeStyleNoGutters(Node node) {
+<span class="nc" id="L78">        node.getStyleClass().add(COMPONENTS_OF_MAIN_PANEL_CLASS_NO_GUTTERS);</span>
+<span class="nc" id="L79">        return node;</span>
+    }
+
+    public static Node configureSingleNodeStyle(Node node) {
+<span class="nc" id="L83">        node.getStyleClass().add(SINGLE_COMPONENT_OF_MAIN_PANEL_CLASS);</span>
+<span class="nc" id="L84">        return node;</span>
+    }
+
+    public static Consumer&lt;Node&gt; styleConfigurator(Map&lt;PerspectivePos, List&lt;ViewDefinition&gt;&gt; positionViews, boolean gutters) {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (positionViews.size() == 1) {</span>
+<span class="nc" id="L89">            return MiniFxComponents::configureSingleNodeStyle;</span>
+        } else {
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            return gutters ? MiniFxComponents::configureMultiNodeStyle : MiniFxComponents::configureMultiNodeStyleNoGutters;</span>
+        }
+    }
+
+    public static void placeViewsIntoPerspective(BorderPane perspectiveImpl,
+            Map&lt;PerspectivePos, List&lt;ViewDefinition&gt;&gt; positionViews, Consumer&lt;Node&gt; styleConfigurator) {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        for (Entry&lt;PerspectivePos, List&lt;ViewDefinition&gt;&gt; entry : positionViews.entrySet()) {</span>
+<span class="nc" id="L98">            Node node = containerPaneFrom(entry.getValue())</span>
+<span class="nc" id="L99">                    .orElseThrow(() -&gt; new RuntimeException(&quot;No view for pos '&quot; + entry.getKey() + &quot;'&quot;));</span>
+<span class="nc" id="L100">            styleConfigurator.accept(node);</span>
+<span class="nc" id="L101">            entry.getKey().set(node).into(perspectiveImpl);</span>
+<span class="nc" id="L102">        }</span>
+<span class="nc" id="L103">    }</span>
+
+    public static Node createPerspective(PerspectiveDefinition definition) {
+<span class="nc" id="L106">        Set&lt;ViewDefinition&gt; views = definition.views();</span>
+
+<span class="nc" id="L108">        BorderPane perspectiveImpl = new BorderPane();</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (views.isEmpty()) {</span>
+<span class="nc" id="L110">            Node node = new TextWorkbenchView(&quot;No views to display&quot;);</span>
+<span class="nc" id="L111">            configureSingleNodeStyle(node);</span>
+<span class="nc" id="L112">            Perspectives.DEFAULT_POSITION.set(node).into(perspectiveImpl);</span>
+<span class="nc" id="L113">        } else {</span>
+<span class="nc" id="L114">            Map&lt;PerspectivePos, List&lt;ViewDefinition&gt;&gt; positionViews = views.stream()</span>
+<span class="nc" id="L115">                    .collect(groupingBy(ViewDefinition::perspectivePos));</span>
+<span class="nc" id="L116">            placeViewsIntoPerspective(perspectiveImpl, positionViews, styleConfigurator(positionViews, definition.displayProperties().hasGutters()));</span>
+        }
+<span class="nc" id="L118">        return perspectiveImpl;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

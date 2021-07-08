@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ElementsDefinitionConstructor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.spring</a> &gt; <span class="el_source">ElementsDefinitionConstructor.java</span></div><h1>ElementsDefinitionConstructor.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2016 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.spring;
+
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toSet;
+
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+
+import org.minifx.workbench.annotations.Footer;
+import org.minifx.workbench.annotations.Icon;
+import org.minifx.workbench.annotations.Name;
+import org.minifx.workbench.annotations.View;
+import org.minifx.workbench.domain.Perspective;
+import org.minifx.workbench.domain.PerspectivePos;
+import org.minifx.workbench.domain.definition.DisplayProperties;
+import org.minifx.workbench.domain.definition.FooterDefinition;
+import org.minifx.workbench.domain.definition.PerspectiveDefinition;
+import org.minifx.workbench.domain.definition.ToolbarItemDefinition;
+import org.minifx.workbench.domain.definition.ViewDefinition;
+import org.minifx.workbench.nodes.FxNodeFactory;
+import org.minifx.workbench.util.Names;
+import org.minifx.workbench.util.Perspectives;
+import org.minifx.workbench.util.Purpose;
+import org.springframework.core.annotation.Order;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableListMultimap.Builder;
+import com.google.common.collect.ListMultimap;
+
+/**
+ * Contains all the relevant logic to bring together all the information which is required to instantiate the workbench
+ * elements later. In particular, this is:
+ * &lt;ul&gt;
+ * &lt;li&gt;The relation between views and perspectives (and the view position inside the perspectives)
+ * &lt;li&gt;The names of views, perspectives and footers
+ * &lt;li&gt;Icons of views perspectives and footers
+ * &lt;/ul&gt;
+ * As a final result, this class constructs perspective definitions (see {@link #perspectives()} (which contain view
+ * definitions) and footer definitions (see {@link #footers()}). All of these can be used to instantiate the
+ * perspectives (and views) and footers.
+ * &lt;p&gt;
+ * This class uses a {@link WorkbenchElementsRepository} to get the collected components as well as to access the
+ * factory methods and annotations of the collected elements.
+ * &lt;p&gt;
+ * For deriving information, usually annotations are used. Those annotations are searched in the order as described in
+ * {@link BeanInformationRepository#from(Object)}. Based on this, the following strategies are applied in particular
+ * cases:
+ * &lt;ul&gt;
+ * &lt;li&gt;&lt;b&gt;Views:&lt;/b&gt; Each bean for which a {@link View} annotation is found, is considered as view in MiniFx. The view
+ * annotation describes the perspective in which the view is displayed and the position within the view. Both values are
+ * optional. If omitted, the view is displayed in the perspective {@link Perspectives#DEFAULT_PERSPECTIVE} at the
+ * position {@link Perspectives#DEFAULT_POSITION}.
+ * &lt;li&gt;&lt;b&gt;Icons:&lt;/b&gt; They are derived from the {@link Icon} annotation (both for views and perspectives). If none is
+ * specified, then perspectives will get a default icon and views will have no icon.
+ * &lt;li&gt;&lt;b&gt;Names:&lt;/b&gt; Names for views are derived in the following order:
+ * &lt;ol&gt;
+ * &lt;li&gt;If annotated by {@link Name}, the value from there is used.
+ * &lt;li&gt;If possible, a name from a name method of the bean is used (see {@link Names#nameFromNameMethod(Object)}.
+ * &lt;li&gt;The bean name from the spring context
+ * &lt;li&gt;If none of the above is found, the simple class name of the view is used.
+ * &lt;/ol&gt;
+ * &lt;li&gt;&lt;b&gt;Order:&lt;/b&gt; if an {@link Order} annotation is specified for a view (or a perspective) then it is taken into
+ * account.
+ * &lt;/ul&gt;
+ *
+ * @author kfuchsbe
+ */
+public class ElementsDefinitionConstructor {
+
+    private final WorkbenchElementsRepository repository;
+    private final BeanInformationExtractor extractor;
+    private final FxNodeFactory fxNodeFactory;
+
+    /**
+     * Constructor which requires an elements repository, which will be used to look up the collected elements as well
+     * as annotations on them and factory methods.
+     *
+     * @param elementsRepository the repository to use
+     * @param beanInformationExtractor the instance who knows about the information of the beans
+     * @param fxNodeFactory the factory to create java fx nodes
+     * @throws NullPointerException if the given repository is {@code null}
+     */
+    public ElementsDefinitionConstructor(WorkbenchElementsRepository elementsRepository,
+<span class="fc" id="L90">            BeanInformationExtractor beanInformationExtractor, FxNodeFactory fxNodeFactory) {</span>
+<span class="fc" id="L91">        this.repository = requireNonNull(elementsRepository, &quot;elementsRepository must not be null&quot;);</span>
+<span class="fc" id="L92">        this.extractor = requireNonNull(beanInformationExtractor, &quot;beanInformationExtractor must not be null&quot;);</span>
+<span class="fc" id="L93">        this.fxNodeFactory = requireNonNull(fxNodeFactory, &quot;fxNodeFactory must not be null&quot;);</span>
+<span class="fc" id="L94">    }</span>
+
+    /**
+     * Returns a perspective definition for each perspective used by at least one of the views found in the repository.
+     *
+     * @return all perspective definitions as derived from the views in the repository
+     */
+    public Set&lt;PerspectiveDefinition&gt; perspectives() {
+<span class="fc" id="L102">        return definitionsFrom(mapToPerspective(repository.views()));</span>
+    }
+
+    /**
+     * Returns a footer definition for each footer found in the repository
+     *
+     * @return all footer definitions
+     */
+    public Set&lt;FooterDefinition&gt; footers() {
+<span class="fc" id="L111">        return footerDefinitionsFrom(repository.footers());</span>
+    }
+
+    public Set&lt;ToolbarItemDefinition&gt; toolbarItems() {
+<span class="fc" id="L115">        return toolbarItemDefinitionsFrom(repository.toolbarItems());</span>
+    }
+    
+    @VisibleForTesting
+    PerspectivePos viewPosFor(Object view) {
+<span class="nc" id="L120">        requireNonNull(view, &quot;view must not be null&quot;);</span>
+<span class="nc" id="L121">        return viewAnnotation(view).map(View::at).orElse(Perspectives.DEFAULT_POSITION);</span>
+    }
+
+    @VisibleForTesting
+    Class&lt;? extends Perspective&gt; perspectiveFor(Object view) {
+<span class="fc" id="L126">        requireNonNull(view, &quot;view must not be null&quot;);</span>
+<span class="fc" id="L127">        Optional&lt;Class&lt;? extends Perspective&gt;&gt; p = viewAnnotation(view).map(View::in);</span>
+<span class="fc" id="L128">        return p.orElse(Perspectives.DEFAULT_PERSPECTIVE);</span>
+    }
+
+    private Optional&lt;View&gt; viewAnnotation(Object view) {
+<span class="fc" id="L132">        return repository.from(view).getAnnotation(View.class);</span>
+    }
+
+    private boolean alwaysShowTabsFromView(Object view) {
+<span class="nc" id="L136">        return viewAnnotation(view).map(View::enforceTab).orElse(false);</span>
+    }
+
+    private boolean alwaysShowTabsFromFooter(Object footer) {
+<span class="nc" id="L140">        return footerAnnotation(footer).map(Footer::enforceTab).orElse(false);</span>
+    }
+
+    private Optional&lt;Footer&gt; footerAnnotation(Object footer) {
+<span class="nc" id="L144">        return repository.from(footer).getAnnotation(Footer.class);</span>
+    }
+
+    private ListMultimap&lt;Class&lt;? extends Perspective&gt;, Object&gt; mapToPerspective(Collection&lt;Object&gt; views) {
+<span class="fc" id="L148">        Builder&lt;Class&lt;? extends Perspective&gt;, Object&gt; perspectiveToViewBuilder = ImmutableListMultimap.builder();</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">        for (Object view : views) {</span>
+<span class="nc" id="L150">            perspectiveToViewBuilder.put(perspectiveFor(view), view);</span>
+<span class="nc" id="L151">        }</span>
+<span class="fc" id="L152">        return perspectiveToViewBuilder.build();</span>
+    }
+
+    private Set&lt;PerspectiveDefinition&gt; definitionsFrom(
+            ListMultimap&lt;Class&lt;? extends Perspective&gt;, Object&gt; mapToPerspective) {
+<span class="pc" id="L157">        return mapToPerspective.asMap().entrySet().stream().map(e -&gt; toPerspectiveDefinition(e.getKey(), e.getValue()))</span>
+<span class="fc" id="L158">                .collect(toSet());</span>
+    }
+
+    private PerspectiveDefinition toPerspectiveDefinition(Class&lt;? extends Perspective&gt; perspective,
+            Collection&lt;Object&gt; allViews) {
+<span class="nc" id="L163">        return new PerspectiveDefinition(perspective, Perspectives.perspectiveDisplayProperties(perspective),</span>
+<span class="nc" id="L164">                viewDefinitionsFrom(allViews));</span>
+    }
+
+    private Set&lt;ViewDefinition&gt; viewDefinitionsFrom(Collection&lt;Object&gt; allViews) {
+<span class="nc" id="L168">        return allViews.stream().map(this::toViewDefinition).collect(toSet());</span>
+    }
+
+    private Set&lt;FooterDefinition&gt; footerDefinitionsFrom(Collection&lt;Object&gt; allViews) {
+<span class="fc" id="L172">        return allViews.stream().map(this::toFooterDefinition).collect(toSet());</span>
+    }
+
+    private Set&lt;ToolbarItemDefinition&gt; toolbarItemDefinitionsFrom(Collection&lt;Object&gt; toolbarItems) {
+<span class="fc" id="L176">        return toolbarItems.stream().map(this::toToolbarItemDefinition).collect(toSet());</span>
+    }
+
+    private ToolbarItemDefinition toToolbarItemDefinition(Object tbItem) {
+<span class="nc" id="L180">        return new ToolbarItemDefinition(fxNodeFactory.fxNodeFrom(tbItem), extractor.orderFrom(tbItem));</span>
+    }
+
+    private ViewDefinition toViewDefinition(Object view) {
+<span class="nc" id="L184">        return new ViewDefinition(fxNodeFactory.fxNodeFrom(view), viewPosFor(view),</span>
+<span class="nc" id="L185">                displayPropertiesFrom(view, Purpose.VIEW), alwaysShowTabsFromView(view));</span>
+    }
+
+    private FooterDefinition toFooterDefinition(Object footer) {
+<span class="nc" id="L189">        return new FooterDefinition(fxNodeFactory.fxNodeFrom(footer), displayPropertiesFrom(footer, Purpose.VIEW),</span>
+<span class="nc" id="L190">                alwaysShowTabsFromFooter(footer));</span>
+    }
+
+    public DisplayProperties displayPropertiesFrom(Object view, Purpose purpose) {
+<span class="nc" id="L194">        return this.extractor.displayPropertiesFrom(view, purpose);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

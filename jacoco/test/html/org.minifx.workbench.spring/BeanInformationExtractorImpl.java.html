@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BeanInformationExtractorImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minifx-workbench</a> &gt; <a href="index.source.html" class="el_package">org.minifx.workbench.spring</a> &gt; <span class="el_source">BeanInformationExtractorImpl.java</span></div><h1>BeanInformationExtractorImpl.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2017 European Organisation for Nuclear Research (CERN), All Rights Reserved.
+ */
+
+package org.minifx.workbench.spring;
+
+import static java.util.Objects.requireNonNull;
+import static org.minifx.workbench.util.Names.nameFromNameMethod;
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
+
+import java.util.Optional;
+
+import org.minifx.workbench.annotations.Icon;
+import org.minifx.workbench.annotations.Name;
+import org.minifx.workbench.annotations.NoGutters;
+import org.minifx.workbench.domain.definition.DisplayProperties;
+import org.minifx.workbench.util.Icons;
+import org.minifx.workbench.util.Optionals;
+import org.minifx.workbench.util.Perspectives;
+import org.minifx.workbench.util.Purpose;
+import org.springframework.core.annotation.Order;
+
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+
+public class BeanInformationExtractorImpl implements BeanInformationExtractor {
+
+    private final BeanInformationRepository repository;
+
+<span class="fc" id="L30">    public BeanInformationExtractorImpl(BeanInformationRepository beanInformationRepository) {</span>
+<span class="fc" id="L31">        this.repository = requireNonNull(beanInformationRepository, &quot;beanInformationRepository must not be null&quot;);</span>
+<span class="fc" id="L32">    }</span>
+
+    @Override
+    public DisplayProperties displayPropertiesFrom(Object view, Purpose purpose) {
+<span class="nc" id="L36">        return new DisplayProperties(viewNameFrom(view), graphicsFor(view, purpose).orElse(null), orderFrom(view), hasGutters(view));</span>
+    }
+
+    private boolean hasGutters(Object view) {
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        return !repository.from(view).getAnnotation(NoGutters.class).isPresent();</span>
+    }
+
+    private String viewNameFrom(Object view) {
+<span class="nc" id="L44">        Optional&lt;String&gt; nameFromAnnotation = repository.from(view).getAnnotation(Name.class).map(Name::value);</span>
+<span class="nc" id="L45">        return Optionals.first(nameFromAnnotation, nameFromNameMethod(view), repository.beanNameFor(view))</span>
+<span class="nc" id="L46">                .orElse(view.getClass().getSimpleName());</span>
+    }
+
+    private Optional&lt;Node&gt; graphicsFor(Object view, Purpose purpose) {
+<span class="nc" id="L50">        Optional&lt;Node&gt; icon = iconAnnotation(view).map(ic -&gt; Icons.graphicFrom(ic, purpose.getSizeScaling()));</span>
+<span class="nc" id="L51">        Optional&lt;Node&gt; defaultIcon = defaultFor(purpose);</span>
+<span class="nc" id="L52">        return Optionals.first(icon, defaultIcon);</span>
+    }
+
+    private Optional&lt;Node&gt; defaultFor(Purpose purpose) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (Purpose.PERSPECTIVE.equals(purpose)) {</span>
+<span class="nc" id="L57">            return Optional.of(Perspectives.perspectiveDefaultGraphics());</span>
+        } else {
+<span class="nc" id="L59">            return Optional.empty();</span>
+        }
+    }
+
+    @Override
+    public Color iconColor(Object view) {
+<span class="nc" id="L65">        String color = iconAnnotation(view).map(Icon::color).orElse(Icon.DEFAULT_COLOR);</span>
+<span class="nc" id="L66">        return Color.valueOf(color);</span>
+    }
+
+    @Override
+    public int orderFrom(Object view) {
+<span class="nc" id="L71">        Optional&lt;Order&gt; order = repository.from(view).getAnnotation(Order.class);</span>
+<span class="nc" id="L72">        return order.map(Order::value).orElse(LOWEST_PRECEDENCE);</span>
+    }
+
+    private Optional&lt;Icon&gt; iconAnnotation(Object view) {
+<span class="nc" id="L76">        return repository.from(view).getAnnotation(Icon.class);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

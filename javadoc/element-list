@@ -1,0 +1,16 @@
+org.minifx.fxcommons
+org.minifx.fxcommons.fxml.commons.spring
+org.minifx.fxcommons.service
+org.minifx.fxcommons.util
+org.minifx.workbench
+org.minifx.workbench.annotations
+org.minifx.workbench.components
+org.minifx.workbench.conf
+org.minifx.workbench.css
+org.minifx.workbench.domain
+org.minifx.workbench.domain.definition
+org.minifx.workbench.nodes
+org.minifx.workbench.nodes.creators
+org.minifx.workbench.providers
+org.minifx.workbench.spring
+org.minifx.workbench.util
